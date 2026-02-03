@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" width="354.1637" height="416.2263" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 354.1637 416.2263">
+  <defs>
+    <radialGradient id="radial-gradient" cx="24.4403" cy="24.4403" fx="24.4403" fy="24.4403" r="24.4403" gradientUnits="userSpaceOnUse">
+      <stop offset=".0447" stop-color="#38a3e5"/>
+      <stop offset=".7596" stop-color="#6accef"/>
+    </radialGradient>
+    <radialGradient id="radial-gradient-2" cx="73.3175" cy="25.1817" fx="73.3175" fy="25.1817" r="24.4403" xlink:href="#radial-gradient"/>
+    <radialGradient id="radial-gradient-3" cx="25.321" cy="72.4402" fx="25.321" fy="72.4402" r="24.4403" xlink:href="#radial-gradient"/>
+    <radialGradient id="radial-gradient-4" cx="74.1982" cy="73.1816" fx="74.1982" fy="73.1816" r="24.4403" xlink:href="#radial-gradient"/>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <g>
+      <path d="M74.1982,48.7413s302.7534,16.1553,276.3314,367.335" style="fill: none; stroke: #537e49; stroke-miterlimit: 10; stroke-width: 4px;"/>
+      <g>
+        <circle cx="24.4403" cy="24.4403" r="24.4403" style="fill: url(#radial-gradient);"/>
+        <circle cx="73.3175" cy="25.1817" r="24.4403" style="fill: url(#radial-gradient-2);"/>
+        <circle cx="25.321" cy="72.4402" r="24.4403" style="fill: url(#radial-gradient-3);"/>
+        <circle cx="74.1982" cy="73.1816" r="24.4403" style="fill: url(#radial-gradient-4);"/>
+      </g>
+    </g>
+  </g>
+</svg>
