@@ -740,8 +740,16 @@
     </div>
 
     
-    <img id="blue-yellow-stem" src="svg/blue_yellow_stem.svg" alt="Blue Rotate" width="1920" height="1080" />    
-    <img id="blue-head" src="svg/blue_rotate.svg" alt="Blue Rotate" width="375" height="375" />
+    <!-- <img id="blue-yellow-stem" src="svg/blue_yellow_stem.svg" alt="Blue Rotate" width="1920" height="1080" />     -->
+    <!-- <img id="blue-head" src="svg/blue_rotate.svg" alt="Blue Rotate" width="375" height="375" /> -->
+    <lottie-player 
+            id="blue-head"
+            class="lottie-layer"
+            src="lotties/blue-head-rotate.json" 
+            background="transparent" 
+            speed="1.4" 
+            style="width: 625px; height: fit-content; z-index: 3;">
+        </lottie-player>
     <img id="yellow-head" src="svg/yellow_rotate.svg" alt="Yellow Rotate" width="188" height="198" />
     <!-- <img id="white-wheel" src="svg/white_wheel.svg" alt="White Rotate" width="355" height="355" /> -->
     <img id="white-wheel-2" src="svg/white_wheel.svg" alt="White Rotate" width="355" height="355" />
@@ -832,6 +840,17 @@
         style="width: 140px; height: auto; z-index: 3;" 
         loop>
     </lottie-player>
+
+    <div class="random-dot" id="dot-1"></div>
+    <div class="random-dot" id="dot-2"></div>
+    <div class="random-dot" id="dot-3"></div>
+    <div class="random-dot" id="dot-4"></div>
+    <div class="random-dot" id="dot-5"></div>
+    <div class="random-dot" id="dot-6"></div>
+    <div class="random-dot" id="dot-7"></div>
+
+    <div class="big-dot"></div>
+
             
         
     <script>
@@ -868,8 +887,8 @@
 
     <script>
         // 1. List of IDs you want to activate behind the canvas
-        const cssTargets = ['white-wheel', 'white-wheel-2', 'blue-head', 'yellow-head'];
-        const lottieTargets = ['lt-circles-circle', 'lt-circles-circle-2', 'blue-w-white-dot', 'lt-rotate-circle2'];
+        const cssTargets = ['white-wheel', 'white-wheel-2', 'yellow-head'];
+        const lottieTargets = ['lt-circles-circle', 'lt-circles-circle-2', 'blue-w-white-dot', 'lt-rotate-circle2', 'blue-head'];
 
         // 2. Global Mouse Tracker
         document.addEventListener('mousemove', (e) => {
@@ -908,6 +927,102 @@
             });
         });
     </script>
+
+    <!-- <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const dotCount = 10;
+            const colors = ['#FF4136', '#FFDC00']; // Red and Yellow
+            const wrapper = document.body;
+            
+            // Configuration for "Spaced Out" look
+            const minSeparation = 150; // Dots must be at least 150px apart
+            const edgePadding = 50;    // Dots can't be too close to the screen edge
+
+            // 1. Identify Obstacles (Images & Lotties)
+            // We exclude the full-screen background and canvas
+            const obstacles = document.querySelectorAll('img:not(#blue-yellow-stem), lottie-player');
+            
+            // Store coordinates of placed dots here to check spacing against them
+            const placedDots = [];
+
+            function isOverlappingObstacles(x, y, size) {
+                for (let el of obstacles) {
+                    // Ignore full-screen elements
+                    if (el.clientWidth > window.innerWidth * 0.9 && el.clientHeight > window.innerHeight * 0.9) {
+                        continue;
+                    }
+                    if (window.getComputedStyle(el).display === 'none') continue;
+
+                    const rect = el.getBoundingClientRect();
+                    const padding = 15; // Extra breathing room around images
+
+                    if (
+                        x + size > rect.left - padding && 
+                        x < rect.right + padding &&
+                        y + size > rect.top - padding && 
+                        y < rect.bottom + padding
+                    ) {
+                        return true; // Hit an image
+                    }
+                }
+                return false; 
+            }
+
+            function isTooCloseToOtherDots(x, y) {
+                for (let dot of placedDots) {
+                    const dx = x - dot.x;
+                    const dy = y - dot.y;
+                    const distance = Math.sqrt(dx*dx + dy*dy);
+                    
+                    if (distance < minSeparation) {
+                        return true; // Too close to another dot
+                    }
+                }
+                return false;
+            }
+
+            // 2. Generation Loop
+            let attempts = 0;
+            const maxAttempts = 3000; // Higher attempts needed when constraints are tight
+
+            while (placedDots.length < dotCount && attempts < maxAttempts) {
+                attempts++;
+                
+                const size = 12;
+                
+                // Random position within safe padding
+                const x = edgePadding + Math.random() * (window.innerWidth - (edgePadding * 2));
+                const y = edgePadding + Math.random() * (window.innerHeight - (edgePadding * 2));
+
+                // Check 1: Does it hit an image?
+                if (isOverlappingObstacles(x, y, size)) continue;
+
+                // Check 2: Is it too close to another dot?
+                if (isTooCloseToOtherDots(x, y)) continue;
+
+                // --- PLACEMENT ---
+                const dot = document.createElement('div');
+                dot.classList.add('random-dot');
+                
+                // Random Color
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                dot.style.backgroundColor = randomColor;
+
+                dot.style.left = x + 'px';
+                dot.style.top = y + 'px';
+
+                wrapper.appendChild(dot);
+                
+                // Save this dot's location so future dots avoid it
+                placedDots.push({x, y});
+            }
+            
+            console.log(`Placed ${placedDots.length} dots after ${attempts} attempts.`);
+            if (placedDots.length < dotCount) {
+                console.warn("Could not fit all dots with current spacing rules.");
+            }
+        });
+    </script> -->
     
 </body>
 

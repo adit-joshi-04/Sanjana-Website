@@ -23,8 +23,8 @@ html, body {
     /* Common styles for both layers */
     .lottie-layer, .canvas-layer {
         position: absolute;
-        top: 0;
-        left: 0;
+        /* top: 0;
+        left: 0; */
     }
 
     /* --- OPTION A: Lottie BEHIND the flowers --- */
@@ -103,13 +103,13 @@ html, body {
 
     #blue-head {
         position: absolute;
-        top: 5%;
-        left: 15%;
-        transform: translateX(-50% , 50%);
+        bottom: -20%;
+        left: 4%;
+        /* transform: translateX(-50% , 50%); */
         scale: 0.8;
         /* transform: translate(-50%, 50%); */
-        animation: spin 20s linear infinite;
-        animation-play-state: paused;
+        /* animation: spin 20s linear infinite;
+        animation-play-state: paused; */
     }
 
     #yellow-head {
@@ -299,6 +299,35 @@ html, body {
         left: 45%;
         top: 85%;
         width: 70px;
+    }
+
+    .random-dot {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        z-index: 1; /* Behind flowers (canvas) but maybe above background stars */
+        pointer-events: none; /* Let clicks pass through them */
+    }
+
+    #dot-1 {left: 15%; top: 5%; background-color: #de604b;}
+    #dot-2 {left: 41%; top: 9%; background-color: #de604b;}
+    #dot-3 {left: 58%; top: 27%; background-color: #ffc562;}
+    #dot-4 {left: 88%; top: 92%; background-color: #ffc562;}
+    #dot-5 {left: 97%; top: 50%; background-color: #ffc562;}
+    #dot-6 {left: 83%; top: 21%; background-color: #ffc562;}
+
+    .big-dot {
+        position: absolute;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        z-index: 1; /* Behind flowers (canvas) but maybe above background stars */
+        pointer-events: none; /* Let clicks pass through them */
+        background-color: #ef5542;
+        left: 96%;
+        bottom: 3%;
+        transform: translateX(-50%, 50%);
     }
 
 
