@@ -1,74 +1,354 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Flower Stage</title>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.17/paper-full.min.js"></script>
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-    <script type="text/paperscript" canvas="myCanvas">
-        var viewZoom = 0.8; 
 
+    <style>
+        /* --- RESET & BASIC SETUP --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden; 
+            background-color: #213e29;
+        }
+
+        /* --- THE VIEWPORT (Window) --- */
+        #stage-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center; 
+            align-items: center;     
+        }
+
+        /* --- THE STAGE (1680x880 Source of Truth) --- */
+        #stage {
+            position: absolute;
+            width: 1680px; 
+            height: 880px;
+            /* transform-origin: top left;  */
+            background-color: #213e29; 
+            overflow: hidden;
+            /* Force hardware acceleration for smooth scaling */
+            will-change: transform;
+        }
+
+        #wrapper {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+        }
+
+        /* --- LAYERS --- */
+        .lottie-layer {
+            position: absolute;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .canvas-layer {
+            position: absolute;
+            top: 0; left: 0;
+            z-index: 2;
+            width: 100%; height: 100%;
+        }
+
+        .no-anim, img, svg {
+            position: absolute;
+            pointer-events: none;
+        }
+
+        /* --- POSITIONING (Original percentages preserved) --- */
+        #lt-jumping-star { top: 93%; left: 80%; transform: translate(-50%, -50%); }
+        #lt-rotate-circle { top: 40%; left: 87%; transform: translate(-50%, -50%); }
+        #lt-rotate-circle2 { top: 90%; left: 55%; transform: translate(-50%, -50%); }
+        #lt-bee { top: 49%; left: 9%; transform: translate(-50%, -50%); }
+        #lt-circles-circle { left: 1%; top: 2%; }
+        #lt-circles-circle-2 { left: 90%; top: 14%; }
+
+        #blue-head { position: absolute; bottom: -180px; left: 4%; scale: 0.8; z-index: 3; }
+        
+        #yellow-head {
+            position: absolute; bottom: 7%; right: 20%;
+            transform: translateX(-50%) translateY(50%);
+            animation: spin 20s linear infinite; animation-play-state: paused;
+        }
+
+        #white-wheel {
+            position: absolute; top: 20%; left: 52%;
+            transform: translateX(-50%);
+            animation: spin 25s linear infinite; animation-play-state: paused;
+        }
+
+        #white-wheel-2 {
+            position: absolute; width: 9%; height: auto; bottom: 10%; left: 88%;
+            transform: translateX(-50%);
+            animation: spin 25s linear infinite; animation-play-state: paused;
+        }
+
+        .force-spin { animation-play-state: running !important; }
+
+        #blue-bent { left: 15%; bottom: -17%; z-index: 3; height: 10vh; width: auto;}
+        #blue-upright { left: 47%; bottom: 0%; height: 64%; width: auto; z-index: 3; }
+        #white-ball-1 { left: 80%; bottom: -28%; }
+        #white-ball-2 { left: 53%; bottom: -35%; }
+        #white-ball-3 { left: 4%; bottom: -22%; }
+        #white-ball-4 { left: 1%; bottom: -50%; }
+        #outline-balls { left: 17%; bottom: 0%; }
+        #blue-w-white-dot { left: 65%; bottom: -4%; }
+
+        /* Stars */
+        .stars { position: absolute; display: block; transform-box: fill-box; transform-origin: center; }
+        #star-1 { left: 12%; top: 8%; width: 65px; fill: #ffc562; }
+        #star-2 { left: 37%; top: 13%; width: 35px; fill: #e293d9; }
+        #star-3 { left: 57%; top: -2%; width: 65px; fill: #e293d9; }
+        #star-4 { left: 13%; top: 75%; width: 38px; fill: #e293d9; }
+        #star-5 { left: 39%; top: 68%; width: 31px; fill: #e293d9; }
+        #star-6 { left: 50%; top: 43%; width: 41px; fill: #e293d9; }
+        #star-7 { left: 80%; top: 47%; width: 35px; fill: #e293d9; }
+        #star-8 { left: 78%; top: -4%; width: 35px; fill: #00cf5e; }
+        #twinkle-star-1 { left: 85%; top: 8%; }
+        #twinkle-star-2 { left: 20%; top: 48%; width: 60px; fill: #00cf5e; }
+        #twinkle-star-3 { left: 45%; top: 85%; width: 70px; }
+
+        /* Dots */
+        .random-dot {
+            position: absolute; width: 12px; height: 12px;
+            border-radius: 50%; z-index: 1; pointer-events: none;
+        }
+        #dot-1 {left: 15%; top: 5%; background-color: #de604b;}
+        #dot-2 {left: 41%; top: 9%; background-color: #de604b;}
+        #dot-3 {left: 58%; top: 27%; background-color: #ffc562;}
+        #dot-4 {left: 88%; top: 92%; background-color: #ffc562;}
+        #dot-5 {left: 97%; top: 50%; background-color: #ffc562;}
+        #dot-6 {left: 83%; top: 21%; background-color: #ffc562;}
+
+        .big-dot {
+            position: absolute; width: 32px; height: 32px;
+            border-radius: 50%; z-index: 1; pointer-events: none;
+            background-color: #ef5542; left: 96%; bottom: 3%;
+            transform: translateX(-50%) translateY(50%);
+        }
+
+        /* --- INTERACTIVITY FIX --- */
+        /* Re-enable mouse events for the specific interactive elements */
+        #lt-bee, 
+        #white-wheel, 
+        #white-wheel-2, 
+        #yellow-head,
+        #lt-circles-circle, 
+        #lt-circles-circle-2, 
+        #blue-w-white-dot, 
+        #lt-rotate-circle2, 
+        #blue-head {
+            pointer-events: auto !important;
+            
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="stage-container">
+        <div id="stage">
+            <div id="wrapper">
+                
+                <lottie-player src="lotties/jumping_star.json" background="transparent" speed="1" style="width: 100px; height: 100px;" loop autoplay class="lottie-layer" id="lt-jumping-star"></lottie-player>
+                <lottie-player src="lotties/circle.json" background="transparent" speed="0.3" style="width: 100px; height: 100px;" loop autoplay class="lottie-layer" id="lt-rotate-circle2"></lottie-player>
+                <lottie-player id="lt-bee" class="lottie-layer" src="lotties/bee/bee_fly.json" background="transparent" speed="1.4" style="width: 500px; height: auto; z-index: 3;"></lottie-player>
+                <lottie-player id="lt-circles-circle" class="lottie-layer" src="lotties/circles-circle.json" background="transparent" speed="0.6" style="width: 150px; height: auto; z-index: 3;" loop autoplay></lottie-player>
+                <lottie-player id="lt-circles-circle-2" class="lottie-layer" src="lotties/circles-circle.json" background="transparent" speed="0.6" style="width: 140px; height: auto; z-index: 3;" loop autoplay></lottie-player>
+
+                <canvas id="myCanvas" class="canvas-layer"></canvas>
+                
+                <lottie-player id="blue-head" class="lottie-layer" src="lotties/blue-head-rotate.json" background="transparent" speed="1.4" style="width: 625px; height: fit-content; z-index: 3;"></lottie-player>
+                <img id="yellow-head" src="svg/yellow_rotate.svg" alt="Yellow Rotate" width="188" height="198" />
+                <img id="white-wheel-2" src="svg/white_wheel.svg" alt="White Rotate" width="355" height="355" />
+                <img id="blue-bent" class="no-anim" src="svg/blue_bent.svg" alt="Blue Bent" width="355" height="417" />
+                <img id="blue-upright" class="no-anim" src="svg/blue_upright.svg" alt="Blue Upright" width="125" height="696" />
+                <lottie-player src="lotties/blue-bent.json" background="transparent" speed="0.8" style="width: 380px; height: auto; z-index: 3;" loop autoplay class="no-anim" id="blue-w-white-dot"></lottie-player>
+                <img id="oval" class="no-anim" src="svg/oval.svg" alt="Oval" width="52" height="16" />
+                <img id="white-ball-1" class="no-anim" src="svg/white_ball_1.svg" alt="White Ball 1" width="68" height="523" />
+                <img id="white-ball-2" class="no-anim" src="svg/white_ball_2.svg" alt="White Ball 2" width="63" height="655" />
+                <img id="white-ball-3" class="no-anim" src="svg/white_ball_3.svg" alt="White Ball 3" width="68" height="523" />
+                <img id="white-ball-4" class="no-anim" src="svg/white_ball_4.svg" alt="White Ball 4" width="66" height="651" />
+                <img id="outline-balls" class="no-anim" src="svg/outline_balls.svg" alt="Outline Balls" width="136" height="45" />
+
+                <svg id="star-1" class="stars" width="200" height="200" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M 50 10 Q 50 50 90 50 Q 50 50 50 90 Q 50 50 10 50 Q 50 50 50 10 Z" /></svg>
+                <svg id="star-2" class="stars" width="200" height="200" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M 50 10 Q 50 50 90 50 Q 50 50 50 90 Q 50 50 10 50 Q 50 50 50 10 Z" /></svg>
+                <svg id="star-3" class="stars" width="200" height="200" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M 50 10 Q 50 50 90 50 Q 50 50 50 90 Q 50 50 10 50 Q 50 50 50 10 Z" /></svg>
+                <svg id="star-4" class="stars" width="200" height="200" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M 50 10 Q 50 50 90 50 Q 50 50 50 90 Q 50 50 10 50 Q 50 50 50 10 Z" /></svg>
+                <svg id="star-5" class="stars" width="200" height="200" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M 50 10 Q 50 50 90 50 Q 50 50 50 90 Q 50 50 10 50 Q 50 50 50 10 Z" /></svg>
+                <svg id="star-6" class="stars" width="200" height="200" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M 50 10 Q 50 50 90 50 Q 50 50 50 90 Q 50 50 10 50 Q 50 50 50 10 Z" /></svg>
+                <svg id="star-7" class="stars" width="200" height="200" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M 50 10 Q 50 50 90 50 Q 50 50 50 90 Q 50 50 10 50 Q 50 50 50 10 Z" /></svg>
+                <svg id="star-8" class="stars" width="200" height="200" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M 50 10 Q 50 50 90 50 Q 50 50 50 90 Q 50 50 10 50 Q 50 50 50 10 Z" /></svg>
+                <img id="twinkle-star-1" class="stars" src="svg/twinkle_star.svg" alt="Twinkle Star" width="82" height="82" />
+                <img id="twinkle-star-2" class="stars" src="svg/twinkle_star_2.svg" alt="Twinkle Star" width="82" height="82" />
+                <img id="twinkle-star-3" class="stars" src="svg/twinkle_star.svg" alt="Twinkle Star" width="82" height="82" />
+
+                <div class="random-dot" id="dot-1"></div>
+                <div class="random-dot" id="dot-2"></div>
+                <div class="random-dot" id="dot-3"></div>
+                <div class="random-dot" id="dot-4"></div>
+                <div class="random-dot" id="dot-5"></div>
+                <div class="random-dot" id="dot-6"></div>
+                <div class="random-dot" id="dot-7"></div>
+                <div class="big-dot"></div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function resizeStage() {
+            const stage = document.getElementById('stage');
+            const winW = window.innerWidth;
+            const winH = window.innerHeight;
+            const baseW = 1680;
+            const baseH = 880;
+            
+            // Strictly check for Mobile Portrait mode
+            const isMobile = winW < winH; 
+
+            if (isMobile) {
+                // --- MOBILE MODE: Pin Top-Left ---
+                // We anchor to the top-left corner so the left side is always visible (0,0)
+                // and the right side gets cropped.
+                
+                const scale = winH / baseH;
+                
+                // Calculate vertical centering manually since we are pinned top-left
+                const topOffset = (winH - (baseH * scale)) / 2;
+
+                // Apply Styles
+                stage.style.transformOrigin = 'top left';
+                stage.style.left = '0px';
+                stage.style.top = '0px';
+                
+                // Translate moves it down to center vertically, then we Scale
+                stage.style.transform = `translate3d(0px, ${topOffset}px, 0) scale(${scale})`;
+                
+            } else {
+                // --- DESKTOP MODE: Pin Center-Center ---
+                // We anchor to the center. This fixes the "Drift" when zooming.
+                // CSS handles the positioning (50% 50%), JS handles the scaling.
+                
+                // Calculate scale to "Contain" (Fit screen without cropping)
+                const scaleX = winW / baseW;
+                const scaleY = winH / baseH;
+                const scale = Math.min(scaleX, scaleY);
+
+                // Apply Styles
+                stage.style.transformOrigin = 'center center';
+                stage.style.left = '50%';
+                stage.style.top = '50%';
+                
+                // We use -50% translate to pull the element back to the true center
+                // This is the standard CSS way to center absolute elements
+                stage.style.transform = `translate3d(-50%, -50%, 0) scale(${scale})`;
+            }
+        }
+
+        window.addEventListener('load', resizeStage);
+        window.addEventListener('resize', resizeStage);
+    </script>
+
+    <script>
+        const beePlayer = document.getElementById('lt-bee');
+        if(beePlayer) {
+            beePlayer.addEventListener('click', () => {
+                const anim = beePlayer.getLottie();
+                beePlayer.loop = false; 
+                anim.loop = false;
+                beePlayer.stop();
+                beePlayer.play();
+            });
+            beePlayer.addEventListener('complete', () => {
+                const anim = beePlayer.getLottie();
+                const startFrame = Math.max(0, anim.totalFrames - (anim.frameRate * 0.53));
+                anim.loop = true;
+                anim.playSegments([startFrame, anim.totalFrames], true);
+            });
+        }
+
+        const cssTargets = ['white-wheel', 'white-wheel-2', 'yellow-head'];
+        const lottieTargets = ['lt-circles-circle', 'lt-circles-circle-2', 'blue-w-white-dot', 'lt-rotate-circle2', 'blue-head'];
+
+        document.addEventListener('mousemove', (e) => {
+            const elementsUnderCursor = document.elementsFromPoint(e.clientX, e.clientY);
+            
+            cssTargets.forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                if (elementsUnderCursor.includes(el)) {
+                    el.classList.add('force-spin'); 
+                } else {
+                    el.classList.remove('force-spin'); 
+                }
+            });
+
+            lottieTargets.forEach(id => {
+                const player = document.getElementById(id);
+                if (!player) return;
+                const isHovering = elementsUnderCursor.includes(player);
+                if (isHovering && player.getLottie() && player.getLottie().isPaused) {
+                    player.play();
+                } else if (!isHovering && player.getLottie() && !player.getLottie().isPaused) {
+                    player.pause(); 
+                }
+            });
+        });
+    </script>
+
+    <script type="text/paperscript" canvas="myCanvas">
+        // --- CONFIGURATION ---
+        // Force internal resolution to match design
+        var viewZoom = 0.8; 
+        
         // Physics
         var spring = 0.005;
         var friction = 0.98;
         var windForce = 0.001; 
 
-        // --- 1. SVG DATA DEFINITIONS ---
-
-        // Flower 1 (Updated with Leaf data)
+        // --- 1. SVG DATA DEFINITIONS (Collapsed for brevity, same as original) ---
         var f1StemData = "M1.9999,732.1036S5.0007,323.9984,404.1036,146.9528";
-        // Note: This petal path is the one from the new SVG (matches the leaf style)
         var f1PetalData = "M552.0588,63.1709c-5.505-1.4837-8.3161-3.4986-9.8633-9.3011C533.7072,22.0344,505.4597.2553,473.1697.0023c-33.0227-.2586-61.6091,21.0843-70.3764,53.3018-1.6823,6.1819-4.5971,8.313-10.4799,9.9242-31.4337,8.6104-52.6969,37.2985-52.5784,69.9844.1169,32.2147,21.2497,60.3015,52.5171,68.9769,5.8162,1.6136,8.7946,3.8631,10.5325,9.9933,9.2112,32.4897,37.6707,53.8155,70.3328,53.456,32.4018-.3566,60.2067-21.8083,69.028-53.9003,1.5921-5.792,4.4996-7.779,9.9548-9.2937,31.9351-8.8671,52.8281-36.7258,52.8288-69.6575.0006-32.8987-21.1496-61.0673-52.8703-69.6166Z";
         var f1SparkleData = "M469.7612,89.0655c5.4171,26.2865,21.0622,41.9471,47.0399,47.5986-25.7089,5.504-41.3815,21.0279-47.1715,47.2213-5.4433-26.0684-21.0876-41.4589-46.7475-47.2281,25.7079-5.788,41.5616-21.3488,46.8791-47.5918Z";
         var f1LeafData = "M273.5112,522.564H46.9356s57.9612,81.8147,160.7106,42.227l-23.7114-23.7527s39.519,29.031,89.5764-18.4743Z";
-
-        // Flower 2 (Updated from new SVG)
         var f2StemData = "M168.7968,167.7534s299.8893,256.6952,145.3208,859.4255";
         var f2PetalData1 = "M185.6426,197.1186c-4.9372-9.221-11.3719-19.4811-16.8823-29.6021,0,.0521.0365.2118.0365.2643-13.6569,0-27.3328.5287-41.1058.5287-1.6657,3.8366-7.7221,12.9379-7.9609,13.3924-6.0973,11.6037-12.06,23.2808-18.382,34.763-4.2767,7.7675-7.0267,15.902-7.5027,24.7142-1.2309,22.7871,12.063,44.0137,32.9498,52.8195,21.552,9.0862,46.3086,4.0055,62.0284-12.7303,15.75-16.7679,19.2363-41.2134,8.7021-61.8295-3.8342-7.5036-7.9042-14.8893-11.883-22.3203Z";
         var f2PetalData2 = "M127.6205,168.502v-40.9931h41.2203v.0313c1.0454-2.0178,2.2405-4.0965,2.8183-5.19,8.0216-15.1862,16.257-30.2641,24.0273-45.5777,11.4434-22.5518,5.2089-49.9696-14.5415-65.4528-19.9291-15.6231-48.0691-15.015-67.3887,1.4562-18.9161,16.1273-23.9136,43.8862-11.9467,65.708,8.2582,15.0592,16.3649,30.2016,24.524,45.315.4586.85.7785,1.7747,1.5773,3.6232-16.4426-8.5346-32.1023-16.3887-47.4909-24.7423-10.7753-5.8497-21.9507-8.5131-34.1597-7.0241C17.7064,99.1379-3.1714,125.8706.3975,154.5066c3.6435,29.2347,30.4341,49.9993,59.2989,46.2264,9.824-1.2842,18.3113-5.6207,26.8119-10.1908,9.3414-5.0227,18.7568-9.9079,28.14-14.8532l12.9722-7.187Z";
         var f2PetalData3 = "M276.7717,106.1897c-16.1966-13.8389-39.5366-15.7504-58.2707-5.6665-13.2085,7.1097-26.4804,14.0986-39.7342,21.1219-2.7373,1.45-6.2881,3.9481-9.97,5.8659v40.2424c1.8395.9533,3.9652,2.2234,4.8248,2.701,14.5993,8.1091,29.1837,16.2455,43.7886,24.3438,10.2434,5.6795,21.1573,7.8716,32.7648,6.3487,21.5863-2.8322,38.9613-17.6963,44.3323-39.0988,5.5576-22.1466-.5075-41.1379-17.7355-55.8584Z";
-        var f2LeafData = "M273.5112,522.564H46.9356s57.9612,81.8147,160.7106,42.227l-23.7114-23.7527s39.519,29.031,89.5764-18.4743Z";
-
-        // Flower 3
         var f3StemData = "M99.3647,87.585c-6.1318,30.6104-6.7471,55.543-1.8789,76.2236,5.291,22.4844,21.4326,36.1816,38.5225,50.6816,12.7236,10.7949,25.8789,21.958,34.1621,37.0811,19.0361,34.7568,17.9082,77.4424,16.8174,118.7227-.3252,12.3369-.6338,23.9893-.3916,35.2402";
         var f3HeadData = "M0,0h200.8069c0,52.4977-42.6214,95.1191-95.119,95.1191h-10.569C42.6214,95.1191,0,52.4977,0,0H0Z";
-
-        // Flower 4
         var f4StemData = "M54.9493,88.0428s-81.2475,241.761,31.7064,404.2561";
         var f4FaceData1 = "M57.1918,45.9559c4.3433,0,4.3505-6.75,0-6.75-4.3433,0-4.3505,6.75,0,6.75h0Z";
         var f4FaceData2 = "M78.7291,37.9134c4.3433,0,4.3505-6.75,0-6.75-4.3433,0-4.3505,6.75,0,6.75h0Z";
         var f4FaceData3 = "M49.6622,62.7107c7.1988,3.9911,15.5599,6.173,23.8096,5.3217,7.2734-.7505,14.2109-3.8784,19.3773-9.0971,2.8034-2.8317,4.9575-6.2065,6.3271-9.9471.4986-1.3618-1.675-1.949-2.1696-.5981-2.2695,6.1983-7.0862,11.1601-12.8853,14.1987-6.4767,3.3936-14.0545,4.0968-21.1751,2.6838-4.2685-.847-8.3465-2.3969-12.1485-4.5047-1.2675-.7027-2.4036,1.2398-1.1356,1.9428h0Z";
-
-        // Flower 5
         var f5StemData = "M299.2582,298.8714s220.0567,178.0459,184.0475,558.1439";
         var f5HeadDataDiamond = "M179.2273,230.8539l67.5174,67.5174c13.5345,13.5345,35.4781,13.5345,49.0126,0h0c13.5345-13.5345,13.5345-35.4782,0-49.0126l-64.5167-66.5172s-49.0126,51.0132-52.0134,48.0124Z";
         var f5HeadDataRound = "M0,213.8192l16.2247,12.2291c56.7569,42.7796,136.2249,37.8053,187.204-11.7182l6.5516-6.3645C268.7364,150.8873,268.178,56.3802,208.7517.0001h-.0001S0,213.8192,0,213.8192Z";
-
-        // Flower 6
         var f6RawStem = "M231.3359,141.583v-24.666c0-63.0898-51.3281-114.417-114.418-114.417S2.5,53.8271,2.5,116.917v894.2227";
-
-        // Flower 7
+        var f6Leaf1Data = "M2.9828,497.276h177.7266c27.6495,0,50.0638,22.4143,50.0638,50.0638h0s-186.7357,0-186.7357,0c-22.3276,0-40.1308-18.3313-39.8618-40.6573.0587-4.8695-.2542-8.4678-1.1929-9.4065Z";
+        var f6Leaf2Data = "M1.0012,568.6153h279.8479c43.5368,0,78.8303,22.4143,78.8303,50.0638h0s-294.0335,0-294.0335,0c-35.157,0-63.1898-18.3313-62.7663-40.6573.0924-4.8695-.4003-8.4678-1.8784-9.4065Z";
         var f7StemData = "M125.2952,161.2702S-76.6193,497.0047,36.3346,867.5727";
         var f7HeadData1 = "M274.7972,156.7063c-6.3896-13.0186-6.999-25.5293-.6421-38.6514,3.0146-6.2217,6.2344-12.6157,5.293-19.6963,1.0107-7.5234-.833-14.6333-4.3574-20.4102-9.6514-15.8184-27.7227-26.269-47.2139-20.3398-6.395,1.9453-6.8726.0303-5.2314-5.6489,3.6587-12.6602.6929-24.6968-6.8711-34.8569C202.7088-.447,183.0374-4.3469,163.0735,5.3929c-12.3765,6.0376-24.7739,6.6714-37.5605.8413C119.4578,3.4734,113.4778.1541,106.4476.0086c-25.0498-.5195-47.6528,22.5894-41.9072,50.0659,1.5542,7.4336.0034,9.2534-7.0801,7.0508-12.0786-3.7559-22.3379.9072-31.9385,6.7817-17.9849,11.0054-21.7158,33.2495-13.3511,50.8325,6.6372,13.9502,8.0024,27.9995.5503,42.2847-4.687,8.9844-6.043,18.4277-3.6865,28.606,4.7671,20.5898,31.9175,36.668,51.3076,29.9404,1.7178-.5962,3.4639-2.605,5.2402-.8896,1.7173,1.6582-.1069,3.6216-.5459,5.3613-4.0273,15.9556.5044,30.1108,11.6943,41.0132,13.438,13.0928,29.5283,14.144,46.6763,6.0977,11.5361-5.4131,23.998-7.2896,36.1099-1.7944,4.8301,2.1914,9.5825,4.5024,14.6875,5.7017,31.3354,7.3608,53.9609-24.0786,49.4351-45.5122-2.4297-11.5063-2.4077-11.8013,9.0811-9.8262,18.2949,3.144,31.4209-5.3091,41.1704-19.187,8.812-12.5444,7.3779-26.6431.9062-39.8286ZM153.9134,174.1229h-22.2051v-68.6333h22.2051v68.6333Z";
         var f7HeadData2 = "M153.9134,174.1229h-22.2051v-68.6333h22.2051v68.6333Z";
-
-        // Flower 8 (Three stalks)
-        // 8a (Left)
         var f8aStem = "M35.007,120.1296s71.3393,377.8341,58.1283,467.6688";
-        // Derived from SVG transform: translate(-15.69 7.12) rotate(-11.6)
-        // Rectangle: x=13.8694, y=-1.4115, w=26.422, h=163.8162
-        
-        // 8b (Middle)
         var f8bStem = "M11.8418,124.1485 L22.2474,656.0739";
-        // Derived from SVG transform: translate(0.38 -0.06) rotate(0.27)
-        // Rectangle: x=0.3244, y=-0.0008, w=26.422, h=163.8162
-
-        // 8c (Right)
         var f8cStem = "M16.7472,122.1406s-35.3741,349.6711,3.4505,469.4405";
-        // Derived from SVG transform: translate(20.31 -5.51) rotate(14.0)
-        // Rectangle: x=19.3894, y=-2.0426, w=26.422, h=163.8162
-
 
         // --- 2. HELPER FUNCTIONS ---
-        
         function resamplePathData(pathData, segmentLength) {
             var tempPath = new Path(pathData);
             var resampled = new Path();
@@ -81,209 +361,118 @@
             resampled.remove();
             return newData;
         }
-
         var f6StemData = resamplePathData(f6RawStem, 10);
-        
-        function easeInOut(t) {
-            return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-        }
-
+        function easeInOut(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
 
         // --- 3. FLOWER OBJECT ---
-
-    function Flower(stemData, headGroup, position, stemColor, stemWidth, leaves) {
-        this.angle = 0;
-        this.velocity = 0;
-        this.headGroup = headGroup;
-        
-        // --- UPDATED: Handle Array of Leaves ---
-        // We convert single leaf to array if necessary to support legacy calls
-        this.leaves = [];
-        var inputLeaves = [];
-        if (leaves) {
-            inputLeaves = Array.isArray(leaves) ? leaves : [leaves];
-        }
-
-        this.growPhase = 'done'; 
-        this.growTime = 0; 
-        
-        this.stemPath = new Path(stemData);
-        this.stemPath.strokeColor = stemColor;
-        this.stemPath.strokeWidth = stemWidth;
-        this.stemPath.strokeCap = 'round';
-        
-        // Auto-reverse check
-        var first = this.stemPath.firstSegment.point;
-        var last = this.stemPath.lastSegment.point;
-        if (first.y < last.y) { this.stemPath.reverse(); }
-
-        this.maxStemLength = this.stemPath.length;
-        this.stemPath.dashArray = [this.maxStemLength, this.maxStemLength];
-        this.stemPath.dashOffset = 0;
-
-        this.rootPoint = this.stemPath.firstSegment.point.clone();
-        this.stemSegments = [];
-        for (var i = 0; i < this.stemPath.segments.length; i++) {
-            var segment = this.stemPath.segments[i];
-            this.stemSegments.push({
-                point: segment.point.subtract(this.rootPoint),
-                handleIn: segment.handleIn.clone(),
-                handleOut: segment.handleOut.clone()
-            });
-        }
-
-        var tipIndex = this.stemPath.segments.length - 1;
-        var initialTip = this.stemPath.segments[tipIndex].point;
-        this.headOffset = this.headGroup.position.subtract(initialTip);
-
-        // --- LEAF ATTACHMENT LOGIC ---
-        // For each leaf, find the closest stem segment and calculate offsets
-        for (var k = 0; k < inputLeaves.length; k++) {
-            var leaf = inputLeaves[k];
-            
-            // 1. Find best segment based on Leaf PIVOT (or center if pivot not set)
-            var leafRefY = leaf.pivot ? leaf.pivot.y : leaf.position.y;
-            
-            var bestDist = 99999;
-            var bestIndex = 0;
-            
-            for(var i=0; i<this.stemPath.segments.length; i++) {
-                var segPoint = this.stemPath.segments[i].point;
-                var dist = Math.abs(segPoint.y - leafRefY);
-                if(dist < bestDist) {
-                    bestDist = dist;
-                    bestIndex = i;
+        function Flower(stemData, headGroup, position, stemColor, stemWidth, leaves) {
+            this.angle = 0;
+            this.velocity = 0;
+            this.headGroup = headGroup;
+            this.leaves = [];
+            var inputLeaves = [];
+            if (leaves) { inputLeaves = Array.isArray(leaves) ? leaves : [leaves]; }
+            this.growPhase = 'done'; 
+            this.growTime = 0; 
+            this.stemPath = new Path(stemData);
+            this.stemPath.strokeColor = stemColor;
+            this.stemPath.strokeWidth = stemWidth;
+            this.stemPath.strokeCap = 'round';
+            var first = this.stemPath.firstSegment.point;
+            var last = this.stemPath.lastSegment.point;
+            if (first.y < last.y) { this.stemPath.reverse(); }
+            this.maxStemLength = this.stemPath.length;
+            this.stemPath.dashArray = [this.maxStemLength, this.maxStemLength];
+            this.stemPath.dashOffset = 0;
+            this.rootPoint = this.stemPath.firstSegment.point.clone();
+            this.stemSegments = [];
+            for (var i = 0; i < this.stemPath.segments.length; i++) {
+                var segment = this.stemPath.segments[i];
+                this.stemSegments.push({ point: segment.point.subtract(this.rootPoint), handleIn: segment.handleIn.clone(), handleOut: segment.handleOut.clone() });
+            }
+            var tipIndex = this.stemPath.segments.length - 1;
+            var initialTip = this.stemPath.segments[tipIndex].point;
+            this.headOffset = this.headGroup.position.subtract(initialTip);
+            for (var k = 0; k < inputLeaves.length; k++) {
+                var leaf = inputLeaves[k];
+                var leafRefY = leaf.pivot ? leaf.pivot.y : leaf.position.y;
+                var bestDist = 99999;
+                var bestIndex = 0;
+                for(var i=0; i<this.stemPath.segments.length; i++) {
+                    var segPoint = this.stemPath.segments[i].point;
+                    var dist = Math.abs(segPoint.y - leafRefY);
+                    if(dist < bestDist) { bestDist = dist; bestIndex = i; }
                 }
+                var stemPoint = this.stemPath.segments[bestIndex].point;
+                var snapVector = stemPoint.subtract(leaf.pivot || leaf.position);
+                leaf.position = leaf.position.add(snapVector);
+                if(leaf.pivot) leaf.pivot = leaf.pivot.add(snapVector);
+                var pivotToCenter = leaf.position.subtract(leaf.pivot || leaf.position);
+                this.leaves.push({ group: leaf, index: bestIndex, offsetVector: pivotToCenter });
             }
-            
-            // 2. Adjust leaf pivot to match the stem segment exactly
-            // This snaps the leaf to the stem if it wasn't perfectly aligned in SVG
-            var stemPoint = this.stemPath.segments[bestIndex].point;
-            var snapVector = stemPoint.subtract(leaf.pivot || leaf.position);
-            leaf.position = leaf.position.add(snapVector);
-            if(leaf.pivot) leaf.pivot = leaf.pivot.add(snapVector);
-
-            // 3. Store configuration
-            // We save the vector from the pivot (on stem) to the leaf center
-            var pivotToCenter = leaf.position.subtract(leaf.pivot || leaf.position);
-            
-            this.leaves.push({
-                group: leaf,
-                index: bestIndex,
-                offsetVector: pivotToCenter
-            });
+            var items = [this.stemPath, this.headGroup];
+            for(var k=0; k<this.leaves.length; k++) { items.push(this.leaves[k].group); }
+            this.fullGroup = new Group(items);
+            this.fullGroup.position = position;
+            this.rootPoint = this.stemPath.firstSegment.point; 
         }
 
-        // Group items
-        var items = [this.stemPath, this.headGroup];
-        for(var k=0; k<this.leaves.length; k++) {
-            items.push(this.leaves[k].group);
-        }
+        Flower.prototype.startGrow = function() {
+            this.growPhase = 'stem';
+            this.growTime = 0; 
+            this.stemPath.dashOffset = this.maxStemLength;
+            this.headGroup.opacity = 0;
+            this.headGroup.scale(0.001);
+            for(var i=0; i<this.leaves.length; i++) { this.leaves[i].group.opacity = 0; this.leaves[i].group.scale(0.001); }
+            this.currentScale = 0.001; 
+        };
 
-        this.fullGroup = new Group(items);
-        this.fullGroup.position = position;
-        this.rootPoint = this.stemPath.firstSegment.point; 
-    }
-
-    Flower.prototype.startGrow = function() {
-        this.growPhase = 'stem';
-        this.growTime = 0; 
-        this.stemPath.dashOffset = this.maxStemLength;
-        this.headGroup.opacity = 0;
-        this.headGroup.scale(0.001);
-        
-        // Hide all leaves
-        for(var i=0; i<this.leaves.length; i++) {
-            this.leaves[i].group.opacity = 0;
-            this.leaves[i].group.scale(0.001);
-        }
-        this.currentScale = 0.001; 
-    };
-
-    Flower.prototype.update = function(mousePoint, mouseDeltaX) {
-        if (mousePoint && mousePoint.getDistance(this.headGroup.position) < 100) {
-            this.velocity += mouseDeltaX * windForce;
-        }
-        var acceleration = -this.angle * spring;
-        this.velocity += acceleration;
-        this.velocity *= friction;
-        this.angle += this.velocity;
-
-        // Animation
-        if (this.growPhase === 'stem') {
-            this.growTime += 0.015; 
-            if (this.growTime >= 1) {
-                this.growTime = 1;
-                this.stemPath.dashOffset = 0;
-                this.growPhase = 'head';
-                this.growTime = 0; 
-            } else {
+        Flower.prototype.update = function(mousePoint, mouseDeltaX) {
+            if (mousePoint && mousePoint.getDistance(this.headGroup.position) < 100) { this.velocity += mouseDeltaX * windForce; }
+            var acceleration = -this.angle * spring;
+            this.velocity += acceleration;
+            this.velocity *= friction;
+            this.angle += this.velocity;
+            if (this.growPhase === 'stem') {
+                this.growTime += 0.015; 
+                if (this.growTime >= 1) { this.growTime = 1; this.stemPath.dashOffset = 0; this.growPhase = 'head'; this.growTime = 0; } 
+                else { var t = easeInOut(this.growTime); this.stemPath.dashOffset = this.maxStemLength * (1 - t); }
+            } else if (this.growPhase === 'head') {
+                this.growTime += 0.02; 
+                if (this.growTime >= 1) { this.growTime = 1; this.growPhase = 'done'; }
                 var t = easeInOut(this.growTime);
-                this.stemPath.dashOffset = this.maxStemLength * (1 - t);
+                this.headGroup.opacity = t;
+                var desiredScale = t;
+                if (this.currentScale < 0.0001) this.currentScale = 0.0001;
+                var scaleFactor = desiredScale / this.currentScale;
+                this.headGroup.scale(scaleFactor);
+                for(var i=0; i<this.leaves.length; i++) { this.leaves[i].group.opacity = t; this.leaves[i].group.scale(scaleFactor); }
+                this.currentScale = desiredScale;
             }
-        }
-        else if (this.growPhase === 'head') {
-            this.growTime += 0.02; 
-            if (this.growTime >= 1) {
-                this.growTime = 1;
-                this.growPhase = 'done';
+            for (var i = 0; i < this.stemPath.segments.length; i++) {
+                var original = this.stemSegments[i];
+                var factor = i / (this.stemPath.segments.length - 1);
+                var currentAngle = this.angle * factor;
+                var newPos = original.point.rotate(currentAngle);
+                this.stemPath.segments[i].point = this.rootPoint.add(newPos);
             }
-            var t = easeInOut(this.growTime);
-            this.headGroup.opacity = t;
-            
-            var desiredScale = t;
-            if (this.currentScale < 0.0001) this.currentScale = 0.0001;
-            var scaleFactor = desiredScale / this.currentScale;
-            
-            this.headGroup.scale(scaleFactor);
-            
-            // Scale all leaves
-            for(var i=0; i<this.leaves.length; i++) {
-                this.leaves[i].group.opacity = t;
-                this.leaves[i].group.scale(scaleFactor);
+            this.stemPath.smooth({ type: 'continuous' });
+            var tipSegment = this.stemPath.lastSegment;
+            var rotatedHeadOffset = this.headOffset.rotate(this.angle);
+            this.headGroup.position = tipSegment.point.add(rotatedHeadOffset);
+            this.headGroup.rotation = this.angle * 0.01; 
+            for(var k=0; k<this.leaves.length; k++) {
+                var leafConfig = this.leaves[k];
+                var leafSeg = this.stemPath.segments[leafConfig.index];
+                var factor = leafConfig.index / (this.stemPath.segments.length - 1);
+                var leafAngle = this.angle * factor * 0.5;
+                var rotatedOffset = leafConfig.offsetVector.rotate(leafAngle);
+                leafConfig.group.position = leafSeg.point.add(rotatedOffset);
+                leafConfig.group.rotation = leafAngle;
             }
-            this.currentScale = desiredScale;
-        }
-
-        // Stem Physics
-        for (var i = 0; i < this.stemPath.segments.length; i++) {
-            var original = this.stemSegments[i];
-            var factor = i / (this.stemPath.segments.length - 1);
-            var currentAngle = this.angle * factor;
-            var newPos = original.point.rotate(currentAngle);
-            this.stemPath.segments[i].point = this.rootPoint.add(newPos);
-        }
-        this.stemPath.smooth({ type: 'continuous' });
-
-        // Head Position
-        var tipSegment = this.stemPath.lastSegment;
-        var rotatedHeadOffset = this.headOffset.rotate(this.angle);
-        this.headGroup.position = tipSegment.point.add(rotatedHeadOffset);
-        this.headGroup.rotation = this.angle * 0.01; 
-        
-        // --- UPDATE LEAVES ---
-        for(var k=0; k<this.leaves.length; k++) {
-            var leafConfig = this.leaves[k];
-            
-            // 1. Get current position of attachment segment
-            var leafSeg = this.stemPath.segments[leafConfig.index];
-            
-            // 2. Calculate partial angle (lower leaves swing less)
-            var factor = leafConfig.index / (this.stemPath.segments.length - 1);
-            var leafAngle = this.angle * factor * 0.5;
-            
-            // 3. Rotate the offset vector
-            var rotatedOffset = leafConfig.offsetVector.rotate(leafAngle);
-            
-            // 4. Update Leaf Group
-            leafConfig.group.position = leafSeg.point.add(rotatedOffset);
-            leafConfig.group.rotation = leafAngle;
-        }
-    };
-
+        };
 
         // --- 4. BUILD FLOWERS ---
-        
         var centerPoint1 = new Point(-120, 600); 
         var centerPoint2 = new Point(440, 430); 
         var centerPoint3 = new Point(70, 800);
@@ -291,316 +480,101 @@
         var centerPoint5 = new Point(-470, 520);
         var centerPoint6 = new Point(710, 445);
         var centerPoint7 = new Point(1250, 550);
-        var centerPoint8 = new Point(1290, 740); // Cluster base
+        var centerPoint8 = new Point(1290, 740);
 
-        
-
-        // Flower 1 Setup
         var f1Petals = new Path(f1PetalData);
-        f1Petals.fillColor = {
-            gradient: {
-                stops: [['#e94100', 0.24], ['#ec4504', 0.44], ['#f55412', 0.67], ['#ff6422', 0.85]],
-                radial: true 
-            },
-            origin: new Point(472.33, 132.82), 
-            destination: new Point(472.33 + 132.7, 132.82)
-        };
-        var f1Sparkle = new Path(f1SparkleData);
-        f1Sparkle.fillColor = 'white';
+        f1Petals.fillColor = { gradient: { stops: [['#e94100', 0.24], ['#ec4504', 0.44], ['#f55412', 0.67], ['#ff6422', 0.85]], radial: true }, origin: new Point(472.33, 132.82), destination: new Point(472.33 + 132.7, 132.82) };
+        var f1Sparkle = new Path(f1SparkleData); f1Sparkle.fillColor = 'white';
         var f1Head = new Group([f1Petals, f1Sparkle]);
-        
-        var f1Leaf = new Path(f1LeafData);
-        f1Leaf.fillColor = '#457f42';
-        var f1LeafGroup = new Group([f1Leaf]); 
-        f1LeafGroup.pivot = new Point(273.5112, 522.564); // Anchor to stem
-        
+        var f1Leaf = new Path(f1LeafData); f1Leaf.fillColor = '#457f42';
+        var f1LeafGroup = new Group([f1Leaf]); f1LeafGroup.pivot = new Point(273.5112, 522.564);
         var f1StemResampled = resamplePathData(f1StemData, 20);
-        // PASS ARRAY [f1LeafGroup]
         var flower1 = new Flower(f1StemResampled, f1Head, centerPoint1, '#457f42', 5, [f1LeafGroup]);
 
-        // Flower 2 (Gradient + Leaf)
-        var f2P1 = new Path(f2PetalData1); 
-        var f2P2 = new Path(f2PetalData2); 
-        var f2P3 = new Path(f2PetalData3);
-        
-        // Create the Radial Gradient
-        // cx="178.5" cy="192.5" r="95.5" (approx from visual center of head)
-        var f2Gradient = {
-            gradient: {
-                stops: [
-                    ['#f4aa34', 0.24],
-                    ['#f4aa34', 0.64],
-                    ['#f4aa34', 0.70],
-                    ['#ffffff', 1.0]
-                ],
-                radial: false
-            },
-            origin: new Point(178.5, 192.5 + 95.5),
-            destination: new Point(178.5, 192.5 - 150.5)
-        };
-
-        f2P1.fillColor = f2Gradient;
-        f2P2.fillColor = f2Gradient;
-        f2P3.fillColor = f2Gradient;
-        
+        var f2P1 = new Path(f2PetalData1); var f2P2 = new Path(f2PetalData2); var f2P3 = new Path(f2PetalData3);
+        var f2Gradient = { gradient: { stops: [['#f4aa34', 0.24], ['#f4aa34', 0.64], ['#f4aa34', 0.70], ['#ffffff', 1.0]], radial: false }, origin: new Point(178.5, 192.5 + 95.5), destination: new Point(178.5, 192.5 - 150.5) };
+        f2P1.fillColor = f2Gradient; f2P2.fillColor = f2Gradient; f2P3.fillColor = f2Gradient;
         var f2Head = new Group([f2P1, f2P2, f2P3]);
-
-        
-
-        // Resample stem for smoother curve
         var f2StemResampled = resamplePathData(f2StemData, 20);
-
-        // Create Flower
         var flower2 = new Flower(f2StemResampled, f2Head, centerPoint2, '#457f42', 5);
-        
-        // Flower 3
+
         var f3Petals = new Path(f3HeadData);
-        f3Petals.fillColor = {
-            gradient: {
-                stops: [
-                    ['#f1cb3e', 0],   // Start Color (Left)
-                    ['#f4aa34', 0.33],
-                    ['#f4aa34', 0.52],
-                    ['#ffffff', 0.97]    // End Color (Right) - Lighter for 3D effect
-                ],
-                radial: false // Linear Gradient
-            },
-            // Automatically find the far left and far right points of the shape
-            origin: f3Petals.bounds.bottomLeft,
-            destination: f3Petals.bounds.topRight
-        }; 
+        f3Petals.fillColor = { gradient: { stops: [['#f1cb3e', 0], ['#f4aa34', 0.33], ['#f4aa34', 0.52], ['#ffffff', 0.97]], radial: false }, origin: f3Petals.bounds.bottomLeft, destination: f3Petals.bounds.topRight }; 
         var f3Head = new Group([f3Petals]);
         var flower3 = new Flower(f3StemData, f3Head, centerPoint3, '#99ffa0', 4);
 
-        // Flower 4
         var f4Bg = new Path.Circle(new Point(56.477, 56.477), 56.477);
-        f4Bg.fillColor = {
-            gradient: {
-                stops: [
-                    ['#de84d6', 0],   // Start Color (Left)
-                    
-                    ['#de84d6', 0.42],
-                    ['#476e46', 0.93]    // End Color (Right) - Lighter for 3D effect
-                ],
-                radial: false // Linear Gradient
-            },
-            // Automatically find the far left and far right points of the shape
-            origin: f4Bg.bounds.bottomRight,
-            destination: f4Bg.bounds.topLeft
-        };
+        f4Bg.fillColor = { gradient: { stops: [['#de84d6', 0], ['#de84d6', 0.42], ['#476e46', 0.93]], radial: false }, origin: f4Bg.bounds.bottomRight, destination: f4Bg.bounds.topLeft };
         var f4FaceP1 = new Path(f4FaceData1); f4FaceP1.fillColor = 'white';
         var f4FaceP2 = new Path(f4FaceData2); f4FaceP2.fillColor = 'white';
         var f4FaceP3 = new Path(f4FaceData3); f4FaceP3.fillColor = 'white';
-        var f4Head = new Group([f4Bg, f4FaceP1, f4FaceP2, f4FaceP3]);
-        f4Head.scale(1.0); 
+        var f4Head = new Group([f4Bg, f4FaceP1, f4FaceP2, f4FaceP3]); f4Head.scale(1.0); 
         var flower4 = new Flower(f4StemData, f4Head, centerPoint4, '#71ff94', 4);
 
-        // Flower 5 (Updated: Diamond with Left-to-Right Gradient)
         var f5Part1 = new Path(f5HeadDataDiamond);
-        
-        // Create the Gradient
-        f5Part1.fillColor = {
-            gradient: {
-                stops: [
-                    ['#ff968b', 0],   // Start Color (Left)
-                    ['#ef5542', 0.87]    // End Color (Right) - Lighter for 3D effect
-                ],
-                radial: false // Linear Gradient
-            },
-            // Automatically find the far left and far right points of the shape
-            origin: f5Part1.bounds.leftCenter,
-            destination: f5Part1.bounds.rightCenter
-        };
-
+        f5Part1.fillColor = { gradient: { stops: [['#ff968b', 0], ['#ef5542', 0.87]], radial: false }, origin: f5Part1.bounds.leftCenter, destination: f5Part1.bounds.rightCenter };
         var f5Part2 = new Path(f5HeadDataRound);
-        f5Part2.fillColor = {
-            gradient: {
-                stops: [
-                    ['#ffffff', 0],   // Start Color (Left)
-                    ['#de84d6', 0.5],
-                    ['#335d36', 1.0]    // End Color (Right) - Lighter for 3D effect
-                ],
-                radial: false // Linear Gradient
-            },
-            // Automatically find the far left and far right points of the shape
-            origin: f5Part2.bounds.leftCenter,
-            destination: f5Part2.bounds.topRight
-        };
-        
-        var f5Head = new Group([f5Part1, f5Part2]);
-        f5Head.scale(1.0); 
-        
+        f5Part2.fillColor = { gradient: { stops: [['#ffffff', 0], ['#de84d6', 0.5], ['#335d36', 1.0]], radial: false }, origin: f5Part2.bounds.leftCenter, destination: f5Part2.bounds.topRight };
+        var f5Head = new Group([f5Part1, f5Part2]); f5Head.scale(1.0); 
         var flower5 = new Flower(f5StemData, f5Head, centerPoint5, '#71ff94', 4);
 
-        // Flower 6 (Updated with Leaves)
-        var f6StemData = "M234.8356,143.0838v-24.6661C234.8356,54.122,182.7136,2,118.4179,2h-.0002C54.122,2,2,54.122,2,118.4177v894.2225";
-        
-        // Leaf Data from SVG ClipPaths
-        var f6Leaf1Data = "M2.9828,497.276h177.7266c27.6495,0,50.0638,22.4143,50.0638,50.0638h0s-186.7357,0-186.7357,0c-22.3276,0-40.1308-18.3313-39.8618-40.6573.0587-4.8695-.2542-8.4678-1.1929-9.4065Z";
-        var f6Leaf2Data = "M1.0012,568.6153h279.8479c43.5368,0,78.8303,22.4143,78.8303,50.0638h0s-294.0335,0-294.0335,0c-35.157,0-63.1898-18.3313-62.7663-40.6573.0924-4.8695-.4003-8.4678-1.8784-9.4065Z";
-
-        // Head Setup
         var f6Outer = new Path.Circle(new Point(234.8436, 143.6878), 98.0915);
-        f6Outer.fillColor = {
-            gradient: { stops: [['#00a5ea', 0.4], ['#39cef2', 0.76]], radial: true },
-            origin: f6Outer.position,
-            destination: f6Outer.position + [172.8, 0]
-        };
+        f6Outer.fillColor = { gradient: { stops: [['#00a5ea', 0.4], ['#39cef2', 0.76]], radial: true }, origin: f6Outer.position, destination: f6Outer.position + [172.8, 0] };
         var f6Inner = new Path.Circle(new Point(234.8356, 143.0838), 44.0459);
-        f6Inner.fillColor = {
-            gradient: { stops: [['#71ff94', 0], ['#4da147', 0.76]], radial: true },
-            origin: f6Inner.position,
-            destination: f6Inner.position + [43.5, 0]
-        };
+        f6Inner.fillColor = { gradient: { stops: [['#71ff94', 0], ['#4da147', 0.76]], radial: true }, origin: f6Inner.position, destination: f6Inner.position + [43.5, 0] };
         var f6Head = new Group([f6Outer, f6Inner]);
-
-        // Leaves Setup
         var f6L1 = new Path(f6Leaf1Data);
-        f6L1.fillColor = {
-            gradient: {
-                stops: [
-                    ['#ef5542', 0.1],   // Start Color (Left)
-                    ['#ff968b', 0.5],
-                    ['#ef5542', 0.98]    // End Color (Right) - Lighter for 3D effect
-                ],
-                radial: false // Linear Gradient
-            },
-            // Automatically find the far left and far right points of the shape
-            origin: f6L1.bounds.leftCenter,
-            destination: f6L1.bounds.topRight
-        };
-        var f6LeafGroup1 = new Group([f6L1]);
-        // Pivot at the left-most point (where it attaches to stem)
-        f6LeafGroup1.pivot = new Point(230, 520); // Approx height on stem for Leaf 1
-
+        f6L1.fillColor = { gradient: { stops: [['#ef5542', 0.1], ['#ff968b', 0.5], ['#ef5542', 0.98]], radial: false }, origin: f6L1.bounds.leftCenter, destination: f6L1.bounds.topRight };
+        var f6LeafGroup1 = new Group([f6L1]); f6LeafGroup1.pivot = new Point(230, 520);
         var f6L2 = new Path(f6Leaf2Data);
-        f6L2.fillColor = {
-            gradient: {
-                stops: [
-                    ['#ef5542', 0.1],   // Start Color (Left)
-                    ['#ff968b', 0.5],
-                    ['#ef5542', 0.98]    // End Color (Right) - Lighter for 3D effect
-                ],
-                radial: false // Linear Gradient
-            },
-            // Automatically find the far left and far right points of the shape
-            origin: f6L2.bounds.leftCenter,
-            destination: f6L2.bounds.topRight
-        };
-        var f6LeafGroup2 = new Group([f6L2]);
-        // Pivot at left-most point
-        f6LeafGroup2.pivot = new Point(230, 590); // Approx height on stem for Leaf 2
-
+        f6L2.fillColor = { gradient: { stops: [['#ef5542', 0.1], ['#ff968b', 0.5], ['#ef5542', 0.98]], radial: false }, origin: f6L2.bounds.leftCenter, destination: f6L2.bounds.topRight };
+        var f6LeafGroup2 = new Group([f6L2]); f6LeafGroup2.pivot = new Point(230, 590);
         var f6StemResampled = resamplePathData(f6StemData, 20);
-        
-        // Pass Array of Leaves
         var flower6 = new Flower(f6StemResampled, f6Head, centerPoint6, '#71ff94', 5, [f6LeafGroup1, f6LeafGroup2]);
 
-        // Flower 7 (Fixed: Using Boolean Subtraction for the hole)
-    
-        // 1. Create the two temporary paths
-        var f7PathOuter = new Path(f7HeadData1);
-        var f7PathInner = new Path(f7HeadData2);
-        
-        // 2. Physically subtract the Inner path from the Outer path
-        // This creates a new path with the hole cut out
+        var f7PathOuter = new Path(f7HeadData1); var f7PathInner = new Path(f7HeadData2);
         var f7CutoutHead = f7PathOuter.subtract(f7PathInner);
-        
-        // 3. Remove the original temp paths from the canvas
-        f7PathOuter.remove();
-        f7PathInner.remove();
-        
-        // 4. Style the final shape
-        f7CutoutHead.fillColor = {
-            gradient: {
-                stops: [
-                    ['#f4e0f2', 0], 
-                    ['#eed2ec', 0.055], 
-                    ['#d698d3', 0.32], 
-                    ['#c674c3', 0.51], 
-                    ['#c167be', 0.62]
-                ],
-                radial: true
-            },
-            origin: new Point(143.9887, 136.13),
-            destination: new Point(143.9887 + 169.9133, 136.13)
-        };
-
-        // 5. Wrap in Group
-        var f7Head = new Group([f7CutoutHead]);
-        f7Head.scale(1.1);
-        
+        f7PathOuter.remove(); f7PathInner.remove();
+        f7CutoutHead.fillColor = { gradient: { stops: [['#f4e0f2', 0], ['#eed2ec', 0.055], ['#d698d3', 0.32], ['#c674c3', 0.51], ['#c167be', 0.62]], radial: true }, origin: new Point(143.9887, 136.13), destination: new Point(143.9887 + 169.9133, 136.13) };
+        var f7Head = new Group([f7CutoutHead]); f7Head.scale(1.1);
         var flower7 = new Flower(f7StemData, f7Head, centerPoint7, '#71ff94', 4);
 
-        // Flower 8 (Blue Cluster - Correctly Positioned using Transforms)
-        // 8a (Left)
         var f8aRect = new Path.Rectangle(new Point(13.8694, -1.4115), new Size(26.422, 163.8162), new Size(13.211, 13.211));
-        f8aRect.fillColor = '#089fd7';
-        f8aRect.transform(new Matrix().translate(-15.6912, 7.1233).rotate(-11.6454));
+        f8aRect.fillColor = '#089fd7'; f8aRect.transform(new Matrix().translate(-15.6912, 7.1233).rotate(-11.6454));
         var flower8a = new Flower(f8aStem, new Group([f8aRect]), centerPoint8 + new Point(-50, 90), '#71ff94', 4);
-
-        // 8b (Middle)
         var f8bRect = new Path.Rectangle(new Point(0.3244, -0.0008), new Size(26.422, 163.8162), new Size(13.211, 13.211));
-        f8bRect.fillColor = '#089fd7';
-        f8bRect.transform(new Matrix().translate(0.3869, -0.063).rotate(0.2705));
+        f8bRect.fillColor = '#089fd7'; f8bRect.transform(new Matrix().translate(0.3869, -0.063).rotate(0.2705));
         var flower8b = new Flower(f8bStem, new Group([f8bRect]), centerPoint8 + new Point(0, 20), '#71ff94', 4);
-
-        // 8c (Right)
         var f8cRect = new Path.Rectangle(new Point(19.3894, -2.0426), new Size(26.422, 163.8162), new Size(13.211, 13.211));
-        f8cRect.fillColor = '#089fd7';
-        f8cRect.transform(new Matrix().translate(20.3161, -5.5182).rotate(14.0178));
+        f8cRect.fillColor = '#089fd7'; f8cRect.transform(new Matrix().translate(20.3161, -5.5182).rotate(14.0178));
         var flower8c = new Flower(f8cStem, new Group([f8cRect]), centerPoint8 + new Point(70, 50), '#71ff94', 4);
 
-
-        // Array of all flowers
-        var flowers = [
-            flower1, flower2, flower3, flower4, flower5, flower6, flower7, 
-            flower8a, flower8b, flower8c
-        ];
-
+        var flowers = [flower1, flower2, flower3, flower4, flower5, flower6, flower7, flower8a, flower8b, flower8c];
 
         // --- 5. VIEW SETUP & EVENTS ---
         
-        view.center = new Point(400, 400);
-        view.zoom = viewZoom;
+        // 1. Force the internal resolution to match our fixed Stage
+        view.viewSize = new Size(1680, 880);
+        view.autoResize = false; 
+
+        // 2. RESTORE ORIGINAL CAMERA
+        view.center = new Point(400, 400); 
+        view.zoom = 0.8; 
 
         view.onKeyDown = function(event) {
-            if (event.key === 'g') {
-                for(var i = 0; i < flowers.length; i++) {
-                    flowers[i].startGrow();
-                }
-            }
+            if (event.key === 'g') { for(var i = 0; i < flowers.length; i++) { flowers[i].startGrow(); } }
         };
 
         view.onMouseMove = function(event) {
-            var deltaX = 0;
-            if (event.delta) {
-                deltaX = event.delta.x;
-            }
-            for(var i = 0; i < flowers.length; i++) {
-                flowers[i].update(event.point, deltaX);
-            }
-        };
-        
-        view.onFrame = function(event) {
-            for(var i = 0; i < flowers.length; i++) {
-                flowers[i].update(null, 0);
-            }
+            var deltaX = event.delta ? event.delta.x : 0;
+            for(var i = 0; i < flowers.length; i++) { flowers[i].update(event.point, deltaX); }
         };
 
-        // --- 6. PERLIN NOISE & STAR TWINKLING ---
-
-        // A. Select all star elements from the DOM
+        // --- 6. STAR TWINKLE ENGINE ---
         var starElements = document.querySelectorAll('.stars');
-        
-        // B. Create random starting offsets so they don't twinkle in sync
         var starOffsets = [];
-        for(var j = 0; j < starElements.length; j++) {
-            starOffsets.push(Math.random() * 1000);
-        }
+        for(var j = 0; j < starElements.length; j++) { starOffsets.push(Math.random() * 1000); }
 
-        // C. The Perlin Noise Implementation (Standard Improved Noise)
-        // This provides smooth random values between 0 and 1
         var Noise = (function() {
             var p = [151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,
             190,6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168,
@@ -610,420 +584,34 @@
             50,238,206,191,152,212,249,215,199,232,236,255,82,78,162,184,195,66,128,243,38,167,49,153,154,2,28,42,126,204,
             5,227,101,170,172,17,205,106,24,242,34,59,207,241,202,67,250,51,121,113,248,157,224,43,185,144,129,70,112,61,
             110,221,4,213,222,45,228,156,218,118,255];
-            // Duplicate the permutation array
             var perm = new Array(512); 
-            var gradP = new Array(512);
-            for(var i=0; i<512; i++) {
-                perm[i] = p[i & 255];
-                gradP[i] = p[i & 255] % 12; // Gradient simulation
-            }
-            // Linear interpolation
+            for(var i=0; i<512; i++) { perm[i] = p[i & 255]; }
             function lerp(t, a, b) { return a + t * (b - a); }
-            // Fade function (smoother curve)
             function fade(t) { return t * t * t * (t * (t * 6 - 15) + 10); }
-            // Hash function
-            function grad(hash, x) {
-                return (hash & 1) === 0 ? x : -x; 
-            }
-            
+            function grad(hash, x) { return (hash & 1) === 0 ? x : -x; }
             return {
                 perlin1: function(x) {
-                    var X = Math.floor(x) & 255;
-                    x -= Math.floor(x);
-                    var u = fade(x);
+                    var X = Math.floor(x) & 255; x -= Math.floor(x); var u = fade(x);
                     return lerp(u, grad(perm[X], x), grad(perm[X+1], x - 1)) * 2;
                 }
             };
         })();
 
-        // D. Modify the existing onFrame to include Star updates
         view.onFrame = function(event) {
-            // 1. Update your existing Flowers
-            for(var i = 0; i < flowers.length; i++) {
-                flowers[i].update(null, 0);
-            }
-
-            // 2. Update the Stars (DOM Elements)
+            for(var i = 0; i < flowers.length; i++) { flowers[i].update(null, 0); }
             var time = event.time;
-            
             for(var k = 0; k < starElements.length; k++) {
                 var speed = 1.0; 
-                
-                // Get noise value (-1 to 1)
                 var noiseVal = Noise.perlin1(time * speed + starOffsets[k]);
-                
-                // Normalize noise to 0 - 1 range
                 var normalizedNoise = (noiseVal + 1) / 2; 
-                
-                // --- SCALE LOGIC ---
-                var minScale = 0.7;
-                var maxScale = 1.0;
+                var minScale = 0.7; var maxScale = 1.0;
                 var currentScale = minScale + (normalizedNoise * (maxScale - minScale));
-
-                // --- OPACITY LOGIC (New) ---
-                // Maps 0-1 noise to 0.3-1.0 opacity
-                var minOpacity = 1;
-                var maxOpacity = 1.0;
+                var minOpacity = 0.5; var maxOpacity = 1.0;
                 var currentOpacity = minOpacity + (normalizedNoise * (maxOpacity - minOpacity));
-
-                // Apply to CSS
                 starElements[k].style.transform = "scale(" + currentScale + ")";
                 starElements[k].style.opacity = currentOpacity;
             }
         };
     </script>
-
-    <style>
-        /* 1. Reset the document to take up full space */
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden; /* Prevents scrollbars */
-        }
-
-        /* 2. Force the canvas to fill that space */
-        canvas[resize] {
-            width: 100%;
-            height: 100%;
-            display: block; /* Removes the tiny bottom scrollbar */
-        }
-    </style>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div id="wrapper">
-        
-        <lottie-player 
-            src="lotties/jumping_star.json" 
-            background="transparent" 
-            speed="1" 
-            style="width: 100px; height: 100px;" 
-            loop 
-            autoplay
-            class="lottie-layer" id="lt-jumping-star">
-        </lottie-player>
-
-        <!-- <lottie-player 
-            src="lotties/circle.json" 
-            background="transparent" 
-            speed="1" 
-            style="width: 100px; height: 100px;" 
-            loop 
-            autoplay
-            class="lottie-layer" id="lt-rotate-circle">
-        </lottie-player> -->
-
-        <lottie-player 
-            src="lotties/circle.json" 
-            background="transparent" 
-            speed="0.3" 
-            style="width: 100px; height: 100px;" 
-            loop 
-            autoplay
-            class="lottie-layer" id="lt-rotate-circle2">
-        </lottie-player>
-
-       <lottie-player 
-            id="lt-bee"
-            class="lottie-layer"
-            src="lotties/bee/bee_fly.json" 
-            background="transparent" 
-            speed="1.4" 
-            style="width: 500px; height: auto; z-index: 3;">
-        </lottie-player>
-
-        <canvas id="myCanvas" resize="true" class="canvas-layer"></canvas>
-        
-    </div>
-
-    
-    <!-- <img id="blue-yellow-stem" src="svg/blue_yellow_stem.svg" alt="Blue Rotate" width="1920" height="1080" />     -->
-    <!-- <img id="blue-head" src="svg/blue_rotate.svg" alt="Blue Rotate" width="375" height="375" /> -->
-    <lottie-player 
-            id="blue-head"
-            class="lottie-layer"
-            src="lotties/blue-head-rotate.json" 
-            background="transparent" 
-            speed="1.4" 
-            style="width: 625px; height: fit-content; z-index: 3;">
-        </lottie-player>
-    <img id="yellow-head" src="svg/yellow_rotate.svg" alt="Yellow Rotate" width="188" height="198" />
-    <!-- <img id="white-wheel" src="svg/white_wheel.svg" alt="White Rotate" width="355" height="355" /> -->
-    <img id="white-wheel-2" src="svg/white_wheel.svg" alt="White Rotate" width="355" height="355" />
-
-    <!-- <img id="no-anim" src="svg/no_anim.svg" alt="Static" width="1920" height="1080" /> -->
-
-    <!-- <img id="bird" class="no-anim" src="svg/bird.svg" alt="Bird" width="85" height="57" /> -->
-
-    <img id="blue-bent" class="no-anim" src="svg/blue_bent.svg" alt="Blue Bent" width="355" height="417" />
-    
-
-    <img id="blue-upright" class="no-anim" src="svg/blue_upright.svg" alt="Blue Upright" width="125" height="696" />
-
-    <!-- <img id="blue-w-white-dot" class="no-anim" src="svg/blue_w_white_dot.svg" alt="Blue w White Dot" width="312" height="620" /> -->
-    <lottie-player 
-            src="lotties/blue-bent.json" 
-            background="transparent" 
-            speed="0.8" 
-            style="width: 450px; height: auto; z-index: 3;" 
-            loop 
-            
-            class="no-anim" id="blue-w-white-dot">
-    </lottie-player>
-
-    <!-- <img id="butterfly" class="no-anim" src="svg/butterfly.svg" alt="Butterfly" width="129" height="107" /> -->
-
-    <img id="oval" class="no-anim" src="svg/oval.svg" alt="Oval" width="52" height="16" />
-
-    <img id="white-ball-1" class="no-anim" src="svg/white_ball_1.svg" alt="White Ball 1" width="68" height="523" />
-    <img id="white-ball-2" class="no-anim" src="svg/white_ball_2.svg" alt="White Ball 2" width="63" height="655" />
-    <img id="white-ball-3" class="no-anim" src="svg/white_ball_3.svg" alt="White Ball 3" width="68" height="523" />
-    <img id="white-ball-4" class="no-anim" src="svg/white_ball_4.svg" alt="White Ball 4" width="66" height="651" />
-    <img id="outline-balls" class="no-anim" src="svg/outline_balls.svg" alt="Outline Balls" width="136" height="45" />
-
-    
-    <svg id="star-1" class="stars" width="200" height="200" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <path d="M 50 10 Q 50 50 90 50 Q 50 50 50 90 Q 50 50 10 50 Q 50 50 50 10 Z" />
-    </svg>
-
-    <svg id="star-2" class="stars" width="200" height="200" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <path d="M 50 10 Q 50 50 90 50 Q 50 50 50 90 Q 50 50 10 50 Q 50 50 50 10 Z" />
-    </svg>
-
-    <svg id="star-3" class="stars" width="200" height="200" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <path d="M 50 10 Q 50 50 90 50 Q 50 50 50 90 Q 50 50 10 50 Q 50 50 50 10 Z" />
-    </svg>
-
-    <svg id="star-4" class="stars" width="200" height="200" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <path d="M 50 10 Q 50 50 90 50 Q 50 50 50 90 Q 50 50 10 50 Q 50 50 50 10 Z" />
-    </svg>
-
-    <svg id="star-5" class="stars" width="200" height="200" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <path d="M 50 10 Q 50 50 90 50 Q 50 50 50 90 Q 50 50 10 50 Q 50 50 50 10 Z" />
-    </svg>
-
-    <svg id="star-6" class="stars" width="200" height="200" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <path d="M 50 10 Q 50 50 90 50 Q 50 50 50 90 Q 50 50 10 50 Q 50 50 50 10 Z" />
-    </svg>
-
-    <svg id="star-7" class="stars" width="200" height="200" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <path d="M 50 10 Q 50 50 90 50 Q 50 50 50 90 Q 50 50 10 50 Q 50 50 50 10 Z" />
-    </svg>
-
-    <svg id="star-8" class="stars" width="200" height="200" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <path d="M 50 10 Q 50 50 90 50 Q 50 50 50 90 Q 50 50 10 50 Q 50 50 50 10 Z" />
-    </svg>
-
-    <img id="twinkle-star-1" class="stars" src="svg/twinkle_star.svg" alt="Twinkle Star" width="82" height="82" />
-    <img id="twinkle-star-2" class="stars" src="svg/twinkle_star_2.svg" alt="Twinkle Star" width="82" height="82" />
-    <img id="twinkle-star-3" class="stars" src="svg/twinkle_star.svg" alt="Twinkle Star" width="82" height="82" />
-
-    <lottie-player 
-        id="lt-circles-circle"
-        class="lottie-layer"
-        src="lotties/circles-circle.json" 
-        background="transparent" 
-        speed="0.6" 
-        style="width: 150px; height: auto; z-index: 3;" 
-        loop>
-    </lottie-player>
-
-    <lottie-player 
-        id="lt-circles-circle-2"
-        class="lottie-layer"
-        src="lotties/circles-circle.json" 
-        background="transparent" 
-        speed="0.6" 
-        style="width: 140px; height: auto; z-index: 3;" 
-        loop>
-    </lottie-player>
-
-    <div class="random-dot" id="dot-1"></div>
-    <div class="random-dot" id="dot-2"></div>
-    <div class="random-dot" id="dot-3"></div>
-    <div class="random-dot" id="dot-4"></div>
-    <div class="random-dot" id="dot-5"></div>
-    <div class="random-dot" id="dot-6"></div>
-    <div class="random-dot" id="dot-7"></div>
-
-    <div class="big-dot"></div>
-
-            
-        
-    <script>
-        const beePlayer = document.getElementById('lt-bee');
-
-        // 1. Handle Click
-        beePlayer.addEventListener('click', () => {
-            const anim = beePlayer.getLottie();
-
-            // RESET: Ensure we aren't looping the small segment anymore
-            // and start from the beginning of the whole file.
-            beePlayer.loop = false; 
-            anim.loop = false;
-            
-            beePlayer.stop();
-            beePlayer.play();
-        });
-
-        // 2. Handle Completion (End of the first full play)
-        beePlayer.addEventListener('complete', () => {
-            const anim = beePlayer.getLottie();
-            
-            // Calculate the last 0.5 seconds
-            // (Total Frames) - (Frame Rate * 0.5)
-            const startFrame = Math.max(0, anim.totalFrames - (anim.frameRate * 0.53));
-            
-            // Enable looping on the internal animation instance
-            anim.loop = true;
-
-            // Force it to play ONLY this segment loop
-            anim.playSegments([startFrame, anim.totalFrames], true);
-        });
-    </script>
-
-    <script>
-        // 1. List of IDs you want to activate behind the canvas
-        const cssTargets = ['white-wheel', 'white-wheel-2', 'yellow-head'];
-        const lottieTargets = ['lt-circles-circle', 'lt-circles-circle-2', 'blue-w-white-dot', 'lt-rotate-circle2', 'blue-head'];
-
-        // 2. Global Mouse Tracker
-        document.addEventListener('mousemove', (e) => {
-            
-            // Get ALL elements under the mouse cursor (returns an array)
-            // This includes the Canvas, the Body, AND the elements behind the canvas
-            const elementsUnderCursor = document.elementsFromPoint(e.clientX, e.clientY);
-
-            // --- Handle CSS Animation Wheels ---
-            cssTargets.forEach(id => {
-                const el = document.getElementById(id);
-                if (!el) return;
-
-                // Check if this element is in the stack under the mouse
-                if (elementsUnderCursor.includes(el)) {
-                    el.classList.add('force-spin'); // Add class to spin
-                } else {
-                    el.classList.remove('force-spin'); // Remove class to pause
-                }
-            });
-
-            // --- Handle Lottie Players ---
-            lottieTargets.forEach(id => {
-                const player = document.getElementById(id);
-                if (!player) return;
-
-                // Check if player is under mouse
-                const isHovering = elementsUnderCursor.includes(player);
-                
-                // Logic: If hovering and paused, play. If not hovering and playing, pause.
-                if (isHovering && player.getLottie().isPaused) {
-                    player.play();
-                } else if (!isHovering && !player.getLottie().isPaused) {
-                    player.pause(); 
-                }
-            });
-        });
-    </script>
-
-    <!-- <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const dotCount = 10;
-            const colors = ['#FF4136', '#FFDC00']; // Red and Yellow
-            const wrapper = document.body;
-            
-            // Configuration for "Spaced Out" look
-            const minSeparation = 150; // Dots must be at least 150px apart
-            const edgePadding = 50;    // Dots can't be too close to the screen edge
-
-            // 1. Identify Obstacles (Images & Lotties)
-            // We exclude the full-screen background and canvas
-            const obstacles = document.querySelectorAll('img:not(#blue-yellow-stem), lottie-player');
-            
-            // Store coordinates of placed dots here to check spacing against them
-            const placedDots = [];
-
-            function isOverlappingObstacles(x, y, size) {
-                for (let el of obstacles) {
-                    // Ignore full-screen elements
-                    if (el.clientWidth > window.innerWidth * 0.9 && el.clientHeight > window.innerHeight * 0.9) {
-                        continue;
-                    }
-                    if (window.getComputedStyle(el).display === 'none') continue;
-
-                    const rect = el.getBoundingClientRect();
-                    const padding = 15; // Extra breathing room around images
-
-                    if (
-                        x + size > rect.left - padding && 
-                        x < rect.right + padding &&
-                        y + size > rect.top - padding && 
-                        y < rect.bottom + padding
-                    ) {
-                        return true; // Hit an image
-                    }
-                }
-                return false; 
-            }
-
-            function isTooCloseToOtherDots(x, y) {
-                for (let dot of placedDots) {
-                    const dx = x - dot.x;
-                    const dy = y - dot.y;
-                    const distance = Math.sqrt(dx*dx + dy*dy);
-                    
-                    if (distance < minSeparation) {
-                        return true; // Too close to another dot
-                    }
-                }
-                return false;
-            }
-
-            // 2. Generation Loop
-            let attempts = 0;
-            const maxAttempts = 3000; // Higher attempts needed when constraints are tight
-
-            while (placedDots.length < dotCount && attempts < maxAttempts) {
-                attempts++;
-                
-                const size = 12;
-                
-                // Random position within safe padding
-                const x = edgePadding + Math.random() * (window.innerWidth - (edgePadding * 2));
-                const y = edgePadding + Math.random() * (window.innerHeight - (edgePadding * 2));
-
-                // Check 1: Does it hit an image?
-                if (isOverlappingObstacles(x, y, size)) continue;
-
-                // Check 2: Is it too close to another dot?
-                if (isTooCloseToOtherDots(x, y)) continue;
-
-                // --- PLACEMENT ---
-                const dot = document.createElement('div');
-                dot.classList.add('random-dot');
-                
-                // Random Color
-                const randomColor = colors[Math.floor(Math.random() * colors.length)];
-                dot.style.backgroundColor = randomColor;
-
-                dot.style.left = x + 'px';
-                dot.style.top = y + 'px';
-
-                wrapper.appendChild(dot);
-                
-                // Save this dot's location so future dots avoid it
-                placedDots.push({x, y});
-            }
-            
-            console.log(`Placed ${placedDots.length} dots after ${attempts} attempts.`);
-            if (placedDots.length < dotCount) {
-                console.warn("Could not fit all dots with current spacing rules.");
-            }
-        });
-    </script> -->
-    
 </body>
-
 </html>
