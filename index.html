@@ -10,18 +10,40 @@
         /* --- RESET & BASIC SETUP --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        /* Update BODY to stack elements vertically */
         html, body {
             width: 100%;
             height: 100%;
             overflow: hidden; 
             background-color: #213e29;
+            
+            /* NEW: This stacks the header and stage */
+            display: flex;
+            flex-direction: column; 
         }
 
-        /* --- THE VIEWPORT (Window) --- */
+        /* NEW: Header Styling */
+        #main-header {
+            width: 100%;
+            height: 10vh; /* 10% of screen height */
+            background-color: #213e29; /* Darker green background */
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: sans-serif;
+            z-index: 10;
+            position: relative;
+        }
+
+        /* UPDATE: Stage Container Height */
         #stage-container {
             position: relative;
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            
+            /* CHANGED: From 100vh to 90vh to fit under header */
+            height: 90vh; 
+            
             overflow: hidden;
             display: flex;
             justify-content: center; 
@@ -31,13 +53,13 @@
         /* --- THE STAGE (1680x880 Source of Truth) --- */
         #stage {
             position: absolute;
-            width: 1680px; 
+            width: 100%; 
             height: 880px;
             /* transform-origin: top left;  */
             background-color: #213e29; 
             overflow: hidden;
             /* Force hardware acceleration for smooth scaling */
-            will-change: transform;
+            will-change: transform, width;
         }
 
         #wrapper {
@@ -55,8 +77,13 @@
         .canvas-layer {
             position: absolute;
             top: 0; left: 0;
-            z-index: 2;
+            z-index: 1;
             width: 100%; height: 100%;
+        }
+
+        canvas[resize] {
+            width: 100%;
+            height: 100%;
         }
 
         .no-anim, img, svg {
@@ -67,7 +94,7 @@
         /* --- POSITIONING (Original percentages preserved) --- */
         #lt-jumping-star { top: 93%; left: 80%; transform: translate(-50%, -50%); }
         #lt-rotate-circle { top: 40%; left: 87%; transform: translate(-50%, -50%); }
-        #lt-rotate-circle2 { top: 90%; left: 55%; transform: translate(-50%, -50%); }
+        #lt-rotate-circle2 { top: 90%; left: 58%; transform: translate(-50%, -50%); }
         #lt-bee { top: 49%; left: 9%; transform: translate(-50%, -50%); }
         #lt-circles-circle { left: 1%; top: 2%; }
         #lt-circles-circle-2 { left: 90%; top: 14%; }
@@ -81,7 +108,7 @@
         }
 
         #white-wheel {
-            position: absolute; top: 20%; left: 52%;
+            position: absolute; top: 20%; left: 53%;
             transform: translateX(-50%);
             animation: spin 25s linear infinite; animation-play-state: paused;
         }
@@ -96,8 +123,8 @@
 
         #blue-bent { left: 14.5%; bottom: -15%; z-index: 3; height: auto; width: auto;}
         #blue-upright { left: 47%; bottom: 0%; height: 64%; width: auto; z-index: 3; }
-        #white-ball-1 { left: 80%; bottom: -28%; }
-        #white-ball-2 { left: 53%; bottom: -35%; }
+        #white-ball-1 { left: 80%; bottom: -30%; }
+        #white-ball-2 { left: 53%; bottom: -25%; }
         #white-ball-3 { left: 4%; bottom: -22%; }
         #white-ball-4 { left: 1%; bottom: -50%; }
         #outline-balls { left: 17%; bottom: 0%; }
@@ -128,12 +155,49 @@
         #dot-4 {left: 88%; top: 92%; background-color: #ffc562;}
         #dot-5 {left: 97%; top: 50%; background-color: #ffc562;}
         #dot-6 {left: 83%; top: 21%; background-color: #ffc562;}
+        #dot-7 {left: 64%; top: 90%; background-color: #ffc562;}
+        #dot-8 {left: 27%; top: 94%; background-color: #ffc562; transform-origin: center; transform: translateX(-50%, 50%);}
 
         .big-dot {
             position: absolute; width: 32px; height: 32px;
             border-radius: 50%; z-index: 1; pointer-events: none;
-            background-color: #ef5542; left: 96%; bottom: 3%;
+            background-color: #ef5542; left: 98%; bottom: 2%;
             transform: translateX(-50%) translateY(50%);
+        }
+
+        .outline-dot {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            /* stroke-width: 2px; */
+            border: 1px solid white;
+            /* background-color: #00cf5e; */
+        }
+
+        #out-dot-1 {
+            left: 26.5%;
+            top: 70%;
+        }
+
+        #out-dot-2 {
+            left: 65%;
+            top: 90%;
+        }
+
+        .oval {
+            position: absolute;
+        }
+
+        #blue {
+            top: 60%;
+            left: 29%;
+        }
+
+        #yellow {
+            top: 92%;
+            left: 27%;
+            transform-origin: center; transform: translateX(-50%, 50%);
         }
 
         /* --- INTERACTIVITY FIX --- */
@@ -158,6 +222,9 @@
     </style>
 </head>
 <body>
+    <header id="main-header">
+        HEADER
+    </header>
 
     <div id="stage-container">
         <div id="stage">
@@ -171,13 +238,15 @@
 
                 <canvas id="myCanvas" class="canvas-layer"></canvas>
                 
-                <lottie-player id="blue-head" class="lottie-layer" src="lotties/blue-head-rotate.json" background="transparent" speed="1.4" style="width: 625px; height: fit-content; z-index: 3;"></lottie-player>
+                <lottie-player id="blue-head" class="lottie-layer" src="lotties/blue-head-rotate.json" background="transparent" speed="1.4" style="width: 625px; height: fit-content; z-index: 3;" loop></lottie-player>
                 <img id="yellow-head" src="svg/yellow_rotate.svg" alt="Yellow Rotate" width="188" height="198" />
+                <img id="white-wheel" src="svg/white_wheel.svg" alt="White Rotate" width="355" height="355" />
                 <img id="white-wheel-2" src="svg/white_wheel.svg" alt="White Rotate" width="355" height="355" />
                 <img id="blue-bent" class="no-anim" src="svg/blue_bent.svg" alt="Blue Bent" width="355" height="417" />
                 <img id="blue-upright" class="no-anim" src="svg/blue_upright.svg" alt="Blue Upright" width="125" height="696" />
                 <lottie-player src="lotties/blue-bent.json" background="transparent" speed="0.8" style="width: 380px; height: auto; z-index: 3;" loop autoplay class="no-anim" id="blue-w-white-dot"></lottie-player>
-                <img id="oval" class="no-anim" src="svg/oval.svg" alt="Oval" width="52" height="16" />
+                <img class="oval" id="blue" class="no-anim" src="svg/oval.svg" alt="Oval" width="52" height="16" />
+                <img class="oval" id="yellow" class="no-anim" src="svg/oval-yellow.svg" alt="Oval" width="52" height="16" />
                 <img id="white-ball-1" class="no-anim" src="svg/white_ball_1.svg" alt="White Ball 1" width="68" height="523" />
                 <img id="white-ball-2" class="no-anim" src="svg/white_ball_2.svg" alt="White Ball 2" width="63" height="655" />
                 <img id="white-ball-3" class="no-anim" src="svg/white_ball_3.svg" alt="White Ball 3" width="68" height="523" />
@@ -203,7 +272,12 @@
                 <div class="random-dot" id="dot-5"></div>
                 <div class="random-dot" id="dot-6"></div>
                 <div class="random-dot" id="dot-7"></div>
+                <!-- <div class="random-dot" id="dot-8"></div> -->
                 <div class="big-dot"></div>
+
+                <div class="outline-dot" id="out-dot-1"></div>
+                <div class="outline-dot" id="out-dot-2"></div>
+
 
             </div>
         </div>
@@ -212,50 +286,53 @@
     <script>
         function resizeStage() {
             const stage = document.getElementById('stage');
-            const winW = window.innerWidth;
-            const winH = window.innerHeight;
-            const baseW = 1680;
-            const baseH = 880;
-            
-            // Strictly check for Mobile Portrait mode
-            const isMobile = winW < winH; 
+            const container = document.getElementById('stage-container');
 
-            if (isMobile) {
-                // --- MOBILE MODE: Pin Top-Left ---
-                // We anchor to the top-left corner so the left side is always visible (0,0)
-                // and the right side gets cropped.
-                
-                const scale = winH / baseH;
-                
-                // Calculate vertical centering manually since we are pinned top-left
-                const topOffset = (winH - (baseH * scale)) / 2;
+            if (!stage || !container) return;
 
-                // Apply Styles
-                stage.style.transformOrigin = 'top left';
-                stage.style.left = '0px';
-                stage.style.top = '0px';
+            // 1. Measure Available Space
+            const availW = container.offsetWidth;
+            const availH = container.offsetHeight;
+
+            const baseH = 880; 
+            const minW = 1680; 
+
+            // 2. Base Scale (Fit Height)
+            let scale = availH / baseH;
+
+            // 3. Calculate Width based on that scale
+            let newInternalWidth = availW / scale;
+
+            // Mobile Protection
+            if (newInternalWidth < minW) {
+                newInternalWidth = minW;
+            }
+
+            // --- ALIGNMENT & SCALE ADJUSTMENT LOGIC ---
+            if (window.innerWidth < 768) {
+                // MOBILE: 
+                // 1. Snap Left
+                container.style.justifyContent = 'flex-start';
+                // 2. Pin vertical center (so it doesn't clip top/bottom when scaled down)
+                stage.style.transformOrigin = 'left center';
                 
-                // Translate moves it down to center vertically, then we Scale
-                stage.style.transform = `translate3d(0px, ${topOffset}px, 0) scale(${scale})`;
-                
+                // 3. EXTRA SCALE DOWN:
+                // Multiply by 0.85 to make it 15% smaller than the screen height
+                scale = scale * 0.85; 
+
             } else {
-                // --- DESKTOP MODE: Pin Center-Center ---
-                // We anchor to the center. This fixes the "Drift" when zooming.
-                // CSS handles the positioning (50% 50%), JS handles the scaling.
-                
-                // Calculate scale to "Contain" (Fit screen without cropping)
-                const scaleX = winW / baseW;
-                const scaleY = winH / baseH;
-                const scale = Math.min(scaleX, scaleY);
-
-                // Apply Styles
+                // DESKTOP:
+                container.style.justifyContent = 'center';
                 stage.style.transformOrigin = 'center center';
-                stage.style.left = '50%';
-                stage.style.top = '50%';
-                
-                // We use -50% translate to pull the element back to the true center
-                // This is the standard CSS way to center absolute elements
-                stage.style.transform = `translate3d(-50%, -50%, 0) scale(${scale})`;
+            }
+
+            // 4. Apply to DOM
+            stage.style.width = newInternalWidth + 'px';
+            stage.style.transform = `scale(${scale})`;
+            
+            // 5. UPDATE PAPER.JS
+            if (window.updatePaperLayout) {
+                window.updatePaperLayout(newInternalWidth);
             }
         }
 
@@ -265,27 +342,42 @@
 
     <script>
         const beePlayer = document.getElementById('lt-bee');
-        if(beePlayer) {
-            beePlayer.addEventListener('click', () => {
-                const anim = beePlayer.getLottie();
-                beePlayer.loop = false; 
-                anim.loop = false;
-                beePlayer.stop();
-                beePlayer.play();
-            });
-            beePlayer.addEventListener('complete', () => {
-                const anim = beePlayer.getLottie();
-                const startFrame = Math.max(0, anim.totalFrames - (anim.frameRate * 0.53));
-                anim.loop = true;
-                anim.playSegments([startFrame, anim.totalFrames], true);
-            });
-        }
 
+        // 1. Mouse Enter: Play Forward to End
+        beePlayer.addEventListener('mouseenter', () => {
+            const anim = beePlayer.getLottie();
+            if (!anim) return;
+
+            anim.loop = false; // Ensure it stops at the end
+            anim.setDirection(1); // Play forward
+            
+            // Play from the CURRENT frame to the END.
+            // 'true' forces this new segment immediately.
+            // This ensures that if you re-enter while it's reversing (e.g. at frame 40),
+            // it smoothly resumes forward from 40 to End, instead of snapping to 0.
+            anim.playSegments([0, anim.totalFrames], true);
+        });
+
+        // 2. Mouse Leave: Reverse to Start
+        beePlayer.addEventListener('mouseleave', () => {
+            const anim = beePlayer.getLottie();
+            if (!anim) return;
+
+            anim.loop = false;
+            
+            // Play from the CURRENT frame back to 0.
+            // This creates a smooth rewind effect from wherever it currently is.
+            anim.playSegments([anim.totalFrames, 0], true);
+        });
+    </script>
+
+    <script>
         const cssTargets = ['white-wheel', 'white-wheel-2', 'yellow-head'];
         const lottieTargets = ['lt-circles-circle', 'lt-circles-circle-2', 'blue-w-white-dot', 'lt-rotate-circle2', 'blue-head'];
 
-        document.addEventListener('mousemove', (e) => {
-            const elementsUnderCursor = document.elementsFromPoint(e.clientX, e.clientY);
+        // --- SHARED LOGIC: VISUAL ELEMENTS ONLY ---
+        function checkInteractiveElements(clientX, clientY) {
+            const elementsUnderCursor = document.elementsFromPoint(clientX, clientY);
             
             cssTargets.forEach(id => {
                 const el = document.getElementById(id);
@@ -307,20 +399,40 @@
                     player.pause(); 
                 }
             });
+        }
+
+        // --- DESKTOP LISTENER ---
+        // Native Paper.js handles the canvas interaction here.
+        document.addEventListener('mousemove', (e) => {
+            checkInteractiveElements(e.clientX, e.clientY);
         });
+
+        // --- MOBILE LISTENER ---
+        // We manually trigger both the Visual Elements AND Paper.js
+        document.addEventListener('touchmove', (e) => {
+            if(e.target.closest('#stage-container')) {
+                e.preventDefault(); // Stop scrolling
+            }
+
+            const touch = e.touches[0];
+
+            // 1. Check Lotties/CSS
+            checkInteractiveElements(touch.clientX, touch.clientY);
+
+            // 2. Call Paper.js Manually
+            if (window.moveFlowersMobile) {
+                window.moveFlowersMobile(touch.clientX, touch.clientY);
+            }
+
+        }, { passive: false });
     </script>
 
     <script type="text/paperscript" canvas="myCanvas">
         // --- CONFIGURATION ---
-        // Force internal resolution to match design
         var viewZoom = 0.8; 
-        
-        // Physics
-        var spring = 0.005;
-        var friction = 0.98;
-        var windForce = 0.001; 
+        var spring = 0.005; var friction = 0.98; var windForce = 0.001; 
 
-        // --- 1. SVG DATA DEFINITIONS (Collapsed for brevity, same as original) ---
+        // SVG Data (Same as before)
         var f1StemData = "M1.9999,732.1036S5.0007,323.9984,404.1036,146.9528";
         var f1PetalData = "M552.0588,63.1709c-5.505-1.4837-8.3161-3.4986-9.8633-9.3011C533.7072,22.0344,505.4597.2553,473.1697.0023c-33.0227-.2586-61.6091,21.0843-70.3764,53.3018-1.6823,6.1819-4.5971,8.313-10.4799,9.9242-31.4337,8.6104-52.6969,37.2985-52.5784,69.9844.1169,32.2147,21.2497,60.3015,52.5171,68.9769,5.8162,1.6136,8.7946,3.8631,10.5325,9.9933,9.2112,32.4897,37.6707,53.8155,70.3328,53.456,32.4018-.3566,60.2067-21.8083,69.028-53.9003,1.5921-5.792,4.4996-7.779,9.9548-9.2937,31.9351-8.8671,52.8281-36.7258,52.8288-69.6575.0006-32.8987-21.1496-61.0673-52.8703-69.6166Z";
         var f1SparkleData = "M469.7612,89.0655c5.4171,26.2865,21.0622,41.9471,47.0399,47.5986-25.7089,5.504-41.3815,21.0279-47.1715,47.2213-5.4433-26.0684-21.0876-41.4589-46.7475-47.2281,25.7079-5.788,41.5616-21.3488,46.8791-47.5918Z";
@@ -342,13 +454,12 @@
         var f6Leaf1Data = "M2.9828,497.276h177.7266c27.6495,0,50.0638,22.4143,50.0638,50.0638h0s-186.7357,0-186.7357,0c-22.3276,0-40.1308-18.3313-39.8618-40.6573.0587-4.8695-.2542-8.4678-1.1929-9.4065Z";
         var f6Leaf2Data = "M1.0012,568.6153h279.8479c43.5368,0,78.8303,22.4143,78.8303,50.0638h0s-294.0335,0-294.0335,0c-35.157,0-63.1898-18.3313-62.7663-40.6573.0924-4.8695-.4003-8.4678-1.8784-9.4065Z";
         var f7StemData = "M125.2952,161.2702S-76.6193,497.0047,36.3346,867.5727";
-        var f7HeadData1 = "M274.7972,156.7063c-6.3896-13.0186-6.999-25.5293-.6421-38.6514,3.0146-6.2217,6.2344-12.6157,5.293-19.6963,1.0107-7.5234-.833-14.6333-4.3574-20.4102-9.6514-15.8184-27.7227-26.269-47.2139-20.3398-6.395,1.9453-6.8726.0303-5.2314-5.6489,3.6587-12.6602.6929-24.6968-6.8711-34.8569C202.7088-.447,183.0374-4.3469,163.0735,5.3929c-12.3765,6.0376-24.7739,6.6714-37.5605.8413C119.4578,3.4734,113.4778.1541,106.4476.0086c-25.0498-.5195-47.6528,22.5894-41.9072,50.0659,1.5542,7.4336.0034,9.2534-7.0801,7.0508-12.0786-3.7559-22.3379.9072-31.9385,6.7817-17.9849,11.0054-21.7158,33.2495-13.3511,50.8325,6.6372,13.9502,8.0024,27.9995.5503,42.2847-4.687,8.9844-6.043,18.4277-3.6865,28.606,4.7671,20.5898,31.9175,36.668,51.3076,29.9404,1.7178-.5962,3.4639-2.605,5.2402-.8896,1.7173,1.6582-.1069,3.6216-.5459,5.3613-4.0273,15.9556.5044,30.1108,11.6943,41.0132,13.438,13.0928,29.5283,14.144,46.6763,6.0977,11.5361-5.4131,23.998-7.2896,36.1099-1.7944,4.8301,2.1914,9.5825,4.5024,14.6875,5.7017,31.3354,7.3608,53.9609-24.0786,49.4351-45.5122-2.4297-11.5063-2.4077-11.8013,9.0811-9.8262,18.2949,3.144,31.4209-5.3091,41.1704-19.187,8.812-12.5444,7.3779-26.6431.9062-39.8286ZM153.9134,174.1229h-22.2051v-68.6333h22.2051v68.6333Z";
+        var f7HeadData1 = "M274.7972,156.7063c-6.3896-13.0186-6.999-25.5293-.6421-38.6514,3.0146-6.2217,6.2344-12.6157,5.293-19.6963,1.0107-7.5234-.833-14.6333-4.3574-20.4102-9.6514-15.8184-27.7227-26.269-47.2139-20.3398-6.395,1.9453-6.8726.0303-5.2314-5.6489,3.6587-12.6602.6929-24.6968-6.8711-34.8569C202.7088-.447,183.0374-4.3469,163.0735,5.3929c-12.3765,6.0376-24.7739,6.6714-37.5605.8413C119.4578,3.4734,113.4778.1541,106.4476.0086c-25.0498-.5195-47.6528,22.5894-41.9072,50.0659,1.5542,7.4336.0034,9.2534-7.0801,7.0508-12.0786-3.7559-22.3379.9072-31.9385,6.7817-17.9849,11.0054-21.7158,33.2495-13.3511,50.8325,6.6372,13.9502,8.0024,27.9995.5503,42.2847-4.687,8.9844-6.043,18.4277-3.6865,28.606,4.7671,20.5898,31.9175,36.668,51.3076,29.9404,1.7178-.5962,3.4639-2.605,5.2402-.8896,1.7173,1.6582-.1069,3.6216-.5459,5.3613-4.0273,15.9556.5044,30.1108,11.6943,41.0132,13.438,13.0928,29.5283,14.144,46.6763,6.0977,11.5361-5.4131,23.998-7.2896,36.1099-1.7944,4.8301,2.1914,9.5825,4.5024,14.6875,5.7017,31.3354,7.3608,53.9609-24.0786,49.4351-45.5122-2.4297-11.5063-2.4077-11.8013,9.0811-9.8262,18.2949,3.144,31.4209-5.3091,41.1704-19.187,8.812-12.5444,7.3779-26.6431.9062-39.8286Z";
         var f7HeadData2 = "M153.9134,174.1229h-22.2051v-68.6333h22.2051v68.6333Z";
         var f8aStem = "M35.007,120.1296s71.3393,377.8341,58.1283,467.6688";
         var f8bStem = "M11.8418,124.1485 L22.2474,656.0739";
         var f8cStem = "M16.7472,122.1406s-35.3741,349.6711,3.4505,469.4405";
 
-        // --- 2. HELPER FUNCTIONS ---
         function resamplePathData(pathData, segmentLength) {
             var tempPath = new Path(pathData);
             var resampled = new Path();
@@ -364,20 +475,23 @@
         var f6StemData = resamplePathData(f6RawStem, 10);
         function easeInOut(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
 
-        // --- 3. FLOWER OBJECT ---
         function Flower(stemData, headGroup, position, stemColor, stemWidth, leaves) {
-            this.angle = 0;
-            this.velocity = 0;
-            this.headGroup = headGroup;
+            this.angle = 0; 
+            this.velocity = 0; 
+            this.headGroup = headGroup; 
             this.leaves = [];
-            var inputLeaves = [];
-            if (leaves) { inputLeaves = Array.isArray(leaves) ? leaves : [leaves]; }
+            var inputLeaves = leaves ? (Array.isArray(leaves) ? leaves : [leaves]) : [];
             this.growPhase = 'done'; 
             this.growTime = 0; 
+            
+            // 1. Create Stem at Normal Scale (1.0)
+            // We do NOT scale it yet. We need it to match the leaves' original positions.
             this.stemPath = new Path(stemData);
-            this.stemPath.strokeColor = stemColor;
-            this.stemPath.strokeWidth = stemWidth;
+            this.stemPath.strokeColor = stemColor; 
+            this.stemPath.strokeWidth = stemWidth; 
             this.stemPath.strokeCap = 'round';
+            
+            // 2. Standard Setup (Orientation & Measurements)
             var first = this.stemPath.firstSegment.point;
             var last = this.stemPath.lastSegment.point;
             if (first.y < last.y) { this.stemPath.reverse(); }
@@ -385,31 +499,79 @@
             this.stemPath.dashArray = [this.maxStemLength, this.maxStemLength];
             this.stemPath.dashOffset = 0;
             this.rootPoint = this.stemPath.firstSegment.point.clone();
+            
+            // 3. Capture Stem Segments (Vectors relative to Root)
             this.stemSegments = [];
             for (var i = 0; i < this.stemPath.segments.length; i++) {
                 var segment = this.stemPath.segments[i];
-                this.stemSegments.push({ point: segment.point.subtract(this.rootPoint), handleIn: segment.handleIn.clone(), handleOut: segment.handleOut.clone() });
+                this.stemSegments.push({ 
+                    point: segment.point.subtract(this.rootPoint), 
+                    handleIn: segment.handleIn.clone(), 
+                    handleOut: segment.handleOut.clone() 
+                });
             }
+            
+            // 4. Connect Head (Scale 1.0 calculation)
             var tipIndex = this.stemPath.segments.length - 1;
             var initialTip = this.stemPath.segments[tipIndex].point;
             this.headOffset = this.headGroup.position.subtract(initialTip);
+            
+            // 5. Connect Leaves (Scale 1.0 calculation)
             for (var k = 0; k < inputLeaves.length; k++) {
                 var leaf = inputLeaves[k];
                 var leafRefY = leaf.pivot ? leaf.pivot.y : leaf.position.y;
-                var bestDist = 99999;
-                var bestIndex = 0;
+                var bestDist = 99999; var bestIndex = 0;
+                
+                // Find closest stem point
                 for(var i=0; i<this.stemPath.segments.length; i++) {
                     var segPoint = this.stemPath.segments[i].point;
                     var dist = Math.abs(segPoint.y - leafRefY);
                     if(dist < bestDist) { bestDist = dist; bestIndex = i; }
                 }
+                
+                // Snap leaf to stem
                 var stemPoint = this.stemPath.segments[bestIndex].point;
                 var snapVector = stemPoint.subtract(leaf.pivot || leaf.position);
                 leaf.position = leaf.position.add(snapVector);
                 if(leaf.pivot) leaf.pivot = leaf.pivot.add(snapVector);
+                
                 var pivotToCenter = leaf.position.subtract(leaf.pivot || leaf.position);
                 this.leaves.push({ group: leaf, index: bestIndex, offsetVector: pivotToCenter });
             }
+
+            // ---------------------------------------------------------
+            // 6. THE FIX: BAKE SCALE (0.9) INTO EVERYTHING
+            // Now that connections are calculated, we shrink all the math.
+            // ---------------------------------------------------------
+            var s = 0.9; // The visual scale factor
+
+            // A. Scale the Stem Skeleton (Points & Handles)
+            // This preserves the curves but makes them 80% size
+            for(var i=0; i<this.stemSegments.length; i++) {
+                this.stemSegments[i].point = this.stemSegments[i].point * s;
+                this.stemSegments[i].handleIn = this.stemSegments[i].handleIn * s;
+                this.stemSegments[i].handleOut = this.stemSegments[i].handleOut * s;
+                
+            }
+
+            // B. Scale the Head Connection
+            this.headOffset = this.headOffset * s;
+            this.headGroup.scale(1);
+
+            // C. Scale the Leaf Connections
+            for(var k=0; k<this.leaves.length; k++) {
+                this.leaves[k].offsetVector = this.leaves[k].offsetVector * s;
+                this.leaves[k].group.scale(1.2);
+            }
+
+            // D. Scale Stem Properties
+            this.stemPath.strokeWidth *= s;
+            this.maxStemLength *= s;
+            this.stemPath.dashArray = [this.maxStemLength, this.maxStemLength]; // Update dash for grow anim
+
+            // ---------------------------------------------------------
+
+            // 7. Final Grouping
             var items = [this.stemPath, this.headGroup];
             for(var k=0; k<this.leaves.length; k++) { items.push(this.leaves[k].group); }
             this.fullGroup = new Group(items);
@@ -418,11 +580,8 @@
         }
 
         Flower.prototype.startGrow = function() {
-            this.growPhase = 'stem';
-            this.growTime = 0; 
-            this.stemPath.dashOffset = this.maxStemLength;
-            this.headGroup.opacity = 0;
-            this.headGroup.scale(0.001);
+            this.growPhase = 'stem'; this.growTime = 0; this.stemPath.dashOffset = this.maxStemLength;
+            this.headGroup.opacity = 0; this.headGroup.scale(0.001);
             for(var i=0; i<this.leaves.length; i++) { this.leaves[i].group.opacity = 0; this.leaves[i].group.scale(0.001); }
             this.currentScale = 0.001; 
         };
@@ -430,9 +589,7 @@
         Flower.prototype.update = function(mousePoint, mouseDeltaX) {
             if (mousePoint && mousePoint.getDistance(this.headGroup.position) < 100) { this.velocity += mouseDeltaX * windForce; }
             var acceleration = -this.angle * spring;
-            this.velocity += acceleration;
-            this.velocity *= friction;
-            this.angle += this.velocity;
+            this.velocity += acceleration; this.velocity *= friction; this.angle += this.velocity;
             if (this.growPhase === 'stem') {
                 this.growTime += 0.015; 
                 if (this.growTime >= 1) { this.growTime = 1; this.stemPath.dashOffset = 0; this.growPhase = 'head'; this.growTime = 0; } 
@@ -472,36 +629,37 @@
             }
         };
 
-        // --- 4. BUILD FLOWERS ---
-        var centerPoint1 = new Point(-120, 600); 
-        var centerPoint2 = new Point(440, 430); 
-        var centerPoint3 = new Point(70, 800);
-        var centerPoint4 = new Point(260, 790);
-        var centerPoint5 = new Point(-470, 520);
-        var centerPoint6 = new Point(710, 445);
-        var centerPoint7 = new Point(1250, 550);
-        var centerPoint8 = new Point(1290, 740);
+        // --- DEFINE BASE POSITIONS (True 1680x880 Grid) ---
+        // We shifted these so they align with a center of 840, not 400.
+        var p1 = new Point(385, 670);
+        var p2 = new Point(880, 523);
+        var p3 = new Point(570, 790);
+        var p4 = new Point(730, 800);
+        var p5 = new Point(165, 580);
+        var p6 = new Point(1100, 545);
+        var p7 = new Point(1520, 620);
+        var p8 = new Point(1555, 780);
 
         var f1Petals = new Path(f1PetalData);
         f1Petals.fillColor = { gradient: { stops: [['#e94100', 0.24], ['#ec4504', 0.44], ['#f55412', 0.67], ['#ff6422', 0.85]], radial: true }, origin: new Point(472.33, 132.82), destination: new Point(472.33 + 132.7, 132.82) };
         var f1Sparkle = new Path(f1SparkleData); f1Sparkle.fillColor = 'white';
-        var f1Head = new Group([f1Petals, f1Sparkle]);
+        var f1Head = new Group([f1Petals, f1Sparkle]); f1Head.scale(1.05);
         var f1Leaf = new Path(f1LeafData); f1Leaf.fillColor = '#457f42';
         var f1LeafGroup = new Group([f1Leaf]); f1LeafGroup.pivot = new Point(273.5112, 522.564);
         var f1StemResampled = resamplePathData(f1StemData, 20);
-        var flower1 = new Flower(f1StemResampled, f1Head, centerPoint1, '#457f42', 5, [f1LeafGroup]);
+        var flower1 = new Flower(f1StemResampled, f1Head, p1, '#457f42', 5, [f1LeafGroup]);
 
         var f2P1 = new Path(f2PetalData1); var f2P2 = new Path(f2PetalData2); var f2P3 = new Path(f2PetalData3);
         var f2Gradient = { gradient: { stops: [['#f4aa34', 0.24], ['#f4aa34', 0.64], ['#f4aa34', 0.70], ['#ffffff', 1.0]], radial: false }, origin: new Point(178.5, 192.5 + 95.5), destination: new Point(178.5, 192.5 - 150.5) };
         f2P1.fillColor = f2Gradient; f2P2.fillColor = f2Gradient; f2P3.fillColor = f2Gradient;
         var f2Head = new Group([f2P1, f2P2, f2P3]);
         var f2StemResampled = resamplePathData(f2StemData, 20);
-        var flower2 = new Flower(f2StemResampled, f2Head, centerPoint2, '#457f42', 5);
+        var flower2 = new Flower(f2StemResampled, f2Head, p2, '#457f42', 5);
 
         var f3Petals = new Path(f3HeadData);
         f3Petals.fillColor = { gradient: { stops: [['#f1cb3e', 0], ['#f4aa34', 0.33], ['#f4aa34', 0.52], ['#ffffff', 0.97]], radial: false }, origin: f3Petals.bounds.bottomLeft, destination: f3Petals.bounds.topRight }; 
         var f3Head = new Group([f3Petals]);
-        var flower3 = new Flower(f3StemData, f3Head, centerPoint3, '#99ffa0', 4);
+        var flower3 = new Flower(f3StemData, f3Head, p3, '#99ffa0', 4);
 
         var f4Bg = new Path.Circle(new Point(56.477, 56.477), 56.477);
         f4Bg.fillColor = { gradient: { stops: [['#de84d6', 0], ['#de84d6', 0.42], ['#476e46', 0.93]], radial: false }, origin: f4Bg.bounds.bottomRight, destination: f4Bg.bounds.topLeft };
@@ -509,14 +667,14 @@
         var f4FaceP2 = new Path(f4FaceData2); f4FaceP2.fillColor = 'white';
         var f4FaceP3 = new Path(f4FaceData3); f4FaceP3.fillColor = 'white';
         var f4Head = new Group([f4Bg, f4FaceP1, f4FaceP2, f4FaceP3]); f4Head.scale(1.0); 
-        var flower4 = new Flower(f4StemData, f4Head, centerPoint4, '#71ff94', 4);
+        var flower4 = new Flower(f4StemData, f4Head, p4, '#71ff94', 4);
 
         var f5Part1 = new Path(f5HeadDataDiamond);
         f5Part1.fillColor = { gradient: { stops: [['#ff968b', 0], ['#ef5542', 0.87]], radial: false }, origin: f5Part1.bounds.leftCenter, destination: f5Part1.bounds.rightCenter };
         var f5Part2 = new Path(f5HeadDataRound);
         f5Part2.fillColor = { gradient: { stops: [['#ffffff', 0], ['#de84d6', 0.5], ['#335d36', 1.0]], radial: false }, origin: f5Part2.bounds.leftCenter, destination: f5Part2.bounds.topRight };
-        var f5Head = new Group([f5Part1, f5Part2]); f5Head.scale(1.0); 
-        var flower5 = new Flower(f5StemData, f5Head, centerPoint5, '#71ff94', 4);
+        var f5Head = new Group([f5Part1, f5Part2]); f5Head.scale(1.15); 
+        var flower5 = new Flower(f5StemData, f5Head, p5, '#71ff94', 4);
 
         var f6Outer = new Path.Circle(new Point(234.8436, 143.6878), 98.0915);
         f6Outer.fillColor = { gradient: { stops: [['#00a5ea', 0.4], ['#39cef2', 0.76]], radial: true }, origin: f6Outer.position, destination: f6Outer.position + [172.8, 0] };
@@ -530,51 +688,153 @@
         f6L2.fillColor = { gradient: { stops: [['#ef5542', 0.1], ['#ff968b', 0.5], ['#ef5542', 0.98]], radial: false }, origin: f6L2.bounds.leftCenter, destination: f6L2.bounds.topRight };
         var f6LeafGroup2 = new Group([f6L2]); f6LeafGroup2.pivot = new Point(230, 590);
         var f6StemResampled = resamplePathData(f6StemData, 20);
-        var flower6 = new Flower(f6StemResampled, f6Head, centerPoint6, '#71ff94', 5, [f6LeafGroup1, f6LeafGroup2]);
+        var flower6 = new Flower(f6StemResampled, f6Head, p6, '#71ff94', 5, [f6LeafGroup1, f6LeafGroup2]);
 
         var f7PathOuter = new Path(f7HeadData1); var f7PathInner = new Path(f7HeadData2);
         var f7CutoutHead = f7PathOuter.subtract(f7PathInner);
         f7PathOuter.remove(); f7PathInner.remove();
         f7CutoutHead.fillColor = { gradient: { stops: [['#f4e0f2', 0], ['#eed2ec', 0.055], ['#d698d3', 0.32], ['#c674c3', 0.51], ['#c167be', 0.62]], radial: true }, origin: new Point(143.9887, 136.13), destination: new Point(143.9887 + 169.9133, 136.13) };
-        var f7Head = new Group([f7CutoutHead]); f7Head.scale(1.1);
-        var flower7 = new Flower(f7StemData, f7Head, centerPoint7, '#71ff94', 4);
+        var f7Head = new Group([f7CutoutHead]); f7Head.scale(1.0);
+        var flower7 = new Flower(f7StemData, f7Head, p7, '#71ff94', 4);
 
         var f8aRect = new Path.Rectangle(new Point(13.8694, -1.4115), new Size(26.422, 163.8162), new Size(13.211, 13.211));
         f8aRect.fillColor = '#089fd7'; f8aRect.transform(new Matrix().translate(-15.6912, 7.1233).rotate(-11.6454));
-        var flower8a = new Flower(f8aStem, new Group([f8aRect]), centerPoint8 + new Point(-50, 90), '#71ff94', 4);
+        var flower8a = new Flower(f8aStem, new Group([f8aRect]), p8 + new Point(-35, 90), '#71ff94', 4);
         var f8bRect = new Path.Rectangle(new Point(0.3244, -0.0008), new Size(26.422, 163.8162), new Size(13.211, 13.211));
         f8bRect.fillColor = '#089fd7'; f8bRect.transform(new Matrix().translate(0.3869, -0.063).rotate(0.2705));
-        var flower8b = new Flower(f8bStem, new Group([f8bRect]), centerPoint8 + new Point(0, 20), '#71ff94', 4);
+        var flower8b = new Flower(f8bStem, new Group([f8bRect]), p8 + new Point(0, 20), '#71ff94', 4);
         var f8cRect = new Path.Rectangle(new Point(19.3894, -2.0426), new Size(26.422, 163.8162), new Size(13.211, 13.211));
         f8cRect.fillColor = '#089fd7'; f8cRect.transform(new Matrix().translate(20.3161, -5.5182).rotate(14.0178));
-        var flower8c = new Flower(f8cStem, new Group([f8cRect]), centerPoint8 + new Point(70, 50), '#71ff94', 4);
+        var flower8c = new Flower(f8cStem, new Group([f8cRect]), p8 + new Point(60, 50), '#71ff94', 4);
 
         var flowers = [flower1, flower2, flower3, flower4, flower5, flower6, flower7, flower8a, flower8b, flower8c];
+        
+        // --- NEW: INITIALIZE PERCENTAGE POSITIONS ---
+        // We calculate where each flower is as a % of the standard 1680px design.
+        for(var i=0; i<flowers.length; i++) {
+            // 1. Scale down the graphic to 0.8 (Visual preference, replacing camera zoom)
+            flowers[i].fullGroup.scale(0.8);
+
+            // 2. Calculate % X based on the design width (1680)
+            // e.g., if x=840, pctX becomes 0.5 (50%)
+            flowers[i].pctX = flowers[i].fullGroup.position.x / 1680;
+            
+            // 3. Store absolute Y (We lock this so flowers never float up/down)
+            flowers[i].baseY = flowers[i].fullGroup.position.y;
+
+            // 4. Store offset to keep stem attached to head
+            flowers[i].rootOffset = flowers[i].rootPoint.subtract(flowers[i].fullGroup.position);
+        }
 
         // --- 5. VIEW SETUP & EVENTS ---
         
-        // 1. Force the internal resolution to match our fixed Stage
-        view.viewSize = new Size(1680, 880);
+        // Disable autoResize so we can control width manually
         view.autoResize = false; 
-
-        // 2. RESTORE ORIGINAL CAMERA
-        view.center = new Point(400, 400); 
-        view.zoom = 0.8; 
+        
+        // Reset Camera to default (0,0 is Top-Left, Zoom is 1)
+         
 
         view.onKeyDown = function(event) {
             if (event.key === 'g') { for(var i = 0; i < flowers.length; i++) { flowers[i].startGrow(); } }
         };
 
+        // Tracking variable for velocity calculation
+        var lastMousePoint = new Point(0,0);
+
         view.onMouseMove = function(event) {
-            var deltaX = event.delta ? event.delta.x : 0;
-            for(var i = 0; i < flowers.length; i++) { flowers[i].update(event.point, deltaX); }
+            var canvas = document.getElementById('myCanvas');
+            var rect = canvas.getBoundingClientRect();
+            
+            // 1. Calculate Normalized Coordinates (0.0 to 1.0)
+            var pctX = (event.event.clientX - rect.left) / rect.width;
+            var pctY = (event.event.clientY - rect.top) / rect.height;
+            
+            // 2. Convert to Internal Canvas Coordinates
+            var internalX = pctX * view.viewSize.width;
+            var internalY = pctY * view.viewSize.height;
+            
+            var correctedPoint = new Point(internalX, internalY);
+
+            // 3. CALCULATE DELTA (Wind Force)
+            // We compare current position with the last frame's position
+            var deltaX = correctedPoint.x - lastMousePoint.x;
+            
+            // Update last point for the next frame
+            lastMousePoint = correctedPoint;
+
+            // 4. Update Flowers
+            for(var i = 0; i < flowers.length; i++) { 
+                flowers[i].update(correctedPoint, deltaX); 
+            }
         };
 
-        // --- 6. STAR TWINKLE ENGINE ---
+        // --- NEW: MOBILE LOGIC BRIDGE ---
+        // This function is called manually by the 'touchmove' event in the HTML script
+        var lastMobilePoint = new Point(0,0); 
+
+        window.moveFlowersMobile = function(screenX, screenY) {
+            
+            // 1. Get Canvas Screen Position
+            var canvas = document.getElementById('myCanvas');
+            var rect = canvas.getBoundingClientRect();
+
+            // 2. Normalize Input (0.0 to 1.0)
+            var pctX = (screenX - rect.left) / rect.width;
+            var pctY = (screenY - rect.top) / rect.height;
+
+            // 3. Map to Internal Paper.js Coordinates (Matches your fixed viewSize)
+            // Note: Since you use a custom camera (center 400,400, zoom 0.8), 
+            // we have to be careful. But for wind interaction, raw internal coordinates usually suffice.
+            // If the wind feels "off", we might need to adjust this math to account for the zoom.
+            var internalX = pctX * view.viewSize.width;
+            var internalY = pctY * view.viewSize.height;
+            var currentPoint = new Point(internalX, internalY);
+
+            // 4. Calculate Wind Force
+            var deltaX = currentPoint.x - lastMobilePoint.x;
+            
+            // 5. Update Flowers
+            for(var i = 0; i < flowers.length; i++) { 
+                flowers[i].update(currentPoint, deltaX); 
+            }
+
+            // 6. Save for next frame
+            lastMobilePoint = currentPoint;
+        };
+
+        
+
+        // --- 6. LINEAR LAYOUT ENGINE (CSS-Like) ---
+        window.updatePaperLayout = function(newWidth) {
+            
+            // 1. Update Canvas Resolution
+            view.viewSize.width = newWidth;
+
+            view.center = new Point(newWidth / 2, 440);
+            
+            
+            // 2. Update Flowers
+            for(var i=0; i<flowers.length; i++) {
+                var f = flowers[i];
+                
+                // MATH: Linear Percentage
+                // If width is 1680, x = 1680 * pct.
+                // If width is 3000, x = 3000 * pct.
+                // This means 0 (Left) stays 0. 100% (Right) moves with the edge.
+                var newX = newWidth * f.pctX;
+                
+                // Move Head
+                f.fullGroup.position.x = newX;
+                f.fullGroup.position.y = f.baseY; // Locked Y
+
+                // Move Root (Snap to Head using stored offset)
+                f.rootPoint = new Point(newX, f.baseY).add(f.rootOffset);
+            }
+        }
+
         var starElements = document.querySelectorAll('.stars');
         var starOffsets = [];
         for(var j = 0; j < starElements.length; j++) { starOffsets.push(Math.random() * 1000); }
-
         var Noise = (function() {
             var p = [151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,
             190,6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168,
