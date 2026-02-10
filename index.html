@@ -95,44 +95,72 @@
         #lt-jumping-star { top: 93%; left: 80%; transform: translate(-50%, -50%); }
         #lt-rotate-circle { top: 40%; left: 87%; transform: translate(-50%, -50%); }
         #lt-rotate-circle2 { top: 90%; left: 58%; transform: translate(-50%, -50%); }
-        #lt-bee { top: 49%; left: 9%; transform: translate(-50%, -50%); }
+        #lt-bee { top: 49%; left: 9%; transform: translate(-50%, -50%); z-index: 4;}
         #lt-circles-circle { left: 1%; top: 2%; }
         #lt-circles-circle-2 { left: 90%; top: 14%; }
 
-        #blue-head { position: absolute; bottom: -180px; left: 4%; scale: 0.8; z-index: 3; }
+        #blue-head { position: absolute; bottom: -80px; left: 4%; scale: 1.16; z-index: 3; }
+
+        #yellow-flower {
+            position: absolute;
+            left: 69%;
+            top: 70%;
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+            align-items: center;
+            justify-content: center;
+            gap: 0px;
+        }
         
         #yellow-head {
-            position: absolute; bottom: 7%; right: 20%;
-            transform: translateX(-50%) translateY(50%);
+            position: relative;
+            /* position: absolute; bottom: 7%; right: 20%; */
+            /* transform: translateX(-50%) translateY(50%); */
             animation: spin 20s linear infinite; animation-play-state: paused;
         }
 
+        #yellow-stem {
+            position: relative;
+            width: 4px;
+            height: 140px;
+            background-color: #67975f;
+            padding-top: -300px;
+        }
+
+        #yellow-stem {
+            position: relative;
+        }
+
         #white-wheel {
-            position: absolute; top: 20%; left: 53%;
+            position: absolute; top: 18%; left: 54%;
             transform: translateX(-50%);
             animation: spin 25s linear infinite; animation-play-state: paused;
         }
 
         #white-wheel-2 {
-            position: absolute; width: 9%; height: auto; bottom: 10%; left: 88%;
+            position: absolute; width: 9%; height: auto; bottom: 10%; left: 88.2%;
             transform: translateX(-50%);
             animation: spin 25s linear infinite; animation-play-state: paused;
         }
 
         .force-spin { animation-play-state: running !important; }
 
-        #blue-bent { left: 14.5%; bottom: -15%; z-index: 3; height: auto; width: auto;}
+        #blue-bent { left: 14.5%; bottom: -14%; z-index: 3; height: auto; width: auto;}
         #blue-upright { left: 47%; bottom: 0%; height: 64%; width: auto; z-index: 3; }
         #white-ball-1 { left: 80%; bottom: -30%; }
-        #white-ball-2 { left: 53%; bottom: -25%; }
+        #white-ball-2 { left: 53%; bottom: -35%; }
         #white-ball-3 { left: 4%; bottom: -22%; }
         #white-ball-4 { left: 1%; bottom: -50%; }
         #outline-balls { left: 17%; bottom: 0%; }
-        #blue-w-white-dot { left: 65%; bottom: -4%; }
+        #blue-w-white-dot { left: 67.3%; bottom: -4%; scale: 1.15;}
+
+        #bird { position: absolute; left: 70%; top: 33%; z-index: 0;}
+        #butterfly { position: absolute; left: 68%; top: 44%; z-index: 0; scale: 0.85;}
 
         /* Stars */
         .stars { position: absolute; display: block; transform-box: fill-box; transform-origin: center; }
-        #star-1 { left: 12%; top: 8%; width: 65px; fill: #ffc562; }
+        #star-1 { left: 10%; top: 8%; width: 65px; fill: #ffc562; scale: 1.2;}
         #star-2 { left: 37%; top: 13%; width: 35px; fill: #e293d9; }
         #star-3 { left: 57%; top: -2%; width: 65px; fill: #e293d9; }
         #star-4 { left: 13%; top: 75%; width: 38px; fill: #e293d9; }
@@ -140,9 +168,10 @@
         #star-6 { left: 50%; top: 43%; width: 41px; fill: #e293d9; }
         #star-7 { left: 80%; top: 47%; width: 35px; fill: #e293d9; }
         #star-8 { left: 78%; top: -4%; width: 35px; fill: #00cf5e; }
-        #twinkle-star-1 { left: 85%; top: 8%; }
-        #twinkle-star-2 { left: 20%; top: 48%; width: 60px; fill: #00cf5e; }
+        #twinkle-star-1 { left: 84%; top: 8%; }
+        #twinkle-star-2 { left: 20%; top: 48%; width: 60px; }
         #twinkle-star-3 { left: 45%; top: 85%; width: 70px; }
+        #twinkle-star-4 { left: 30%; top: 1%; width: 70px; }
 
         /* Dots */
         .random-dot {
@@ -155,7 +184,7 @@
         #dot-4 {left: 88%; top: 92%; background-color: #ffc562;}
         #dot-5 {left: 97%; top: 50%; background-color: #ffc562;}
         #dot-6 {left: 83%; top: 21%; background-color: #ffc562;}
-        #dot-7 {left: 64%; top: 90%; background-color: #ffc562;}
+        #dot-7 {left: 64%; top: 90%; background-color: #ffc562; scale: 1.1;}
         #dot-8 {left: 27%; top: 94%; background-color: #ffc562; transform-origin: center; transform: translateX(-50%, 50%);}
 
         .big-dot {
@@ -176,13 +205,14 @@
         }
 
         #out-dot-1 {
-            left: 26.5%;
+            left: 25.5%;
             top: 70%;
         }
 
         #out-dot-2 {
-            left: 65%;
-            top: 90%;
+            left: 64.5%;
+            top: 91%;
+            scale: 0.8;
         }
 
         .oval {
@@ -191,12 +221,19 @@
 
         #blue {
             top: 60%;
-            left: 29%;
+            left: 30%;
+            scale: 0.8;
         }
 
         #yellow {
             top: 92%;
             left: 27%;
+            transform-origin: center; transform: translateX(-50%, 50%);
+        }
+
+        #yellow2 {
+            top: 9%;
+            left: 95%;
             transform-origin: center; transform: translateX(-50%, 50%);
         }
 
@@ -219,6 +256,49 @@
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
+
+        @media screen and (max-width: 768px) {
+            #white-wheel-2 {
+                left: 22%;
+                bottom: 15%;
+            }
+
+            #lt-rotate-circle2 { top: 85%; left: 34%; transform: translate(-50%, -50%); scale: 0.7; }
+
+            #white-ball-4 { left: 0%; bottom: -52%; scale: 0.9;}
+            #white-ball-3 { display: none;}
+            #yellow-flower { left: 0.3%; top: 52%; scale: 0.68;}
+            #yellow-stem { height: 320px;}
+
+            #blue-bent { left: 12%; bottom: -13%;}
+
+            #outline-balls { left: 18.3%; bottom: 0%; }
+            #blue-head { scale: 1; left: 2.7%; bottom: -49px;}
+            #bird { left: 25%; top: 43%; scale: 0.7;}
+            #blue { left: 25%; top: 63%;}
+            
+            #dot-6 { left: 35%; top: 12%;}
+            #dot-5 { left: 37%; top: 78%; scale: 0.7;}
+
+            #star-5 { left: 25.7%; top: 50%; width: 31px; fill: #e293d9; }
+            .big-dot { left: 35%; scale: 0.7; top: 95.5%;}
+            #star-4 { left: 11%; top: 75%; width: 38px; fill: #e293d9; scale: 1.2;}
+            #yellow { rotate: 180deg; scale: 0.8;}
+
+            #out-dot-1 {
+                left: 30.5%;
+                top: 57%;
+                scale: 0.8;
+            }
+
+            #out-dot-2 {
+                left: 37.5%;
+                top: 78%;
+                scale: 0.6;
+            }
+
+        }
+
     </style>
 </head>
 <body>
@@ -232,26 +312,35 @@
                 
                 <lottie-player src="lotties/jumping_star.json" background="transparent" speed="1" style="width: 100px; height: 100px;" loop autoplay class="lottie-layer" id="lt-jumping-star"></lottie-player>
                 <lottie-player src="lotties/circle.json" background="transparent" speed="0.3" style="width: 100px; height: 100px;" loop autoplay class="lottie-layer" id="lt-rotate-circle2"></lottie-player>
-                <lottie-player id="lt-bee" class="lottie-layer" src="lotties/bee/bee_fly.json" background="transparent" speed="1.4" style="width: 500px; height: auto; z-index: 3;"></lottie-player>
+                <lottie-player id="lt-bee" class="lottie-layer" src="lotties/bee/bee_fly.json" background="transparent" speed="1.4" style="width: 500px; height: auto; z-index: 3;" autoplay></lottie-player>
                 <lottie-player id="lt-circles-circle" class="lottie-layer" src="lotties/circles-circle.json" background="transparent" speed="0.6" style="width: 150px; height: auto; z-index: 3;" loop autoplay></lottie-player>
                 <lottie-player id="lt-circles-circle-2" class="lottie-layer" src="lotties/circles-circle.json" background="transparent" speed="0.6" style="width: 140px; height: auto; z-index: 3;" loop autoplay></lottie-player>
+                <img id="bird" src="svg/bird.svg" alt="Bird" width="85" height="56">
+                <img id="butterfly" src="svg/butterfly.svg" alt="Butterfly" width="129" height="107">
 
                 <canvas id="myCanvas" class="canvas-layer"></canvas>
                 
-                <lottie-player id="blue-head" class="lottie-layer" src="lotties/blue-head-rotate.json" background="transparent" speed="1.4" style="width: 625px; height: fit-content; z-index: 3;" loop></lottie-player>
-                <img id="yellow-head" src="svg/yellow_rotate.svg" alt="Yellow Rotate" width="188" height="198" />
+                <lottie-player id="blue-head" class="lottie-layer" src="lotties/blue-head-rotate.json" background="transparent" speed="1.4" style="width: 625px; height: 1273.09; z-index: 3;" loop></lottie-player>
+                
+                <div id="yellow-flower">
+                    <img id="yellow-head" src="svg/yellow_rotate.svg" alt="Yellow Rotate" width="188" height="198" />
+                    <div id="yellow-stem"></div>
+                </div>
+                
                 <img id="white-wheel" src="svg/white_wheel.svg" alt="White Rotate" width="355" height="355" />
                 <img id="white-wheel-2" src="svg/white_wheel.svg" alt="White Rotate" width="355" height="355" />
                 <img id="blue-bent" class="no-anim" src="svg/blue_bent.svg" alt="Blue Bent" width="355" height="417" />
                 <img id="blue-upright" class="no-anim" src="svg/blue_upright.svg" alt="Blue Upright" width="125" height="696" />
                 <lottie-player src="lotties/blue-bent.json" background="transparent" speed="0.8" style="width: 380px; height: auto; z-index: 3;" loop autoplay class="no-anim" id="blue-w-white-dot"></lottie-player>
                 <img class="oval" id="blue" class="no-anim" src="svg/oval.svg" alt="Oval" width="52" height="16" />
-                <img class="oval" id="yellow" class="no-anim" src="svg/oval-yellow.svg" alt="Oval" width="52" height="16" />
+                <img class="oval" id="yellow" class="no-anim" src="svg/oval_w_dot.svg" alt="Oval" width="52" height="42" />
+                <img class="oval" id="yellow2" class="no-anim" src="svg/oval-yellow.svg" alt="Oval" width="52" height="16" />
                 <img id="white-ball-1" class="no-anim" src="svg/white_ball_1.svg" alt="White Ball 1" width="68" height="523" />
                 <img id="white-ball-2" class="no-anim" src="svg/white_ball_2.svg" alt="White Ball 2" width="63" height="655" />
                 <img id="white-ball-3" class="no-anim" src="svg/white_ball_3.svg" alt="White Ball 3" width="68" height="523" />
                 <img id="white-ball-4" class="no-anim" src="svg/white_ball_4.svg" alt="White Ball 4" width="66" height="651" />
                 <img id="outline-balls" class="no-anim" src="svg/outline_balls.svg" alt="Outline Balls" width="136" height="45" />
+                
 
                 <svg id="star-1" class="stars" width="200" height="200" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M 50 10 Q 50 50 90 50 Q 50 50 50 90 Q 50 50 10 50 Q 50 50 50 10 Z" /></svg>
                 <svg id="star-2" class="stars" width="200" height="200" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M 50 10 Q 50 50 90 50 Q 50 50 50 90 Q 50 50 10 50 Q 50 50 50 10 Z" /></svg>
@@ -264,6 +353,7 @@
                 <img id="twinkle-star-1" class="stars" src="svg/twinkle_star.svg" alt="Twinkle Star" width="82" height="82" />
                 <img id="twinkle-star-2" class="stars" src="svg/twinkle_star_2.svg" alt="Twinkle Star" width="82" height="82" />
                 <img id="twinkle-star-3" class="stars" src="svg/twinkle_star.svg" alt="Twinkle Star" width="82" height="82" />
+                <img id="twinkle-star-4" class="stars" src="svg/twinkle_star_3.svg" alt="Twinkle Star" width="82" height="82" />
 
                 <div class="random-dot" id="dot-1"></div>
                 <div class="random-dot" id="dot-2"></div>
@@ -318,7 +408,7 @@
                 
                 // 3. EXTRA SCALE DOWN:
                 // Multiply by 0.85 to make it 15% smaller than the screen height
-                scale = scale * 0.85; 
+                scale = scale * 1; 
 
             } else {
                 // DESKTOP:
@@ -340,45 +430,63 @@
         window.addEventListener('resize', resizeStage);
     </script>
 
-    <script>
+    <!-- <script>
         const beePlayer = document.getElementById('lt-bee');
 
-        // 1. Mouse Enter: Play Forward to End
-        beePlayer.addEventListener('mouseenter', () => {
+        // We wrap the logic in a function to reuse it safely
+        function setupBeeInteraction() {
             const anim = beePlayer.getLottie();
-            if (!anim) return;
-
-            anim.loop = false; // Ensure it stops at the end
-            anim.setDirection(1); // Play forward
+            console.log("im running");
             
-            // Play from the CURRENT frame to the END.
-            // 'true' forces this new segment immediately.
-            // This ensures that if you re-enter while it's reversing (e.g. at frame 40),
-            // it smoothly resumes forward from 40 to End, instead of snapping to 0.
-            anim.playSegments([0, anim.totalFrames], true);
-        });
-
-        // 2. Mouse Leave: Reverse to Start
-        beePlayer.addEventListener('mouseleave', () => {
-            const anim = beePlayer.getLottie();
+            // Safety Check: If animation still isn't ready, stop here.
             if (!anim) return;
+            console.log("im running");
+            // 1. Mouse Enter: Play Forward
+            beePlayer.addEventListener('mouseenter', () => {
+                anim.loop = false;
+                anim.setDirection(1); // Forward
+                
+                // Play from CURRENT frame to END
+                // 'true' forces the new segment immediately
+                anim.playSegments([anim.currentFrame, anim.totalFrames], true);
+            });
 
-            anim.loop = false;
-            
-            // Play from the CURRENT frame back to 0.
-            // This creates a smooth rewind effect from wherever it currently is.
-            anim.playSegments([anim.totalFrames, 0], true);
-        });
-    </script>
+            // 2. Mouse Leave: Reverse
+            beePlayer.addEventListener('mouseleave', () => {
+                anim.loop = false;
+                
+                // Play from CURRENT frame back to START (0)
+                // This ensures smooth rewinding from wherever it is
+                anim.playSegments([anim.currentFrame, 0], true);
+            });
+        }
+
+        // --- CRITICAL FIX: WAIT FOR LOAD ---
+        // We listen for the 'ready' event which fires when the JSON is parsed and ready.
+        beePlayer.addEventListener('ready', setupBeeInteraction);
+        
+        // Fallback: If it's already cached/loaded by the time this runs
+        if (beePlayer.getLottie()) {
+            setupBeeInteraction();
+        }
+    </script> -->
 
     <script>
+        // --- CONFIGURATION ---
         const cssTargets = ['white-wheel', 'white-wheel-2', 'yellow-head'];
+        // Note: 'lt-bee' is NOT in this list because it has special logic
         const lottieTargets = ['lt-circles-circle', 'lt-circles-circle-2', 'blue-w-white-dot', 'lt-rotate-circle2', 'blue-head'];
+        
+        // State tracking for the Bee to prevent spamming the play() command
+        let isBeeHovered = false;
 
-        // --- SHARED LOGIC: VISUAL ELEMENTS ONLY ---
+        // --- INTERACTION LOGIC ---
         function checkInteractiveElements(clientX, clientY) {
+            
+            // 1. What is under the cursor/finger?
             const elementsUnderCursor = document.elementsFromPoint(clientX, clientY);
             
+            // 2. Handle CSS Animation Wheels
             cssTargets.forEach(id => {
                 const el = document.getElementById(id);
                 if (!el) return;
@@ -389,37 +497,66 @@
                 }
             });
 
+            // 3. Handle Standard Lottie Players (Simple Play/Pause)
             lottieTargets.forEach(id => {
                 const player = document.getElementById(id);
-                if (!player) return;
+                if (!player || !player.getLottie()) return; // Safety check
+
                 const isHovering = elementsUnderCursor.includes(player);
-                if (isHovering && player.getLottie() && player.getLottie().isPaused) {
+                
+                if (isHovering && player.getLottie().isPaused) {
                     player.play();
-                } else if (!isHovering && player.getLottie() && !player.getLottie().isPaused) {
+                } else if (!isHovering && !player.getLottie().isPaused) {
                     player.pause(); 
                 }
             });
+
+            // 4. HANDLE THE BEE (Special Logic) 
+            const bee = document.getElementById('lt-bee');
+            // if (bee && bee.getLottie()) {
+            //     const anim = bee.getLottie();
+            //     const currentlyHovering = elementsUnderCursor.includes(bee);
+
+            //     // STATE MACHINE: Only trigger when state CHANGES
+            //     if (currentlyHovering && !isBeeHovered) {
+            //         // --- MOUSE ENTER ---
+            //         isBeeHovered = true;
+            //         anim.loop = false;
+            //         anim.setDirection(1); // Forward
+            //         // Play from Current Frame -> End
+            //         anim.playSegments([anim.currentFrame, anim.totalFrames], true);
+                
+            //     } else if (!currentlyHovering && isBeeHovered) {
+            //         // --- MOUSE LEAVE ---
+            //         isBeeHovered = false;
+            //         anim.loop = false;
+            //         // Play from Current Frame -> Start (Reverse)
+            //         anim.playSegments([anim.currentFrame, 0], true);
+            //     }
+            // }
         }
 
-        // --- DESKTOP LISTENER ---
-        // Native Paper.js handles the canvas interaction here.
-        document.addEventListener('mousemove', (e) => {
+        // --- EVENT LISTENERS ---
+
+        // 1. Desktop Mouse
+        // We use window listener to catch moves everywhere
+        window.addEventListener('mousemove', (e) => {
             checkInteractiveElements(e.clientX, e.clientY);
         });
 
-        // --- MOBILE LISTENER ---
-        // We manually trigger both the Visual Elements AND Paper.js
-        document.addEventListener('touchmove', (e) => {
+        // 2. Mobile Touch
+        window.addEventListener('touchmove', (e) => {
+            // Prevent scrolling if touching the stage
             if(e.target.closest('#stage-container')) {
-                e.preventDefault(); // Stop scrolling
+                e.preventDefault();
             }
 
             const touch = e.touches[0];
 
-            // 1. Check Lotties/CSS
+            // Update Lotties/CSS
             checkInteractiveElements(touch.clientX, touch.clientY);
 
-            // 2. Call Paper.js Manually
+            // Update Paper.js (Bridge)
             if (window.moveFlowersMobile) {
                 window.moveFlowersMobile(touch.clientX, touch.clientY);
             }
@@ -631,8 +768,8 @@
 
         // --- DEFINE BASE POSITIONS (True 1680x880 Grid) ---
         // We shifted these so they align with a center of 840, not 400.
-        var p1 = new Point(385, 670);
-        var p2 = new Point(880, 523);
+        var p1 = new Point(400, 640);
+        var p2 = new Point(870, 523);
         var p3 = new Point(570, 790);
         var p4 = new Point(730, 800);
         var p5 = new Point(165, 580);
@@ -643,7 +780,7 @@
         var f1Petals = new Path(f1PetalData);
         f1Petals.fillColor = { gradient: { stops: [['#e94100', 0.24], ['#ec4504', 0.44], ['#f55412', 0.67], ['#ff6422', 0.85]], radial: true }, origin: new Point(472.33, 132.82), destination: new Point(472.33 + 132.7, 132.82) };
         var f1Sparkle = new Path(f1SparkleData); f1Sparkle.fillColor = 'white';
-        var f1Head = new Group([f1Petals, f1Sparkle]); f1Head.scale(1.05);
+        var f1Head = new Group([f1Petals, f1Sparkle]); f1Head.scale(1.1);
         var f1Leaf = new Path(f1LeafData); f1Leaf.fillColor = '#457f42';
         var f1LeafGroup = new Group([f1Leaf]); f1LeafGroup.pivot = new Point(273.5112, 522.564);
         var f1StemResampled = resamplePathData(f1StemData, 20);
@@ -652,13 +789,13 @@
         var f2P1 = new Path(f2PetalData1); var f2P2 = new Path(f2PetalData2); var f2P3 = new Path(f2PetalData3);
         var f2Gradient = { gradient: { stops: [['#f4aa34', 0.24], ['#f4aa34', 0.64], ['#f4aa34', 0.70], ['#ffffff', 1.0]], radial: false }, origin: new Point(178.5, 192.5 + 95.5), destination: new Point(178.5, 192.5 - 150.5) };
         f2P1.fillColor = f2Gradient; f2P2.fillColor = f2Gradient; f2P3.fillColor = f2Gradient;
-        var f2Head = new Group([f2P1, f2P2, f2P3]);
+        var f2Head = new Group([f2P1, f2P2, f2P3]); f2Head.scale(1.1);
         var f2StemResampled = resamplePathData(f2StemData, 20);
         var flower2 = new Flower(f2StemResampled, f2Head, p2, '#457f42', 5);
 
         var f3Petals = new Path(f3HeadData);
         f3Petals.fillColor = { gradient: { stops: [['#f1cb3e', 0], ['#f4aa34', 0.33], ['#f4aa34', 0.52], ['#ffffff', 0.97]], radial: false }, origin: f3Petals.bounds.bottomLeft, destination: f3Petals.bounds.topRight }; 
-        var f3Head = new Group([f3Petals]);
+        var f3Head = new Group([f3Petals]); f3Head.scale(1.1);
         var flower3 = new Flower(f3StemData, f3Head, p3, '#99ffa0', 4);
 
         var f4Bg = new Path.Circle(new Point(56.477, 56.477), 56.477);
@@ -666,7 +803,7 @@
         var f4FaceP1 = new Path(f4FaceData1); f4FaceP1.fillColor = 'white';
         var f4FaceP2 = new Path(f4FaceData2); f4FaceP2.fillColor = 'white';
         var f4FaceP3 = new Path(f4FaceData3); f4FaceP3.fillColor = 'white';
-        var f4Head = new Group([f4Bg, f4FaceP1, f4FaceP2, f4FaceP3]); f4Head.scale(1.0); 
+        var f4Head = new Group([f4Bg, f4FaceP1, f4FaceP2, f4FaceP3]); f4Head.scale(1.1); 
         var flower4 = new Flower(f4StemData, f4Head, p4, '#71ff94', 4);
 
         var f5Part1 = new Path(f5HeadDataDiamond);
@@ -680,7 +817,7 @@
         f6Outer.fillColor = { gradient: { stops: [['#00a5ea', 0.4], ['#39cef2', 0.76]], radial: true }, origin: f6Outer.position, destination: f6Outer.position + [172.8, 0] };
         var f6Inner = new Path.Circle(new Point(234.8356, 143.0838), 44.0459);
         f6Inner.fillColor = { gradient: { stops: [['#71ff94', 0], ['#4da147', 0.76]], radial: true }, origin: f6Inner.position, destination: f6Inner.position + [43.5, 0] };
-        var f6Head = new Group([f6Outer, f6Inner]);
+        var f6Head = new Group([f6Outer, f6Inner]); f6Head.scale(1.1);
         var f6L1 = new Path(f6Leaf1Data);
         f6L1.fillColor = { gradient: { stops: [['#ef5542', 0.1], ['#ff968b', 0.5], ['#ef5542', 0.98]], radial: false }, origin: f6L1.bounds.leftCenter, destination: f6L1.bounds.topRight };
         var f6LeafGroup1 = new Group([f6L1]); f6LeafGroup1.pivot = new Point(230, 520);
