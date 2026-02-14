@@ -95,7 +95,7 @@
         #lt-jumping-star { top: 93%; left: 80%; transform: translate(-50%, -50%); }
         #lt-rotate-circle { top: 40%; left: 87%; transform: translate(-50%, -50%); }
         #lt-rotate-circle2 { top: 90%; left: 58%; transform: translate(-50%, -50%); }
-        #lt-bee { top: 49%; left: 9%; transform: translate(-50%, -50%); z-index: 4;}
+        #lt-bee { top: 55.5%; left: 12%; transform: translate(-50%, -50%); z-index: 5; scale: 1.2;}
         #lt-circles-circle { left: 1%; top: 2%; }
         #lt-circles-circle-2 { left: 90%; top: 14%; }
 
@@ -134,7 +134,7 @@
         }
 
         #white-wheel {
-            position: absolute; top: 18%; left: 54%;
+            position: absolute; top: 18%; left: 53.65%;
             transform: translateX(-50%);
             animation: spin 25s linear infinite; animation-play-state: paused;
         }
@@ -147,13 +147,13 @@
 
         .force-spin { animation-play-state: running !important; }
 
-        #blue-bent { left: 14.5%; bottom: -14%; z-index: 3; height: auto; width: auto;}
+        #blue-bent { left: 15%; bottom: -17%; z-index: 3; height: auto; width: auto;}
         #blue-upright { left: 47%; bottom: 0%; height: 64%; width: auto; z-index: 3; }
         #white-ball-1 { left: 80%; bottom: -30%; }
         #white-ball-2 { left: 53%; bottom: -35%; }
         #white-ball-3 { left: 4%; bottom: -22%; }
         #white-ball-4 { left: 1%; bottom: -50%; }
-        #outline-balls { left: 17%; bottom: 0%; }
+        #outline-balls { left: 17.6%; bottom: 0%; }
         #blue-w-white-dot { left: 67.3%; bottom: -4%; scale: 1.15;}
 
         #bird { position: absolute; left: 70%; top: 33%; z-index: 0;}
@@ -172,7 +172,7 @@
         #twinkle-star-1 { left: 84%; top: 8%; }
         #twinkle-star-2 { left: 20%; top: 48%; width: 60px; }
         #twinkle-star-3 { left: 45%; top: 85%; width: 70px; }
-        #twinkle-star-4 { left: 30%; top: 1%; width: 70px; }
+        #twinkle-star-4 { left: 34%; top: 1%; width: 70px; }
 
         /* Dots */
         .random-dot {
@@ -227,8 +227,9 @@
         }
 
         #yellow {
-            top: 92%;
+            top: 87%;
             left: 27%;
+            scale: 0.8;
             transform-origin: center; transform: translateX(-50%, 50%);
         }
 
@@ -298,6 +299,8 @@
                 scale: 0.6;
             }
 
+            #lt-bee { top: 49%; left: 9%; transform: translate(-50%, -50%); z-index: 5; scale: 1;}
+
         }
 
     </style>
@@ -313,7 +316,7 @@
                 
                 <lottie-player src="lotties/jumping_star.json" background="transparent" speed="1" style="width: 100px; height: 100px;" loop autoplay class="lottie-layer" id="lt-jumping-star"></lottie-player>
                 <lottie-player src="lotties/circle.json" background="transparent" speed="0.3" style="width: 100px; height: 100px;" loop autoplay class="lottie-layer" id="lt-rotate-circle2"></lottie-player>
-                <lottie-player id="lt-bee" class="lottie-layer" src="lotties/bee/bee_fly.json" background="transparent" speed="1.4" style="width: 500px; height: auto; z-index: 3;" autoplay></lottie-player>
+                
                 <lottie-player id="lt-circles-circle" class="lottie-layer" src="lotties/circles-circle.json" background="transparent" speed="0.6" style="width: 150px; height: auto; z-index: 3;" loop autoplay></lottie-player>
                 <lottie-player id="lt-circles-circle-2" class="lottie-layer" src="lotties/circles-circle.json" background="transparent" speed="0.6" style="width: 140px; height: auto; z-index: 3;" loop autoplay></lottie-player>
                 <img id="bird" src="svg/bird.svg" alt="Bird" width="85" height="56">
@@ -334,7 +337,8 @@
                 <img id="blue-upright" class="no-anim" src="svg/blue_upright.svg" alt="Blue Upright" width="125" height="696" />
                 <lottie-player src="lotties/blue-bent.json" background="transparent" speed="0.8" style="width: 380px; height: auto; z-index: 3;" loop autoplay class="no-anim" id="blue-w-white-dot"></lottie-player>
                 <img class="oval" id="blue" class="no-anim" src="svg/oval.svg" alt="Oval" width="52" height="16" />
-                <img class="oval" id="yellow" class="no-anim" src="svg/oval_w_dot.svg" alt="Oval" width="52" height="42" />
+                <!-- <img class="oval" id="yellow" class="no-anim" src="svg/oval_w_dot.svg" alt="Oval" width="52" height="42" /> -->
+                <lottie-player src="lotties/jumping_star_yellow.json" background="transparent" speed="1" style="width: 100px; height: 100px;" loop autoplay class="lottie-layer" id="yellow"></lottie-player>
                 <img class="oval" id="yellow2" class="no-anim" src="svg/oval-yellow.svg" alt="Oval" width="52" height="16" />
                 <img id="white-ball-1" class="no-anim" src="svg/white_ball_1.svg" alt="White Ball 1" width="68" height="523" />
                 <img id="white-ball-2" class="no-anim" src="svg/white_ball_2.svg" alt="White Ball 2" width="63" height="655" />
@@ -368,6 +372,8 @@
 
                 <div class="outline-dot" id="out-dot-1"></div>
                 <div class="outline-dot" id="out-dot-2"></div>
+
+                <lottie-player id="lt-bee" class="lottie-layer" src="lotties/bee/bee_fly.json" background="transparent" speed="1.4" style="width: 500px; height: auto; z-index: 3;" autoplay></lottie-player>
 
 
             </div>
@@ -613,109 +619,102 @@
         var f6StemData = resamplePathData(f6RawStem, 10);
         function easeInOut(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
 
-        function Flower(stemData, headGroup, position, stemColor, stemWidth, leaves) {
-            this.angle = 0; 
-            this.velocity = 0; 
-            this.headGroup = headGroup; 
-            this.leaves = [];
-            var inputLeaves = leaves ? (Array.isArray(leaves) ? leaves : [leaves]) : [];
-            this.growPhase = 'done'; 
-            this.growTime = 0; 
-            
-            // 1. Create Stem at Normal Scale (1.0)
-            // We do NOT scale it yet. We need it to match the leaves' original positions.
-            this.stemPath = new Path(stemData);
-            this.stemPath.strokeColor = stemColor; 
-            this.stemPath.strokeWidth = stemWidth; 
-            this.stemPath.strokeCap = 'round';
-            
-            // 2. Standard Setup (Orientation & Measurements)
-            var first = this.stemPath.firstSegment.point;
-            var last = this.stemPath.lastSegment.point;
-            if (first.y < last.y) { this.stemPath.reverse(); }
-            this.maxStemLength = this.stemPath.length;
-            this.stemPath.dashArray = [this.maxStemLength, this.maxStemLength];
-            this.stemPath.dashOffset = 0;
-            this.rootPoint = this.stemPath.firstSegment.point.clone();
-            
-            // 3. Capture Stem Segments (Vectors relative to Root)
-            this.stemSegments = [];
-            for (var i = 0; i < this.stemPath.segments.length; i++) {
-                var segment = this.stemPath.segments[i];
-                this.stemSegments.push({ 
-                    point: segment.point.subtract(this.rootPoint), 
-                    handleIn: segment.handleIn.clone(), 
-                    handleOut: segment.handleOut.clone() 
-                });
-            }
-            
-            // 4. Connect Head (Scale 1.0 calculation)
-            var tipIndex = this.stemPath.segments.length - 1;
-            var initialTip = this.stemPath.segments[tipIndex].point;
-            this.headOffset = this.headGroup.position.subtract(initialTip);
-            
-            // 5. Connect Leaves (Scale 1.0 calculation)
-            for (var k = 0; k < inputLeaves.length; k++) {
-                var leaf = inputLeaves[k];
-                var leafRefY = leaf.pivot ? leaf.pivot.y : leaf.position.y;
-                var bestDist = 99999; var bestIndex = 0;
-                
-                // Find closest stem point
-                for(var i=0; i<this.stemPath.segments.length; i++) {
-                    var segPoint = this.stemPath.segments[i].point;
-                    var dist = Math.abs(segPoint.y - leafRefY);
-                    if(dist < bestDist) { bestDist = dist; bestIndex = i; }
-                }
-                
-                // Snap leaf to stem
-                var stemPoint = this.stemPath.segments[bestIndex].point;
-                var snapVector = stemPoint.subtract(leaf.pivot || leaf.position);
-                leaf.position = leaf.position.add(snapVector);
-                if(leaf.pivot) leaf.pivot = leaf.pivot.add(snapVector);
-                
-                var pivotToCenter = leaf.position.subtract(leaf.pivot || leaf.position);
-                this.leaves.push({ group: leaf, index: bestIndex, offsetVector: pivotToCenter });
-            }
+        // --- 3. FLOWER OBJECT ---
 
-            // ---------------------------------------------------------
-            // 6. THE FIX: BAKE SCALE (0.9) INTO EVERYTHING
-            // Now that connections are calculated, we shrink all the math.
-            // ---------------------------------------------------------
-            var s = 0.9; // The visual scale factor
+    // --- 3. FLOWER OBJECT ---
 
-            // A. Scale the Stem Skeleton (Points & Handles)
-            // This preserves the curves but makes them 80% size
-            for(var i=0; i<this.stemSegments.length; i++) {
-                this.stemSegments[i].point = this.stemSegments[i].point * s;
-                this.stemSegments[i].handleIn = this.stemSegments[i].handleIn * s;
-                this.stemSegments[i].handleOut = this.stemSegments[i].handleOut * s;
-                
-            }
+    function Flower(stemData, headGroup, position, stemColor, stemWidth, leaves) {
+        this.angle = 0;
+        this.velocity = 0;
+        this.headGroup = headGroup;
+        
+        // --- IDLE LOGIC ---
+        this.idleFrames = 0; 
+        this.leafBend = 0; // Tracks the temporary bend added to leaves
+        // ------------------
 
-            // B. Scale the Head Connection
-            this.headOffset = this.headOffset * s;
-            this.headGroup.scale(1);
-
-            // C. Scale the Leaf Connections
-            for(var k=0; k<this.leaves.length; k++) {
-                this.leaves[k].offsetVector = this.leaves[k].offsetVector * s;
-                this.leaves[k].group.scale(1.2);
-            }
-
-            // D. Scale Stem Properties
-            this.stemPath.strokeWidth *= s;
-            this.maxStemLength *= s;
-            this.stemPath.dashArray = [this.maxStemLength, this.maxStemLength]; // Update dash for grow anim
-
-            // ---------------------------------------------------------
-
-            // 7. Final Grouping
-            var items = [this.stemPath, this.headGroup];
-            for(var k=0; k<this.leaves.length; k++) { items.push(this.leaves[k].group); }
-            this.fullGroup = new Group(items);
-            this.fullGroup.position = position;
-            this.rootPoint = this.stemPath.firstSegment.point; 
+        this.leaves = [];
+        var inputLeaves = leaves ? (Array.isArray(leaves) ? leaves : [leaves]) : [];
+        this.growPhase = 'done'; 
+        this.growTime = 0; 
+        
+        this.stemPath = new Path(stemData);
+        this.stemPath.strokeColor = stemColor; 
+        this.stemPath.strokeWidth = stemWidth; 
+        this.stemPath.strokeCap = 'round';
+        
+        var first = this.stemPath.firstSegment.point;
+        var last = this.stemPath.lastSegment.point;
+        if (first.y < last.y) { this.stemPath.reverse(); }
+        this.maxStemLength = this.stemPath.length;
+        this.stemPath.dashArray = [this.maxStemLength, this.maxStemLength];
+        this.stemPath.dashOffset = 0;
+        this.rootPoint = this.stemPath.firstSegment.point.clone();
+        
+        this.stemSegments = [];
+        for (var i = 0; i < this.stemPath.segments.length; i++) {
+            var segment = this.stemPath.segments[i];
+            this.stemSegments.push({ 
+                point: segment.point.subtract(this.rootPoint), 
+                handleIn: segment.handleIn.clone(), 
+                handleOut: segment.handleOut.clone() 
+            });
         }
+        
+        var tipIndex = this.stemPath.segments.length - 1;
+        var initialTip = this.stemPath.segments[tipIndex].point;
+        this.headOffset = this.headGroup.position.subtract(initialTip);
+        
+        for (var k = 0; k < inputLeaves.length; k++) {
+            var leaf = inputLeaves[k];
+            var leafRefY = leaf.pivot ? leaf.pivot.y : leaf.position.y;
+            var bestDist = 99999; var bestIndex = 0;
+            
+            for(var i=0; i<this.stemPath.segments.length; i++) {
+                var segPoint = this.stemPath.segments[i].point;
+                var dist = Math.abs(segPoint.y - leafRefY);
+                if(dist < bestDist) { bestDist = dist; bestIndex = i; }
+            }
+            
+            var stemPoint = this.stemPath.segments[bestIndex].point;
+            var snapVector = stemPoint.subtract(leaf.pivot || leaf.position);
+            leaf.position = leaf.position.add(snapVector);
+            if(leaf.pivot) leaf.pivot = leaf.pivot.add(snapVector);
+            
+            var pivotToCenter = leaf.position.subtract(leaf.pivot || leaf.position);
+            
+            this.leaves.push({ 
+                group: leaf, 
+                index: bestIndex, 
+                offsetVector: pivotToCenter,
+                // --- NEW: Store the default rotation ---
+                baseRotation: leaf.rotation || 0 
+            });
+        }
+
+        // SCALING LOGIC
+        var s = 0.9; 
+        for(var i=0; i<this.stemSegments.length; i++) {
+            this.stemSegments[i].point = this.stemSegments[i].point * s;
+            this.stemSegments[i].handleIn = this.stemSegments[i].handleIn * s;
+            this.stemSegments[i].handleOut = this.stemSegments[i].handleOut * s;
+        }
+        this.headOffset = this.headOffset * s;
+        this.headGroup.scale(1);
+        for(var k=0; k<this.leaves.length; k++) {
+            this.leaves[k].offsetVector = this.leaves[k].offsetVector * s;
+            this.leaves[k].group.scale(1.2);
+        }
+        this.stemPath.strokeWidth *= s;
+        this.maxStemLength *= s;
+        this.stemPath.dashArray = [this.maxStemLength, this.maxStemLength];
+
+        var items = [this.stemPath, this.headGroup];
+        for(var k=0; k<this.leaves.length; k++) { items.push(this.leaves[k].group); }
+        this.fullGroup = new Group(items);
+        this.fullGroup.position = position;
+        this.rootPoint = this.stemPath.firstSegment.point; 
+    }
 
         Flower.prototype.startGrow = function() {
             this.growPhase = 'stem'; this.growTime = 0; this.stemPath.dashOffset = this.maxStemLength;
@@ -725,25 +724,49 @@
         };
 
         Flower.prototype.update = function(mousePoint, mouseDeltaX) {
-            if (mousePoint && mousePoint.getDistance(this.headGroup.position) < 100) { this.velocity += mouseDeltaX * windForce; }
+            // 1. PHYSICS (Stem Sway)
+            if (mousePoint && mousePoint.getDistance(this.headGroup.position) < 100) {
+                this.velocity += mouseDeltaX * windForce;
+            }
             var acceleration = -this.angle * spring;
-            this.velocity += acceleration; this.velocity *= friction; this.angle += this.velocity;
+            this.velocity += acceleration;
+            this.velocity *= friction;
+            this.angle += this.velocity;
+
+            // 2. GROW ANIMATION
             if (this.growPhase === 'stem') {
                 this.growTime += 0.015; 
-                if (this.growTime >= 1) { this.growTime = 1; this.stemPath.dashOffset = 0; this.growPhase = 'head'; this.growTime = 0; } 
-                else { var t = easeInOut(this.growTime); this.stemPath.dashOffset = this.maxStemLength * (1 - t); }
-            } else if (this.growPhase === 'head') {
+                if (this.growTime >= 1) {
+                    this.growTime = 1;
+                    this.stemPath.dashOffset = 0;
+                    this.growPhase = 'head';
+                    this.growTime = 0; 
+                } else {
+                    var t = easeInOut(this.growTime);
+                    this.stemPath.dashOffset = this.maxStemLength * (1 - t);
+                }
+            }
+            else if (this.growPhase === 'head') {
                 this.growTime += 0.02; 
-                if (this.growTime >= 1) { this.growTime = 1; this.growPhase = 'done'; }
+                if (this.growTime >= 1) {
+                    this.growTime = 1;
+                    this.growPhase = 'done';
+                }
                 var t = easeInOut(this.growTime);
                 this.headGroup.opacity = t;
+                
                 var desiredScale = t;
                 if (this.currentScale < 0.0001) this.currentScale = 0.0001;
                 var scaleFactor = desiredScale / this.currentScale;
                 this.headGroup.scale(scaleFactor);
-                for(var i=0; i<this.leaves.length; i++) { this.leaves[i].group.opacity = t; this.leaves[i].group.scale(scaleFactor); }
+                for(var i=0; i<this.leaves.length; i++) {
+                    this.leaves[i].group.opacity = t;
+                    this.leaves[i].group.scale(scaleFactor);
+                }
                 this.currentScale = desiredScale;
             }
+
+            // 3. STEM DEFORMATION
             for (var i = 0; i < this.stemPath.segments.length; i++) {
                 var original = this.stemSegments[i];
                 var factor = i / (this.stemPath.segments.length - 1);
@@ -752,18 +775,29 @@
                 this.stemPath.segments[i].point = this.rootPoint.add(newPos);
             }
             this.stemPath.smooth({ type: 'continuous' });
+
+            // 4. HEAD UPDATE
             var tipSegment = this.stemPath.lastSegment;
             var rotatedHeadOffset = this.headOffset.rotate(this.angle);
             this.headGroup.position = tipSegment.point.add(rotatedHeadOffset);
             this.headGroup.rotation = this.angle * 0.01; 
+            
+            // 5. LEAF UPDATE (Slight Rotation)
             for(var k=0; k<this.leaves.length; k++) {
                 var leafConfig = this.leaves[k];
                 var leafSeg = this.stemPath.segments[leafConfig.index];
+                
+                // Calculate Stem Angle (for position)
                 var factor = leafConfig.index / (this.stemPath.segments.length - 1);
-                var leafAngle = this.angle * factor * 0.5;
-                var rotatedOffset = leafConfig.offsetVector.rotate(leafAngle);
+                var stemAngle = this.angle * factor; 
+                
+                // 1. Position: Fully follow the stem's bend
+                var rotatedOffset = leafConfig.offsetVector.rotate(stemAngle);
                 leafConfig.group.position = leafSeg.point.add(rotatedOffset);
-                leafConfig.group.rotation = leafAngle;
+                
+                // 2. Rotation: Follow only 15% of the stem's angle
+                // This creates "slight movement" without full drooping
+                leafConfig.group.rotation = stemAngle * 0.15; 
             }
         };
 
@@ -794,10 +828,12 @@
         var f2StemResampled = resamplePathData(f2StemData, 20);
         var flower2 = new Flower(f2StemResampled, f2Head, p2, '#457f42', 5);
 
+        var f3StemResampled = resamplePathData(f3StemData, 20);
         var f3Petals = new Path(f3HeadData);
         f3Petals.fillColor = { gradient: { stops: [['#f1cb3e', 0], ['#f4aa34', 0.33], ['#f4aa34', 0.52], ['#ffffff', 0.97]], radial: false }, origin: f3Petals.bounds.bottomLeft, destination: f3Petals.bounds.topRight }; 
         var f3Head = new Group([f3Petals]); f3Head.scale(1.1);
-        var flower3 = new Flower(f3StemData, f3Head, p3, '#99ffa0', 4);
+        
+        var flower3 = new Flower(f3StemResampled, f3Head, p3, '#99ffa0', 4);
 
         var f4Bg = new Path.Circle(new Point(56.477, 56.477), 56.477);
         f4Bg.fillColor = { gradient: { stops: [['#de84d6', 0], ['#de84d6', 0.42], ['#476e46', 0.93]], radial: false }, origin: f4Bg.bounds.bottomRight, destination: f4Bg.bounds.topLeft };
