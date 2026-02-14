@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" width="354.0543" height="354.0543" viewBox="0 0 354.0543 354.0543">
-  <g id="Layer_5" data-name="Layer 5">
+<svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 354 354.3">
+  <!-- Generator: Adobe Illustrator 30.2.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <g id="Layer_1-2">
     <g>
-      <line y1="175.7542" x2="354.0543" y2="175.7542" style="fill: none; stroke: #fff; stroke-miterlimit: 10; stroke-width: 1.2px;"/>
-      <line x1="169.2726" x2="169.2726" y2="354.0543" style="fill: none; stroke: #fff; stroke-miterlimit: 10; stroke-width: 1.2px;"/>
-      <line x1="295.6745" y1="50.9212" x2="45.3203" y2="301.2754" style="fill: none; stroke: #fff; stroke-miterlimit: 10; stroke-width: 1.2px;"/>
-      <line x1="292.9222" y1="302.5827" x2="42.568" y2="52.2285" style="fill: none; stroke: #fff; stroke-miterlimit: 10; stroke-width: 1.2px;"/>
-      <line x1="238.4465" y1="339.7442" x2="97.5253" y2="14.9432" style="fill: none; stroke: #fff; stroke-miterlimit: 10; stroke-width: 1.2px;"/>
-      <line x1="10.8423" y1="247.0818" x2="335.6433" y2="106.1606" style="fill: none; stroke: #fff; stroke-miterlimit: 10; stroke-width: 1.2px;"/>
-      <line x1="103.73" y1="344.5394" x2="233.6179" y2="15.1709" style="fill: none; stroke: #fff; stroke-miterlimit: 10; stroke-width: 1.2px;"/>
-      <line x1="6.9233" y1="107.6347" x2="331.9521" y2="248.0297" style="fill: none; stroke: #fff; stroke-miterlimit: 10; stroke-width: 1.2px;"/>
+      <rect class="st0" x="-2.1" y="176.7" width="354.1" height="1.2" transform="translate(-1.7 352.9) rotate(-90.2)"/>
+      <rect class="st0" x="176.5" y="-8" width="1.2" height="354.1" transform="translate(8.7 346.8) rotate(-90.2)"/>
+      <rect class="st0" x="176.9" y="-5.4" width="1.2" height="354.1" transform="translate(-69.3 176.8) rotate(-45.2)"/>
+      <rect class="st0" x="-1" y="167" width="354.1" height="1.2" transform="translate(-67 174.5) rotate(-45.2)"/>
+      <rect class="st0" x="0" y="167.5" width="354.1" height="1.2" transform="translate(-52.6 85.2) rotate(-23.7)"/>
+      <rect class="st0" x="176.2" y="-3.9" width="1.2" height="354.1" transform="translate(-54.7 85.7) rotate(-23.7)"/>
+      <rect class="st0" x="172.9" y="-8.4" width="1.2" height="354.1" transform="translate(-46.5 269.2) rotate(-68.8)"/>
+      <rect class="st0" x="-2.8" y="169.8" width="354.1" height="1.2" transform="translate(-50.9 263.6) rotate(-66.9)"/>
     </g>
   </g>
 </svg>
