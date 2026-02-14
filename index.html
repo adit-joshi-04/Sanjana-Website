@@ -118,6 +118,7 @@
             /* position: absolute; bottom: 7%; right: 20%; */
             /* transform: translateX(-50%) translateY(50%); */
             animation: spin 20s linear infinite; animation-play-state: paused;
+            scale: 0.8;
         }
 
         #yellow-stem {
@@ -295,8 +296,11 @@
             #star-5 { left: 25.7%; top: 50%; width: 31px; fill: #e293d9; display: none;}
             .big-dot { left: 35%; scale: 0.7; top: 95.5%;}
             #star-4 { left: 11%; top: 75%; width: 38px; fill: #e293d9; scale: 1.2; display: none;}
-            #yellow { rotate: 180deg; scale: 0.8;}
-
+            #yellow { rotate: 180deg; scale: 0.8; display: none;}
+            #lt-jumping-star { top: 90%;
+            left: 29%;
+            scale: 0.8;
+            transform-origin: center; transform: translateX(-50%, 50%);}
             #star-2 { left: 35%; top: 13%; width: 35px; fill: #e293d9; }
 
             #twinkle-star-4 { left: 30%; top: 1%; width: 70px; }
@@ -398,7 +402,7 @@
                 <div class="outline-dot" id="out-dot-2"></div>
                 <div class="outline-dot" id="out-dot-3"></div>
 
-                <lottie-player id="lt-bee" class="lottie-layer" src="lotties/bee/bee_fly.json" background="transparent" speed="1.4" style="width: 500px; height: auto; z-index: 3;" autoplay></lottie-player>
+                <lottie-player id="lt-bee" class="lottie-layer" src="lotties/bee/bee_fly.json" background="transparent" speed="1.4" style="width: 500px; height: auto; z-index: 3;" autoplay loop></lottie-player>
 
 
             </div>
@@ -736,6 +740,11 @@
 
         var items = [this.stemPath, this.headGroup];
         for(var k=0; k<this.leaves.length; k++) { items.push(this.leaves[k].group); }
+        // 2. Add Stem (Middle)
+        items.push(this.stemPath);
+
+        // 3. Add Head (Foreground)
+        items.push(this.headGroup);
         this.fullGroup = new Group(items);
         this.fullGroup.position = position;
         this.rootPoint = this.stemPath.firstSegment.point; 
