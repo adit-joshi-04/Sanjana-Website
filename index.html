@@ -173,6 +173,7 @@
         #twinkle-star-2 { left: 20%; top: 48%; width: 60px; }
         #twinkle-star-3 { left: 45%; top: 85%; width: 70px; }
         #twinkle-star-4 { left: 34%; top: 1%; width: 70px; }
+        #blue-yellow-star { left: 8%; top: 50%; display: none;}
 
         /* Dots */
         .random-dot {
@@ -214,6 +215,13 @@
             left: 64.5%;
             top: 91%;
             scale: 0.8;
+        }
+
+        #out-dot-3 {
+            left: 64.5%;
+            top: 91%;
+            scale: 0.8;
+            display: none;
         }
 
         .oval {
@@ -261,31 +269,37 @@
 
         @media screen and (max-width: 768px) {
             #white-wheel-2 {
-                left: 22%;
-                bottom: 15%;
+                left: 20%;
+                bottom: 23%;
             }
 
             #lt-rotate-circle2 { top: 85%; left: 34%; transform: translate(-50%, -50%); scale: 0.7; }
-
+            #white-ball-1 { left: 3.7%; top: 67%;}
+            #white-ball-2 { left: 9%; top: 83%;}
             #white-ball-4 { left: 0%; bottom: -52%; scale: 0.9;}
             #white-ball-3 { display: none;}
-            #yellow-flower { left: 0.3%; top: 59%; scale: 0.68;}
+            #yellow-flower { left: 0.3%; top: 59%; scale: 0.68; display: none;}
             #yellow-stem { height: 320px; display: none;}
 
-            #blue-bent { left: 12%; bottom: -13%;}
+            #blue-bent { left: 12%; bottom: -13%; display: none;}
 
             #outline-balls { left: 18.3%; bottom: 0%; }
             #blue-head { scale: 1; left: 2.7%; bottom: -49px;}
             #bird { left: 25%; top: 43%; scale: 0.7;}
-            #blue { left: 25%; top: 63%;}
+            #blue { left: 25%; top: 63%; display: none;}
             
             #dot-6 { left: 35%; top: 12%;}
             #dot-5 { left: 37%; top: 78%; scale: 0.7;}
+            #dot-4 { left: 13.5%; top: 79%; background-color: #ef5542;}
 
-            #star-5 { left: 25.7%; top: 50%; width: 31px; fill: #e293d9; }
+            #star-5 { left: 25.7%; top: 50%; width: 31px; fill: #e293d9; display: none;}
             .big-dot { left: 35%; scale: 0.7; top: 95.5%;}
-            #star-4 { left: 11%; top: 75%; width: 38px; fill: #e293d9; scale: 1.2;}
+            #star-4 { left: 11%; top: 75%; width: 38px; fill: #e293d9; scale: 1.2; display: none;}
             #yellow { rotate: 180deg; scale: 0.8;}
+
+            #star-2 { left: 35%; top: 13%; width: 35px; fill: #e293d9; }
+
+            #twinkle-star-4 { left: 30%; top: 1%; width: 70px; }
 
             #out-dot-1 {
                 left: 30.5%;
@@ -299,7 +313,16 @@
                 scale: 0.6;
             }
 
+            #out-dot-3 {
+                left: 14%;
+                top: 76%;
+                scale: 0.8;
+                display: block;
+            }
+
             #lt-bee { top: 49%; left: 9%; transform: translate(-50%, -50%); z-index: 5; scale: 1;}
+
+            #blue-yellow-star { left: 13%; top: 64%; display: block; scale: 0.7;}
 
         }
 
@@ -359,6 +382,7 @@
                 <img id="twinkle-star-2" class="stars" src="svg/twinkle_star_2.svg" alt="Twinkle Star" width="82" height="82" />
                 <img id="twinkle-star-3" class="stars" src="svg/twinkle_star.svg" alt="Twinkle Star" width="82" height="82" />
                 <img id="twinkle-star-4" class="stars" src="svg/twinkle_star_3.svg" alt="Twinkle Star" width="82" height="82" />
+                <img id="blue-yellow-star" class="no-anim" src="svg/blue_yellow_star.svg" alt="Oval w Star" width="52" height="46" />
 
                 <div class="random-dot" id="dot-1"></div>
                 <div class="random-dot" id="dot-2"></div>
@@ -372,6 +396,7 @@
 
                 <div class="outline-dot" id="out-dot-1"></div>
                 <div class="outline-dot" id="out-dot-2"></div>
+                <div class="outline-dot" id="out-dot-3"></div>
 
                 <lottie-player id="lt-bee" class="lottie-layer" src="lotties/bee/bee_fly.json" background="transparent" speed="1.4" style="width: 500px; height: auto; z-index: 3;" autoplay></lottie-player>
 
