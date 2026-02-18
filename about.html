@@ -28,18 +28,20 @@
     }
 
     .page {
-      width: 100%;
-      height: 100vh;
+      --scale: min(1vw, calc(1vh * 1440 / 869));
+      width: min(100%, calc(100vh * 1440 / 869));
+      aspect-ratio: 1440 / 869;
       position: relative;
       overflow: hidden;
+      margin: 0 auto;
     }
 
-    /* Navigation */
+    /* Navigation - outside .page, spans full viewport */
     .nav {
       position: absolute;
-      top: 3.452%;    /* 30/869 */
-      left: 2.778%;   /* 40/1440 */
-      right: 2.778%;  /* 40/1440 */
+      top: 2.083vw;   /* 30/1440 */
+      left: 2.778vw;  /* 40/1440 */
+      right: 2.778vw; /* 40/1440 */
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
@@ -146,13 +148,23 @@
       height: 100%;
     }
 
-    /* Decorative colored shapes */
+    /* Shapes container - clipped to white card */
+    .shapes-container {
+      position: absolute;
+      top: 13.808%;    /* same as white-card */
+      left: 3.472%;
+      width: 93.125%;
+      height: 81.933%;
+      z-index: 5;
+      overflow: hidden;
+    }
+
+    /* Decorative colored shapes (positioned relative to shapes-container) */
     .shape-pink {
       position: absolute;
-      top: 13.3%;    /* 222/869 */
-      left: 50.694%;   /* 730/1440 */
-      width: 43.125%;  /* 621/1440 */
-      z-index: 5;
+      top: 0%;
+      left: 50.71%;
+      width: 46.31%;
       /* transform: rotate(10.85deg); */
       transform-origin: top left;
     }
@@ -165,10 +177,9 @@
 
     .shape-orange {
       position: absolute;
-      top: 16.686%;    /* 145/869 */
-      left: 35.903%;   /* 517/1440 */
-      width: 24.583%;  /* 354/1440 */
-      z-index: 6;
+      top: 3.51%;
+      left: 34.83%;
+      width: 26.40%;
     }
 
     .shape-orange svg {
@@ -179,10 +190,9 @@
 
     .shape-blue {
       position: absolute;
-      top: 30.725%;    /* 267/869 */
-      left: 58.4%;   /* 933/1440 */
-      width: 37%;  /* 549/1440 */
-      z-index: 7;
+      top: 20.65%;
+      left: 58.98%;
+      width: 39.73%;
       /* transform: rotate(-15.88deg); */
       transform-origin: top left;
     }
@@ -226,7 +236,7 @@
     .deco-designer {
       left: 50%;
       top: 18.3%;
-      font-size: 2.3vw;
+      font-size: calc(2.3 * var(--scale));
       /* transform: rotate(3deg); */
       transform-origin: top right;
     }
@@ -234,7 +244,7 @@
     .deco-creative {
       left: 67.778%;
       top: 21.5%;
-      font-size: 2.3vw;
+      font-size: calc(2.3 * var(--scale));
       transform: rotate(-10deg);
     }
 
@@ -245,7 +255,7 @@
     .deco-direction {
       left: 77.222%;
       top: 18.5%;
-      font-size: 2.3vw;
+      font-size: calc(2.3 * var(--scale));
       transform: rotate(-8deg);
       display: none;
     }
@@ -253,7 +263,7 @@
     .deco-illustrator {
       left: 84%;
       top: 42%;
-      font-size: 2.3vw;
+      font-size: calc(2.3 * var(--scale));
       transform: rotate(16deg);
     }
 
@@ -265,7 +275,7 @@
       width: 28.75%;   /* 414/1440 */
       z-index: 30;
       font-family: 'Inter', sans-serif;
-      font-size: 0.9vw;
+      font-size: calc(0.9 * var(--scale));
       font-weight: 400;
       color: #000;
       letter-spacing: -0.03em;
@@ -274,7 +284,7 @@
     }
 
     .body-text h2 {
-      font-size: 0.9vw;
+      font-size: calc(0.9 * var(--scale));
       font-weight: 400;
       margin-bottom: 0.9em;
       letter-spacing: -0.03em;
@@ -292,7 +302,7 @@
       position: absolute;
       z-index: 30;
       font-family: 'Inter', sans-serif;
-      font-size: 0.72vw;
+      font-size: calc(0.72 * var(--scale));
       font-weight: 600;
       color: #000;
       letter-spacing: -0.03em;
@@ -314,7 +324,7 @@
       transform-origin: top left;
       left: 7.153%;
       top: 21.0%;
-      font-size: 2.6vw;
+      font-size: calc(2.6 * var(--scale));
       /* transform: rotate(-4deg); */
     }
 
@@ -345,12 +355,17 @@
        ============================================= */
     @media (max-width: 768px) {
 
+      html {
+        overflow-x: hidden;
+      }
+
       body {
-        overflow: auto;
+        overflow-y: auto;
         overflow-x: hidden;
       }
 
       .page {
+        --scale: 1vw; /* on mobile, page is always full width */
         width: 100%;
         height: 229vw; /* 900/393 * 100 - explicit height so % children resolve correctly */
         position: relative;
@@ -359,9 +374,9 @@
 
       /* Navigation */
       .nav {
-        top: 4.18%;      /* ~37.6/900 */
-        left: 7.888%;    /* 31/393 */
-        right: 8.906%;   /* 35/393 */
+        top: 9.58vw;     /* ~37.6/393 */
+        left: 7.888vw;   /* 31/393 */
+        right: 8.906vw;  /* 35/393 */
       }
 
       .logo-s {
@@ -444,13 +459,21 @@
           linear-gradient(to bottom, rgba(0,0,0,1) 0.5px, transparent 0.5px);
       }
 
-      /* Colored shapes repositioned for mobile */
-      /* Pink: abs (71, 123), 297x279 - NOT rotated on mobile, rounded corners */
+      /* Shapes container - match mobile white card position */
+      .shapes-container {
+        top: 12.444%;      /* 112/900 */
+        left: 6.107%;      /* 24/393 */
+        width: 87.786%;    /* 345/393 */
+        height: 84.202%;   /* 758/900 */
+        overflow: visible;
+      }
+
+      /* Colored shapes repositioned for mobile (container-relative) */
+      /* Pink: page abs (71, 123), container abs (24, 112) */
       .shape-pink {
-        top: 9%;     /* 123/900 */
-        left: 29%;    /* 71/393 */
-        width: 75.573%;   /* 297/393 */
-        z-index: 5;
+        top: -4%;       /* (123-112)/758 */
+        left: 25.62%;     /* (71-24)/345 */
+        width: 86.09%;    /* 297/345 */
         transform: rotate(10.5deg);
       }
 
@@ -458,23 +481,20 @@
         border-radius: 20px;
       }
 
-      /* Orange: abs (48, 139), 192x188, rotation 14.12 */
+      /* Orange: page abs (48, 139), container abs (24, 112) */
       .shape-orange {
-        top: 15.444%;     /* 139/900 */
-        left: 12.214%;    /* 48/393 */
-        width: 48.855%;   /* 192/393 */
-        z-index: 6;
+        top: 3.56%;       /* (139-112)/758 */
+        left: 6.96%;      /* (48-24)/345 */
+        width: 55.65%;    /* 192/345 */
         transform: rotate(-14.12deg);
         transform-origin: top left;
       }
 
-      /* Blue: abs (135, 269), 259x216, rotation -15.88 */
+      /* Blue: page abs (135, 269), container abs (24, 112) */
       .shape-blue {
-        top: 29.889%;     /* 269/900 */
-        left: 30%;    /* 135/393 */
-        width: 65.903%;   /* 259/393 */
-        z-index: 7;
-        /* transform: rotate(-15.88deg); */
+        top: 20.71%;      /* (269-112)/758 */
+        left: 28.17%;     /* (135-24)/345 */
+        width: 75.07%;    /* 259/345 */
         transform-origin: top left;
       }
 
@@ -588,19 +608,8 @@
   </style>
 </head>
 <body>
-  <div class="page">
-
-    <!-- Hidden SVG clip path for mobile notebook lines -->
-    <svg width="0" height="0" style="position:absolute;">
-      <defs>
-        <clipPath id="mobileCardClip" clipPathUnits="objectBoundingBox">
-          <path d="M 0 0.04418 V 0.95699 C 0 0.98061, 0.04197 1, 0.09370 1 H 0.90484 C 0.95659 1, 0.99853 0.98060, 0.99853 0.95699 L 0.99371 0.51630 C 0.99371 0.50417, 0.98657 0.49228, 0.97305 0.48184 L 0.31109 0.02098 C 0.29392 0.00775, 0.26254 0, 0.22885 0.00001 C 0.17722 0.00042, 0.15370 0.00096, 0.09218 0.00142 C 0.04104 0.00181, 0.00003 0.02084, 0.00003 0.04419 L 0 0.04418 Z"/>
-        </clipPath>
-      </defs>
-    </svg>
-
-    <!-- Navigation Bar -->
-    <div class="nav">
+  <!-- Navigation Bar (outside page for full-width) -->
+  <div class="nav">
       <!-- sbr Logo -->
       <div class="logo">
         <!-- s -->
@@ -633,9 +642,23 @@
       </div>
     </div>
 
+  <div class="page">
+
+    <!-- Hidden SVG clip paths for card shapes -->
+    <svg width="0" height="0" style="position:absolute;">
+      <defs>
+        <clipPath id="desktopCardClip" clipPathUnits="objectBoundingBox">
+          <path d="M 0 0.08370 V 0.92093 C 0 0.96446, 0.01874 0.99976, 0.04185 0.99976 H 0.95770 C 0.98082 0.99976, 0.99956 0.96446, 0.99956 0.92093 V 0.66183 C 0.99956 0.63127, 0.99018 0.60346, 0.97549 0.59047 L 0.31633 0.00747 C 0.31057 0.00237, 0.30425 0, 0.29787 0.00001 C 0.25923 0.00117, 0.11455 0.00535, 0.04200 0.00486 C 0.01882 0.00471, 0 0.04003, 0 0.08370 Z"/>
+        </clipPath>
+        <clipPath id="mobileCardClip" clipPathUnits="objectBoundingBox">
+          <path d="M 0 0.04418 V 0.95699 C 0 0.98061, 0.04197 1, 0.09370 1 H 0.90484 C 0.95659 1, 0.99853 0.98060, 0.99853 0.95699 L 0.99371 0.51630 C 0.99371 0.50417, 0.98657 0.49228, 0.97305 0.48184 L 0.31109 0.02098 C 0.29392 0.00775, 0.26254 0, 0.22885 0.00001 C 0.17722 0.00042, 0.15370 0.00096, 0.09218 0.00142 C 0.04104 0.00181, 0.00003 0.02084, 0.00003 0.04419 L 0 0.04418 Z"/>
+        </clipPath>
+      </defs>
+    </svg>
+
     <!-- White Card Background -->
     <div class="white-card">
-      <svg class="white-card-desktop" viewBox="0 0 1341 712" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <svg class="white-card-desktop" viewBox="0 0 1341 712" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M0 59.5882V655.702C0 686.695 25.1322 711.827 56.1253 711.827H1284.28C1315.28 711.827 1340.41 686.695 1340.41 655.702V471.226C1340.41 449.471 1327.83 429.669 1308.14 420.422L424.194 5.3184C416.458 1.68601 407.995 -0.130184 399.445 0.00725792C347.619 0.831908 153.611 3.80654 56.3216 3.46294C25.2402 3.35495 0 28.5068 0 59.5882Z" fill="white"/>
       </svg>
       <svg class="white-card-mobile" viewBox="0 0 346 758" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
@@ -697,25 +720,28 @@
       </svg>
     </div>
 
-    <!-- Pink Rotated Rectangle -->
-    <div class="shape-pink">
-      <svg viewBox="0 0 621 594" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M488.387 0.777313L34.9452 87.6862C11.6004 92.1606 -3.69708 114.712 0.777288 138.057L81.3661 558.525C85.8405 581.869 108.392 597.167 131.737 592.693L585.179 505.784C608.524 501.309 623.822 478.757 619.347 455.413L538.759 34.9452C534.284 11.6004 511.732 -3.69707 488.387 0.777313Z" fill="#F090DE"/>
-      </svg>
-    </div>
+    <!-- Colored shapes (clipped to white card) -->
+    <div class="shapes-container">
+      <!-- Pink Rotated Rectangle -->
+      <div class="shape-pink">
+        <svg viewBox="0 0 621 594" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M488.387 0.777313L34.9452 87.6862C11.6004 92.1606 -3.69708 114.712 0.777288 138.057L81.3661 558.525C85.8405 581.869 108.392 597.167 131.737 592.693L585.179 505.784C608.524 501.309 623.822 478.757 619.347 455.413L538.759 34.9452C534.284 11.6004 511.732 -3.69707 488.387 0.777313Z" fill="#F090DE"/>
+        </svg>
+      </div>
 
-    <!-- Orange Rounded Rectangle -->
-    <div class="shape-orange">
-      <svg viewBox="0 0 354 347" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M333.021 0H20.6653C9.25217 0 0 9.25218 0 20.6653V325.619C0 337.032 9.25217 346.284 20.6653 346.284H333.021C344.434 346.284 353.686 337.032 353.686 325.619V20.6653C353.686 9.25218 344.434 0 333.021 0Z" fill="#EB591D"/>
-      </svg>
-    </div>
+      <!-- Orange Rounded Rectangle -->
+      <div class="shape-orange">
+        <svg viewBox="0 0 354 347" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M333.021 0H20.6653C9.25217 0 0 9.25218 0 20.6653V325.619C0 337.032 9.25217 346.284 20.6653 346.284H333.021C344.434 346.284 353.686 337.032 353.686 325.619V20.6653C353.686 9.25218 344.434 0 333.021 0Z" fill="#EB591D"/>
+        </svg>
+      </div>
 
-    <!-- Blue Rotated Rectangle -->
-    <div class="shape-blue">
-      <svg viewBox="0 0 549 494" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M517.611 108.998L140.275 1.65355C117.413 -4.85039 93.6065 8.41088 87.1026 31.2735L1.65354 331.643C-4.8504 354.505 8.41091 378.311 31.2735 384.815L408.609 492.16C431.472 498.664 455.278 485.403 461.782 462.54L547.231 162.171C553.735 139.308 540.474 115.502 517.611 108.998Z" fill="#00A3DD"/>
-      </svg>
+      <!-- Blue Rotated Rectangle -->
+      <div class="shape-blue">
+        <svg viewBox="0 0 549 494" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M517.611 108.998L140.275 1.65355C117.413 -4.85039 93.6065 8.41088 87.1026 31.2735L1.65354 331.643C-4.8504 354.505 8.41091 378.311 31.2735 384.815L408.609 492.16C431.472 498.664 455.278 485.403 461.782 462.54L547.231 162.171C553.735 139.308 540.474 115.502 517.611 108.998Z" fill="#00A3DD"/>
+        </svg>
+      </div>
     </div>
 
     <!-- Photo in parallelogram mask -->
