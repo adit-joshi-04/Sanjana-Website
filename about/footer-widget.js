@@ -17,6 +17,11 @@
   var scaleFactor = 1;
   var flowerImages = [];
   var particles = [];
+  var cursorOver = false;
+  var cursorX = 0, cursorY = 0;
+  var cursorFlowerIndex = 0;
+  var cursorAge = 0;
+  var mouseHeld = false;
 
   // ── Helpers ──
   function rand(a, b) {
@@ -29,6 +34,13 @@
 
   // ── CSS ──
   var FOOTER_CSS = `
+@font-face {
+      font-family: 'Romie Trial Mid';
+      src: url('RomieTrial-Medium.otf') format('opentype');
+      font-weight: 700;
+      font-style: normal;
+    }
+
 #sanjana-footer,
 #sanjana-footer *,
 #sanjana-footer *::before,
@@ -43,8 +55,12 @@
   width: 100%;
   background: rgb(255, 244, 149);
   overflow: hidden;
-  cursor: pointer;
+  cursor: none;
   font-family: 'Inter', sans-serif;
+}
+
+#sanjana-footer a {
+  cursor: pointer;
 }
 
 #sanjana-footer-canvas {
@@ -76,7 +92,7 @@
   left: 554px;
   top: 47px;
   width: 774px;
-  font-family: 'Romie Trial', 'Playfair Display', 'Georgia', serif;
+  font-family: 'Romie Trial Mid', 'Playfair Display', 'Georgia', serif;
   font-size: 80px;
   font-weight: 500;
   text-align: center;
@@ -97,6 +113,7 @@
 #sanjana-footer .contact-label {
   display: block;
   margin-bottom: 16px;
+  font-size: 12px;
 }
 #sanjana-footer .contact-block a {
   display: block;
@@ -317,6 +334,12 @@
     pt.rotation += pt.rotSpeed;
     pt.x += pt.vx;
     pt.y += pt.vy;
+
+    var radius = pt.displaySize * pt.scale / 2;
+    if (pt.y - radius <= 0) {
+      pt.y = radius;
+      pt.vy = Math.abs(pt.vy) * 0.6;
+    }
   }
 
   function displayParticle(p, pt) {
@@ -338,9 +361,9 @@
   function spawnFlowers(x, y) {
     for (var i = 0; i < 4; i++) {
       var angle = mapVal(i, 0, 4, -PI * 0.8, PI * 0.8) + rand(-0.3, 0.3);
-      var speed = rand(4, 8);
+      var speed = rand(2, 4);
       var vx = Math.cos(angle - HALF_PI) * speed;
-      var vy = Math.sin(angle - HALF_PI) * speed - rand(2, 5);
+      var vy = Math.sin(angle - HALF_PI) * speed - rand(1, 2.5);
       particles.push(createParticle(x, y, vx, vy));
     }
   }
@@ -410,16 +433,38 @@
         var canvas = p.createCanvas(footer.offsetWidth, footer.offsetHeight);
         p.imageMode(p.CENTER);
 
-        footer.addEventListener('click', function(e) {
+        footer.addEventListener('mousedown', function(e) {
           if (e.target.closest('a')) return;
+          mouseHeld = true;
           var rect = footer.getBoundingClientRect();
-          var x = (e.clientX - rect.left) / scaleFactor;
-          var y = (e.clientY - rect.top) / scaleFactor;
-          spawnFlowers(x, y);
+          cursorX = (e.clientX - rect.left) / scaleFactor;
+          cursorY = (e.clientY - rect.top) / scaleFactor;
+          spawnFlowers(cursorX, cursorY);
+        });
+        window.addEventListener('mouseup', function() {
+          mouseHeld = false;
+        });
+
+        footer.addEventListener('mouseenter', function() {
+          cursorOver = true;
+          cursorFlowerIndex = Math.floor(rand(flowerImages.length));
+          cursorAge = 0;
+        });
+        footer.addEventListener('mouseleave', function() {
+          cursorOver = false;
+        });
+        footer.addEventListener('mousemove', function(e) {
+          var rect = footer.getBoundingClientRect();
+          cursorX = (e.clientX - rect.left) / scaleFactor;
+          cursorY = (e.clientY - rect.top) / scaleFactor;
+          cursorAge++;
         });
       };
 
       p.draw = function() {
+        if (mouseHeld && p.frameCount % 15 === 0) {
+          spawnFlowers(cursorX, cursorY);
+        }
         p.clear();
         p.push();
         p.scale(scaleFactor);
@@ -430,6 +475,20 @@
             particles.splice(i, 1);
           }
         }
+
+        if (cursorOver && flowerImages.length > 0) {
+          var img = flowerImages[cursorFlowerIndex];
+          if (img && img.width > 0) {
+            var pulse = 0.85 + 0.1 * Math.sin(p.frameCount * 0.03);
+            var size = 35 * pulse;
+            var aspect = img.height / img.width;
+            p.push();
+            p.translate(cursorX, cursorY);
+            p.image(img, 0, 0, size, size * aspect);
+            p.pop();
+          }
+        }
+
         p.pop();
       };
 
