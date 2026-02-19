@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ABOUT - sbr</title>
+  <!-- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"> -->
+  <style>
+    @font-face {
+      font-family: 'Romie Trial Reg';
+      src: url('romie-regular.otf') format('opentype');
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Romie Trial Mid';
+      src: url('RomieTrial-Medium.otf') format('opentype');
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Romie Trial Bold';
+      src: url('RomieTrial-Bold.otf') format('opentype');
+      font-weight: 900;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Inter';
+      src: url('Inter-VariableFont_slnt,wght.ttf') format('truetype');
+      font-weight: 100;
+      font-style: normal;
+    }
+  </style>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: rgb(255, 244, 149);
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    .page {
+      --page-w: min(100vw, calc(100vh * 1440 / 869));
+      --scale: min(1vw, calc(1vh * 1440 / 869));
+      --right-shift: max(0px, calc(50vw - 0.5 * var(--page-w)));
+      width: min(100%, calc(100vh * 1440 / 869));
+      aspect-ratio: 1440 / 869;
+      position: relative;
+      clip-path: inset(0 -100vw 0 -100vw);
+      margin: 0 auto;
+    }
+
+    /* Navigation - outside .page, spans full viewport */
+    .nav {
+      position: absolute;
+      top: 2.083vw;   /* 30/1440 */
+      left: 2.778vw;  /* 40/1440 */
+      right: 2.778vw; /* 40/1440 */
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .logo svg {
+      display: block;
+    }
+
+    .logo-s {
+      width: 1.389vw;
+      height: auto;
+      position: relative;
+      /* top: 0.694vw; */
+    }
+
+    .logo-b {
+      width: 1.736vw;
+      height: auto;
+      position: relative;
+      bottom: 0.3vw;
+      margin-left: 0.139vw;
+    }
+
+    .logo-r {
+      width: 1.25vw;
+      height: auto;
+      position: relative;
+      /* top: 0.764vw; */
+      margin-left: 0.139vw;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 5.069vw;
+      align-items: flex-start;
+      position: absolute;
+      right: 0;
+      top: 1.957%;  /* 17/869 */
+    }
+
+    .nav-links a {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9vw;
+      font-weight: 400;
+      color: #000;
+      text-decoration: none;
+      letter-spacing: 0;
+      position: relative;
+    }
+
+    .nav-links a.active::after {
+      content: '';
+      position: absolute;
+      bottom: -0.347vw;
+      left: 0;
+      width: 3.542vw;
+      height: 1px;
+      background: #000;
+    }
+
+    /* White Card */
+    .white-card {
+      position: absolute;
+      top: 13.808%;    /* 120/869 */
+      left: calc(3.472% - var(--right-shift));
+      width: calc(93.125% + 2 * var(--right-shift));
+      height: 81.933%; /* 712/869 */
+      z-index: 10;
+    }
+
+    .white-card svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .white-card-left {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: calc(0.65486 * var(--page-w)); /* 943/1440 of page */
+      height: 100%;
+      background: white;
+      border-radius: calc(0.03889 * var(--page-w)) 0 0 calc(0.03889 * var(--page-w));
+    }
+
+    .white-card .white-card-right {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: calc(0.65486 * var(--page-w)); /* 943/1440 of page */
+      height: 100%;
+    }
+
+    .white-card-mobile {
+      display: none;
+    }
+
+    /* Notebook lines overlay */
+    .notebook-lines {
+      position: absolute;
+      top: 13.694%;    /* 119/869 */
+      left: 3.472%;    /* 50/1440 */
+      width: 93.125%;  /* 1341/1440 */
+      height: 81.933%; /* 712/869 */
+      z-index: 15;
+      opacity: 0.28;
+      overflow: hidden;
+      display: none;
+    }
+
+    .notebook-lines svg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Shapes container - clipped to white card */
+    .shapes-container {
+      position: absolute;
+      top: 13.808%;    /* same as white-card */
+      left: 3.472%;
+      width: 93.125%;
+      height: 81.933%;
+      z-index: 5;
+      overflow: hidden;
+      transform: translateX(var(--right-shift));
+    }
+
+    /* Decorative colored shapes (positioned relative to shapes-container) */
+    .shape-pink {
+      position: absolute;
+      top: 0%;
+      left: 50.71%;
+      width: 46.31%;
+      /* transform: rotate(10.85deg); */
+      transform-origin: top left;
+    }
+
+    .shape-pink svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .shape-orange {
+      position: absolute;
+      top: 3.51%;
+      left: 34.83%;
+      width: 26.40%;
+    }
+
+    .shape-orange svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .shape-blue {
+      position: absolute;
+      top: 20.65%;
+      left: 58.98%;
+      width: 39.73%;
+      /* transform: rotate(-15.88deg); */
+      transform-origin: top left;
+    }
+
+    .shape-blue svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    /* Photo mask */
+    .photo-container {
+      position: absolute;
+      top: 26.122%;    /* 227/869 */
+      left: 53.194%;   /* 766/1440 */
+      width: 26.944%;  /* 388/1440 */
+      height: 41.772%; /* 363/869 */
+      z-index: 20;
+      overflow: hidden;
+      transform: translateX(var(--right-shift));
+    }
+
+    .photo-container svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Decorative text words */
+    .deco-word {
+      position: absolute;
+      z-index: 25;
+      font-family: 'Romie Trial Mid', serif;
+      font-weight: 400;
+      color: #000;
+      white-space: nowrap;
+      transform-origin: top left;
+    }
+
+    .deco-designer {
+      left: 49%;
+      top: 18.7%;
+      font-size: calc(2.3 * var(--scale));
+      transform: translateX(var(--right-shift));
+      transform-origin: top right;
+    }
+
+    .deco-creative {
+      left: 67.778%;
+      top: 21.0%;
+      font-size: calc(2.3 * var(--scale));
+      transform: translateX(var(--right-shift)) rotate(-10deg);
+    }
+
+    .deco-director-down {
+      display: inline;
+    }
+
+    .deco-direction {
+      left: 77.222%;
+      top: 18.5%;
+      font-size: calc(2.3 * var(--scale));
+      transform: rotate(-8deg);
+      display: none;
+    }
+
+    .deco-illustrator {
+      left: 84%;
+      top: 40.3%;
+      font-size: calc(2.3 * var(--scale));
+      transform: translateX(var(--right-shift)) rotate(16deg);
+    }
+
+    /* Body text */
+    .body-text {
+      position: absolute;
+      top: 42.348%;    /* 368/869 */
+      left: 7.083%;    /* 102/1440 */
+      width: calc(28.75% + var(--right-shift));
+      max-width: 65%;
+      z-index: 30;
+      font-family: 'Inter', sans-serif;
+      font-size: calc(1.1 * var(--scale));
+      font-weight: 400;
+      color: #000;
+      letter-spacing: -0.03em;
+      line-height: 135%;
+      text-align: left;
+      transform: translateX(calc(-1 * var(--right-shift)));
+    }
+
+    .body-text h2 {
+      font-size: calc(1.1 * var(--scale));
+      font-weight: 400;
+      margin-bottom: 0.9em;
+      letter-spacing: -0.03em;
+      line-height: 135%;
+    }
+
+    .body-text p {
+      margin-bottom: 0.9em;
+      letter-spacing: -0.03em;
+      line-height: 135%;
+    }
+
+    /* Service labels */
+    .service-label {
+      position: absolute;
+      z-index: 30;
+      font-family: 'Inter', sans-serif;
+      font-size: calc(0.9 * var(--scale));
+      font-weight: 600;
+      color: #000;
+      letter-spacing: -0.03em;
+      line-height: 135%;
+      transform: translateX(var(--right-shift));
+    }
+
+    .service-label-normal {
+      font-weight: 400;
+    }
+
+    /* About Me heading */
+    .about-heading-text {
+      position: absolute;
+      z-index: 30;
+      font-family: 'Romie Trial Bold', serif;
+      font-weight: 400;
+      color: #000;
+      white-space: nowrap;
+      transform-origin: top left;
+      left: 7.153%;
+      top: 19.0%;
+      font-size: calc(2.6 * var(--scale));
+      transform: translateX(calc(-1 * var(--right-shift)));
+    }
+
+    /* Hamburger menu - hidden on desktop */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 0;
+      cursor: pointer;
+      position: absolute;
+      right: 0;
+      top: 1.957%;
+      z-index: 110;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 34px;
+      height: 2px;
+      background: #000;
+    }
+
+    .hamburger span:nth-child(1) { margin-bottom: 6px; }
+    .hamburger span:nth-child(2) { margin-bottom: 7px; }
+
+    /* =============================================
+       MOBILE BREAKPOINT - 393x900 design
+       ============================================= */
+    @media (max-width: 768px) {
+
+      html {
+        overflow-x: hidden;
+      }
+
+      body {
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+
+      .page {
+        --scale: 1vw; /* on mobile, page is always full width */
+        width: 100%;
+        height: 229vw; /* 900/393 * 100 - explicit height so % children resolve correctly */
+        position: relative;
+        overflow: visible;
+        clip-path: none;
+      }
+
+      /* Navigation */
+      .nav {
+        top: 9.58vw;     /* ~37.6/393 */
+        left: 7.888vw;   /* 31/393 */
+        right: 8.906vw;  /* 35/393 */
+      }
+
+      .logo-s {
+        width: 4.96vw;   /* ~19.5/393 */
+        /* top: 2.5vw; */
+      }
+
+      .logo-b {
+        width: 6.2vw;    /* ~24.5/393 */
+        bottom: 1.2vw;
+        margin-left: 0.5vw;
+      }
+
+      .logo-r {
+        width: 4.5vw;    /* ~17.6/393 */
+        /* top: 2.7vw; */
+        margin-left: 0.5vw;
+      }
+
+      /* Hide desktop nav links, show hamburger */
+      .nav-links {
+        display: none;
+      }
+
+      .hamburger {
+        display: flex;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .hamburger span {
+        width: 8.65vw;  /* 34/393 */
+        height: 2px;
+      }
+
+      .hamburger span:nth-child(1) { margin-bottom: 1.527vw; } /* ~6px at 393 */
+      .hamburger span:nth-child(2) { margin-bottom: 1.781vw; } /* ~7px at 393 */
+
+      /* White Card - mobile portrait orientation */
+      /* Absolute: x=24, y=112, w=345, h=758 on 393x900 */
+      .white-card {
+        top: 12.444%;      /* 112/900 */
+        left: 6.107%;      /* 24/393 */
+        width: 87.786%;    /* 345/393 */
+        height: 84.202%;   /* 758/900 */
+      }
+
+      .white-card-left {
+        display: none;
+      }
+
+      .white-card .white-card-right {
+        display: none;
+      }
+
+      .white-card-mobile {
+        display: block;
+      }
+
+      /* Notebook lines - match white card position */
+      .notebook-lines {
+        top: 12.444%;
+        left: 6.107%;
+        width: 87.786%;
+        height: 84.202%;
+        opacity: 0.19;
+        clip-path: url(#mobileCardClip);
+      }
+
+      .notebook-lines svg {
+        display: none;
+      }
+
+      .notebook-lines::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: 10vw 10vw;
+        background-image:
+          linear-gradient(to right, rgba(0,0,0,1) 0.5px, transparent 0.5px),
+          linear-gradient(to bottom, rgba(0,0,0,1) 0.5px, transparent 0.5px);
+      }
+
+      /* Shapes container - match mobile white card position */
+      .shapes-container {
+        top: 12.444%;      /* 112/900 */
+        left: 6.107%;      /* 24/393 */
+        width: 87.786%;    /* 345/393 */
+        height: 84.202%;   /* 758/900 */
+        overflow: visible;
+      }
+
+      /* Colored shapes repositioned for mobile (container-relative) */
+      /* Pink: page abs (71, 123), container abs (24, 112) */
+      .shape-pink {
+        top: -4%;       /* (123-112)/758 */
+        left: 25.62%;     /* (71-24)/345 */
+        width: 86.09%;    /* 297/345 */
+        transform: rotate(10.5deg);
+      }
+
+      .shape-pink svg {
+        border-radius: 20px;
+      }
+
+      /* Orange: page abs (48, 139), container abs (24, 112) */
+      .shape-orange {
+        top: 3.56%;       /* (139-112)/758 */
+        left: 6.96%;      /* (48-24)/345 */
+        width: 55.65%;    /* 192/345 */
+        transform: rotate(-14.12deg);
+        transform-origin: top left;
+      }
+
+      /* Blue: page abs (135, 269), container abs (24, 112) */
+      .shape-blue {
+        top: 20.71%;      /* (269-112)/758 */
+        left: 28.17%;     /* (135-24)/345 */
+        width: 75.07%;    /* 259/345 */
+        transform-origin: top left;
+      }
+
+      /* Photo: abs (81, 176), 221x207, rotation 3.72 */
+      .photo-container {
+        top: 19.556%;     /* 176/900 */
+        left: 20.611%;    /* 81/393 */
+        width: 56.234%;   /* 221/393 */
+        height: 23.0%;    /* 207/900 */
+        transform: rotate(3.72deg);
+        transform-origin: center center;
+      }
+
+      /* "About me" heading - mobile position */
+      /* abs (48, 403), fontSize 28 on 393px width */
+      .about-heading {
+        /* Scale heading sizes for mobile */
+        
+      }
+
+      /* Body text - wider on mobile */
+      /* abs (48, 452), width 292, fontSize 10 on 393 */
+      .body-text {
+        top: 50.222%;      /* 452/900 */
+        left: 12.214%;     /* 48/393 */
+        width: 74.3%;      /* 292/393 */
+        font-size: 2.55vw; /* 10/393*100 */
+        max-width: none;
+      }
+
+      .body-text h2 {
+        font-size: 2.55vw;
+      }
+
+      /* Service labels - repositioned for mobile */
+      .service-label {
+        font-size: 2.04vw;  /* 8/393*100 */
+      }
+
+      /* Decorative words - mobile repositioning */
+      .deco-designer {
+        left: 37%;
+        top: 11.5%;
+        font-size: 4.8vw;
+        transform: rotate(-14deg);
+      }
+
+      .deco-creative {
+        left: 71%;
+        top: 14.8%;
+        font-size: 4.8vw;
+        width: 20px;
+        transform: rotate(0);
+        line-height: 130%;
+      }
+
+      .deco-director-down {
+        display: block;
+      }
+
+      .deco-direction {
+        left: 88.04%;
+        top: 11.5%;
+        font-size: 5.0vw;
+        transform: rotate(-8deg);
+      }
+
+      .deco-illustrator {
+        left: 74%;
+        top: 34.3%;
+        font-size: 4.8vw;
+        transform: rotate(16deg);
+      }
+
+      /* About Me heading - mobile */
+      .about-heading-text {
+        left: 12.214%;
+        top: 44.8%;
+        font-size: 7.1vw; /* 28/393*100 */
+        font-family: 'Romie Trial Mid', serif;
+        font-weight: 700;
+      }
+    }
+
+    /* Service labels repositioned for mobile layout */
+    @media (max-width: 768px) {
+      /* Service labels repositioned for mobile layout */
+      /* BRAND IDENTITY... abs (163, 752) -> 41.5%, 83.6% */
+      .service-label[data-service="brand"] {
+        left: 41.476% !important;
+        top: 83.556% !important;
+        font-size: 2.04vw !important;
+      }
+
+      /* PRINT & EDITORIAL... abs (121, 789) -> 30.8%, 87.7% */
+      .service-label[data-service="print"] {
+        left: 30.789% !important;
+        top: 87.667% !important;
+        font-size: 2.04vw !important;
+      }
+
+      /* SERVICES abs (48, 825) -> 12.2%, 91.7% */
+      .service-label[data-service="services"] {
+        left: 12.214% !important;
+        top: 91.667% !important;
+        font-size: 2.04vw !important;
+      }
+
+      /* CREATIVE DIRECTOR abs (265, 825) -> 67.4%, 91.7% */
+      .service-label[data-service="creative-dir"] {
+        left: 67.43% !important;
+        top: 91.667% !important;
+        font-size: 2.04vw !important;
+      }
+    }
+
+    /* Mobile Menu Overlay */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      background: white;
+      z-index: 200;
+    }
+
+    .mobile-menu.open {
+      display: block;
+    }
+
+    .mobile-menu-close {
+      position: absolute;
+      top: 9.58vw;
+      right: 8.906vw;
+      width: 8.65vw;
+      height: 8.65vw;
+      cursor: pointer;
+      z-index: 210;
+    }
+
+    .mobile-menu-close span {
+      display: block;
+      position: absolute;
+      width: 8.65vw;
+      height: 2px;
+      background: #000;
+      top: 50%;
+      left: 0;
+    }
+
+    .mobile-menu-close span:first-child {
+      transform: rotate(45deg);
+    }
+
+    .mobile-menu-close span:last-child {
+      transform: rotate(-45deg);
+    }
+
+    .mobile-menu-logo {
+      position: absolute;
+      top: 9.58vw;
+      left: 7.888vw;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .mobile-menu-logo svg:nth-child(1) { width: 4.96vw; }
+    .mobile-menu-logo svg:nth-child(2) { width: 6.2vw; margin-left: 0.5vw; }
+    .mobile-menu-logo svg:nth-child(3) { width: 4.5vw; margin-left: 0.5vw; }
+
+    .mobile-menu-nav {
+      position: absolute;
+      top: 19.3%;
+      left: 10.18vw;
+      right: 10.69vw;
+    }
+
+    .mobile-menu-nav a {
+      display: block;
+      font-family: 'Inter', sans-serif;
+      font-size: 10.08vw;
+      font-weight: 400;
+      color: #000;
+      text-decoration: none;
+      line-height: 1.16;
+      padding-bottom: 6.1vw;
+      border-bottom: 1px solid #000;
+      margin-bottom: 6.1vw;
+    }
+
+    .mobile-menu-nav a:last-child {
+      margin-bottom: 0;
+    }
+
+    .mobile-menu-social {
+      position: absolute;
+      top: 82.5%;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 18.5vw;
+    }
+
+    .mobile-menu-social a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mobile-menu-social a svg {
+      width: 7.89vw;
+      height: 7.89vw;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar (outside page for full-width) -->
+  <div class="nav">
+      <!-- sbr Logo -->
+      <div class="logo">
+        <!-- s -->
+        <svg class="logo-s" viewBox="0 0 20 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0.00150785 13.7919H5.17139C5.20302 14.1024 5.25424 14.3987 5.26177 14.6949C5.32805 17.0791 7.1342 18.7163 9.64231 18.6505C10.9483 18.6161 12.2062 18.453 13.1416 17.4412C14.2127 16.2834 13.9852 14.6892 12.4969 14.0767C11.4063 13.6273 10.1846 13.4198 9.00059 13.2323C7.36768 12.9733 5.73478 12.7543 4.23141 12.0402C1.89804 10.9326 0.784819 9.00059 0.882734 6.52337C1.01078 3.28767 3.33813 1.23835 6.59341 0.415468C9.43142 -0.302941 12.2107 -0.098293 14.9026 1.09667C17.3971 2.20433 18.8628 4.89479 18.3236 7.5466H13.3073C13.2847 7.39061 13.2651 7.26325 13.2486 7.13445C12.9247 4.65293 10.4558 3.41361 8.05309 4.51269C7.29839 4.85901 6.66119 5.29263 6.52562 6.13841C6.39456 6.9527 6.80279 7.76413 7.73825 8.04176C9.06085 8.43388 10.4407 8.67716 11.8115 8.89326C13.5905 9.17232 15.3349 9.52867 16.8609 10.4832C18.8222 11.7082 19.4624 13.5457 19.375 15.6766C19.2485 18.8036 17.4634 20.8429 14.5245 21.9577C11.2903 23.1841 7.96421 23.1899 4.73454 21.9277C2.10441 20.8987 0.558869 18.9581 0.173237 16.2562C0.0602587 15.4663 0.0572423 14.662 0 13.7933L0.00150785 13.7919Z" fill="black"/>
+        </svg>
+        <!-- b -->
+        <svg class="logo-b" viewBox="0 0 25 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 0H5.80407V14.2866C6.32979 13.6741 6.71241 13.1231 7.20047 12.6766C9.12411 10.9164 11.5193 10.3625 14.0952 10.4684C18.4606 10.6488 22.4149 13.5181 23.7706 17.465C24.9471 20.8911 24.9034 24.3057 23.1665 27.5457C19.9881 33.479 12.4773 34.9229 7.27428 31.2422C6.18668 30.4737 5.37926 29.4447 4.78123 28.2354V32.6504H0V0.00142812V0Z M5.82817 21.963C5.87788 25.3718 7.99735 27.7517 11.4515 28.1124C13.9249 28.3714 16.1062 27.7474 17.5794 25.6824C18.6083 24.2398 18.7032 22.5984 18.5826 20.9154C18.3025 17.0128 14.8288 14.9893 11.0041 15.629C7.67197 16.1871 5.77846 18.5956 5.82817 21.9615V21.963Z" fill="black"/>
+        </svg>
+        <!-- r -->
+        <svg class="logo-r" viewBox="0 0 18 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17.5628 7.81327H12.4186C12.1173 7.09629 11.9757 6.3464 11.5418 5.80831C10.4226 4.41872 7.87231 4.55467 6.72747 5.96001C5.93512 6.93315 5.78448 8.05942 5.78298 9.22719C5.77997 13.2829 5.78298 17.3386 5.78298 21.3943V22.2129H0V0.639206H4.78425V4.36147C5.52388 2.49676 6.75911 1.11719 8.73999 0.441714C10.1726 -0.0477196 11.6518 -0.170796 13.1281 0.278567C16.3005 1.24599 18.0012 4.46308 17.5643 7.81327H17.5628Z" fill="black"/>
+        </svg>
+      </div>
+
+      <!-- Nav Links (desktop) -->
+      <div class="nav-links">
+        <a href="#" class="active">ABOUT</a>
+        <a href="#">WORK</a>
+        <a href="#">ARCHIVE</a>
+        <a href="#">INSTAGRAM</a>
+      </div>
+
+      <!-- Hamburger Menu (mobile only) -->
+      <div class="hamburger" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu-logo">
+      <svg viewBox="0 0 20 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0.00150785 13.3041H5.17139C5.20302 13.6036 5.25424 13.8894 5.26177 14.1752C5.32805 16.475 7.1342 18.0543 9.64231 17.9908C10.9483 17.9577 12.2062 17.8003 13.1416 16.8243C14.2127 15.7075 13.9852 14.1696 12.4969 13.5788C11.4063 13.1453 10.1846 12.9452 9.00059 12.7643C7.36768 12.5144 5.73478 12.3032 4.23141 11.6144C1.89804 10.5459 0.784819 8.68224 0.882734 6.29264C1.01078 3.17139 3.33813 1.19455 6.59341 0.400773C9.43142 -0.292226 12.2107 -0.0948164 14.9026 1.05788C17.3971 2.12637 18.8628 4.72166 18.3236 7.27968H13.3073C13.2847 7.12921 13.2651 7.00635 13.2486 6.88211C12.9247 4.48836 10.4558 3.29287 8.05309 4.35307C7.29839 4.68715 6.66119 5.10543 6.52562 5.92129C6.39456 6.70678 6.80279 7.48951 7.73825 7.75733C9.06085 8.13558 10.4407 8.37025 11.8115 8.57871C13.5905 8.8479 15.3349 9.19164 16.8609 10.1124C18.8222 11.2941 19.4624 13.0666 19.375 15.1222C19.2485 18.1385 17.4634 20.1057 14.5245 21.1811C11.2903 22.3641 7.96421 22.3697 4.73454 21.1521C2.10441 20.1595 0.558869 18.2876 0.173237 15.6813C0.0602587 14.9192 0.0572423 14.1434 0 13.3055L0.00150785 13.3041Z" fill="black"/>
+      </svg>
+      <svg viewBox="0 0 25 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 0H5.80407V13.7813C6.32979 13.1904 6.71241 12.659 7.20047 12.2282C9.12411 10.5303 11.5193 9.99602 14.0952 10.0982C18.4606 10.2721 22.4149 13.04 23.7706 16.8473C24.9471 20.1522 24.9034 23.446 23.1665 26.5714C19.9881 32.2948 12.4773 33.6877 7.27428 30.1371C6.18668 29.3958 5.37926 28.4033 4.78123 27.2368V31.4955H0V0.00137761V0ZM5.82817 21.1861C5.87788 24.4744 7.99735 26.7702 11.4515 27.118C13.9249 27.3679 16.1062 26.766 17.5794 24.774C18.6083 23.3825 18.7032 21.7991 18.5826 20.1756C18.3025 16.4111 14.8288 14.4591 11.0041 15.0762C7.67197 15.6146 5.77846 17.9379 5.82817 21.1848V21.1861Z" fill="black"/>
+      </svg>
+      <svg viewBox="0 0 18 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.5628 7.53691H12.4186C12.1173 6.8453 11.9757 6.12193 11.5418 5.60287C10.4226 4.26243 7.87231 4.39358 6.72747 5.7492C5.93512 6.68793 5.78448 7.77436 5.78298 8.90082C5.77997 12.8131 5.78298 16.7254 5.78298 20.6376V21.4273H0V0.616597H4.78425V4.20721C5.52388 2.40845 6.75911 1.07767 8.73999 0.426091C10.1726 -0.0460318 11.6518 -0.164755 13.1281 0.268715C16.3005 1.20192 18.0012 4.30522 17.5643 7.53691H17.5628Z" fill="black"/>
+      </svg>
+    </div>
+    <div class="mobile-menu-close" id="menuClose" aria-label="Close menu">
+      <span></span>
+      <span></span>
+    </div>
+    <nav class="mobile-menu-nav">
+      <a href="#">WORK</a>
+      <a href="#">ARCHIVE</a>
+      <a href="#">ABOUT</a>
+    </nav>
+    <div class="mobile-menu-social">
+      <a href="#" aria-label="Instagram">
+        <svg viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15.3757 30.7532C13.1869 30.7532 10.9899 30.8717 8.81001 30.7265C5.29548 30.4915 2.71734 28.6826 1.04885 25.5931C0.291377 24.1885 4.24815e-05 22.6647 0.00141347 21.0758C0.00552643 17.2909 0.0103249 13.506 4.24814e-05 9.7211C-0.00612696 7.41207 0.659487 5.33051 2.12302 3.54358C3.82921 1.46065 6.03924 0.256802 8.73734 0.056046C9.90611 -0.0309711 11.0845 0.00739865 12.2587 0.00534313C15.1892 -0.000138263 18.1197 0.0121949 21.0502 0.00054691C23.3329 -0.00836034 25.3983 0.632962 27.1806 2.06635C29.3111 3.77928 30.5312 6.00815 30.7465 8.74405C30.8205 9.68547 30.7924 10.6351 30.7938 11.5807C30.7986 14.727 30.7856 17.8733 30.7986 21.0196C30.8082 23.3143 30.17 25.3903 28.7263 27.1807C27.0105 29.3088 24.7834 30.584 22.0435 30.7258C19.8259 30.8402 17.598 30.7491 15.375 30.7491C15.375 30.7498 15.375 30.7511 15.375 30.7518L15.3757 30.7532ZM15.4031 2.4151C15.4031 2.40962 15.4031 2.40414 15.4031 2.39865C13.4878 2.39865 11.5719 2.40551 9.65659 2.39591C8.579 2.39043 7.5343 2.56584 6.5705 3.04272C3.84361 4.39182 2.42669 6.60356 2.40475 9.64916C2.37733 13.4786 2.39173 17.3087 2.40475 21.1388C2.40681 21.6938 2.43971 22.2632 2.56447 22.8017C3.34525 26.1605 6.12082 28.375 9.58119 28.3914C13.4577 28.4099 17.3341 28.3928 21.2106 28.3976C22.2656 28.3989 23.2856 28.2167 24.2281 27.7514C26.9585 26.4044 28.3713 24.1906 28.3939 21.1457C28.422 17.3163 28.4151 13.4861 28.3877 9.65601C28.3829 8.94686 28.2876 8.21715 28.1005 7.53403C27.3053 4.62889 24.6662 2.52062 21.6603 2.42812C19.5757 2.3644 17.4877 2.41578 15.4017 2.41578L15.4031 2.4151Z" fill="black"/>
+          <g transform="translate(6.87, 6.87)">
+            <path d="M8.6112 17.2349C3.84839 17.2253 -0.0129915 13.3575 3.28516e-05 8.6099C0.0137427 3.85548 3.8861 -0.0075259 8.63177 1.10099e-05C13.3857 0.00823309 17.2525 3.88494 17.2388 8.62977C17.2251 13.3986 13.3699 17.2438 8.6112 17.2342V17.2349ZM8.59749 14.8409C12.0469 14.8511 14.8293 12.0913 14.8437 8.64553C14.8588 5.19226 12.0647 2.3899 8.61258 2.39538C5.19333 2.40154 2.41914 5.16759 2.39583 8.59551C2.37253 12.0221 5.16111 14.8306 8.59818 14.8409H8.59749Z" fill="black"/>
+          </g>
+          <g transform="translate(22.47, 5.15)">
+            <path d="M3.34735 1.68767C3.34049 2.61129 2.58508 3.35333 1.65897 3.34648C0.734929 3.33963 -0.00883217 2.58251 7.92505e-05 1.65821C0.00899067 0.732543 0.764405 -0.00950047 1.68845 9.19626e-05C2.61592 0.00968439 3.3542 0.760634 3.34735 1.68767Z" fill="black"/>
+          </g>
+        </svg>
+      </a>
+      <a href="#" aria-label="LinkedIn">
+        <svg viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0.000109441 3.85367C0.0160168 1.70247 1.78752 -0.0278692 3.94587 -0.00115974C6.09048 0.0255497 7.80992 1.77033 7.80052 3.91142C7.79112 6.07705 6.05215 7.80378 3.8873 7.79728C1.70437 7.79079 -0.015798 6.04529 0.000109441 3.85367Z" fill="black"/>
+          <g transform="translate(0.53, 11.1)">
+            <path d="M6.75992 21.9032H0V0H6.75992V21.9032Z" fill="black"/>
+          </g>
+          <g transform="translate(11.11, 10.63)">
+            <path d="M0 0.459825H6.23787V3.53358C6.36368 3.39859 6.42008 3.34373 6.4707 3.28381C8.89513 0.365981 12.9855 -0.763758 16.5538 0.532012C19.1344 1.46901 20.7411 3.33506 21.4837 5.93599C21.7085 6.72428 21.8604 7.56238 21.8669 8.37882C21.903 12.9223 21.8842 17.4658 21.8842 22.0093C21.8842 22.1162 21.8842 22.223 21.8842 22.3587H15.2299C15.2234 22.2064 15.2104 22.0548 15.2104 21.9039C15.2133 18.0938 15.2198 14.2831 15.2162 10.473C15.2162 10.1019 15.1901 9.72584 15.1229 9.3613C14.7266 7.22165 12.9768 5.99013 10.6999 6.1872C7.9255 6.42759 6.83657 8.32685 6.63122 10.416C6.61386 10.595 6.61893 10.7762 6.61893 10.9566C6.61893 14.6108 6.61893 18.2649 6.61893 21.9191V22.3645H0V0.459825Z" fill="black"/>
+          </g>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <div class="page">
+
+    <!-- Hidden SVG clip paths for card shapes -->
+    <svg width="0" height="0" style="position:absolute;">
+      <defs>
+        <clipPath id="desktopCardClip" clipPathUnits="objectBoundingBox">
+          <path d="M 0 0.08370 V 0.92093 C 0 0.96446, 0.01874 0.99976, 0.04185 0.99976 H 0.95770 C 0.98082 0.99976, 0.99956 0.96446, 0.99956 0.92093 V 0.66183 C 0.99956 0.63127, 0.99018 0.60346, 0.97549 0.59047 L 0.31633 0.00747 C 0.31057 0.00237, 0.30425 0, 0.29787 0.00001 C 0.25923 0.00117, 0.11455 0.00535, 0.04200 0.00486 C 0.01882 0.00471, 0 0.04003, 0 0.08370 Z"/>
+        </clipPath>
+        <clipPath id="mobileCardClip" clipPathUnits="objectBoundingBox">
+          <path d="M 0 0.04418 V 0.95699 C 0 0.98061, 0.04197 1, 0.09370 1 H 0.90484 C 0.95659 1, 0.99853 0.98060, 0.99853 0.95699 L 0.99371 0.51630 C 0.99371 0.50417, 0.98657 0.49228, 0.97305 0.48184 L 0.31109 0.02098 C 0.29392 0.00775, 0.26254 0, 0.22885 0.00001 C 0.17722 0.00042, 0.15370 0.00096, 0.09218 0.00142 C 0.04104 0.00181, 0.00003 0.02084, 0.00003 0.04419 L 0 0.04418 Z"/>
+        </clipPath>
+      </defs>
+    </svg>
+
+    <!-- White Card Background -->
+    <div class="white-card">
+      <div class="white-card-left"></div>
+      <svg class="white-card-right" viewBox="0 0 943 712" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1.44434 0.00726008C9.99517 -0.130182 18.4583 1.68542 26.1943 5.31781L910.14 420.421C929.833 429.669 942.409 449.471 942.409 471.226V655.702C942.409 686.695 917.277 711.826 886.284 711.827H0V0.029721C0.493009 0.0218959 0.974519 0.0147359 1.44434 0.00726008Z" fill="white"/>
+      </svg>
+      <svg class="white-card-mobile" viewBox="0 0 346 758" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <path d="M0 33.4896V725.393C0 743.302 14.5194 757.812 32.4192 757.812H313.072C330.982 757.812 345.492 743.293 345.492 725.393L343.826 391.35C343.826 382.158 341.356 373.141 336.677 365.237L107.631 15.8998C101.694 5.8747 90.8358 -0.198453 79.1834 0.00495385C61.3127 0.314907 53.1764 0.731408 31.8962 1.08011C14.1998 1.37069 0.00968073 15.7932 0.00968073 33.4993L0 33.4896Z" fill="white"/>
+      </svg>
+    </div>
+
+    <!-- Notebook Lines (clipped to white card shape) -->
+    <div class="notebook-lines">
+      <svg viewBox="0 0 1341 712" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <defs>
+          <clipPath id="cardClip">
+            <path d="M0 59.5882V655.702C0 686.695 25.1322 711.827 56.1253 711.827H1284.28C1315.28 711.827 1340.41 686.695 1340.41 655.702V471.226C1340.41 449.471 1327.83 429.669 1308.14 420.422L424.194 5.3184C416.458 1.68601 407.995 -0.130184 399.445 0.00725792C347.619 0.831908 153.611 3.80654 56.3216 3.46294C25.2402 3.35495 0 28.5068 0 59.5882Z"/>
+          </clipPath>
+        </defs>
+        <g clip-path="url(#cardClip)">
+          <!-- Vertical lines -->
+          <line x1="52.5" y1="-3" x2="52.5" y2="715" stroke="black" stroke-width="0.245"/>
+          <line x1="104.5" y1="1" x2="104.5" y2="715" stroke="black" stroke-width="0.245"/>
+          <line x1="157.8" y1="-6" x2="157.8" y2="710" stroke="black" stroke-width="0.245"/>
+          <line x1="209.8" y1="-1" x2="209.8" y2="714" stroke="black" stroke-width="0.245"/>
+          <line x1="265.7" y1="-7" x2="265.7" y2="708" stroke="black" stroke-width="0.245"/>
+          <line x1="317.7" y1="-3" x2="317.7" y2="712" stroke="black" stroke-width="0.245"/>
+          <line x1="371" y1="0" x2="371" y2="714" stroke="black" stroke-width="0.245"/>
+          <line x1="423" y1="4" x2="423" y2="714" stroke="black" stroke-width="0.245"/>
+          <line x1="476.3" y1="5" x2="476.3" y2="714" stroke="black" stroke-width="0.245"/>
+          <line x1="528.3" y1="9" x2="528.3" y2="714" stroke="black" stroke-width="0.245"/>
+          <line x1="585.6" y1="17" x2="585.6" y2="714" stroke="black" stroke-width="0.245"/>
+          <line x1="637.6" y1="21" x2="637.6" y2="714" stroke="black" stroke-width="0.245"/>
+          <line x1="690.8" y1="8" x2="690.8" y2="714" stroke="black" stroke-width="0.245"/>
+          <line x1="742.8" y1="27" x2="742.8" y2="714" stroke="black" stroke-width="0.245"/>
+          <line x1="796.1" y1="12" x2="796.1" y2="714" stroke="black" stroke-width="0.245"/>
+          <line x1="848.1" y1="6" x2="848.1" y2="714" stroke="black" stroke-width="0.245"/>
+          <line x1="900.1" y1="9" x2="900.1" y2="714" stroke="black" stroke-width="0.245"/>
+          <line x1="956.1" y1="4" x2="956.1" y2="714" stroke="black" stroke-width="0.245"/>
+          <line x1="1008" y1="8" x2="1008" y2="714" stroke="black" stroke-width="0.245"/>
+          <line x1="1061.4" y1="11" x2="1061.4" y2="714" stroke="black" stroke-width="0.245"/>
+          <line x1="1113.3" y1="15" x2="1113.3" y2="714" stroke="black" stroke-width="0.245"/>
+          <line x1="1166.6" y1="16" x2="1166.6" y2="714" stroke="black" stroke-width="0.245"/>
+          <line x1="1218.6" y1="20" x2="1218.6" y2="714" stroke="black" stroke-width="0.245"/>
+          <line x1="1275.9" y1="28" x2="1275.9" y2="714" stroke="black" stroke-width="0.245"/>
+          <line x1="1339.9" y1="15" x2="1339.9" y2="714" stroke="black" stroke-width="0.245"/>
+
+          <!-- Horizontal lines -->
+          <line x1="-50" y1="38.3" x2="1440" y2="38.3" stroke="black" stroke-width="0.245"/>
+          <line x1="-50" y1="90.3" x2="1440" y2="90.3" stroke="black" stroke-width="0.245"/>
+          <line x1="-50" y1="146.3" x2="1440" y2="146.3" stroke="black" stroke-width="0.245"/>
+          <line x1="-50" y1="198.2" x2="1440" y2="198.2" stroke="black" stroke-width="0.245"/>
+          <line x1="-50" y1="251.2" x2="1440" y2="251.2" stroke="black" stroke-width="0.245"/>
+          <line x1="-50" y1="303.5" x2="1440" y2="303.5" stroke="black" stroke-width="0.245"/>
+          <line x1="-50" y1="356.8" x2="1440" y2="356.8" stroke="black" stroke-width="0.245"/>
+          <line x1="-50" y1="408.8" x2="1440" y2="408.8" stroke="black" stroke-width="0.245"/>
+          <line x1="-50" y1="462.1" x2="1440" y2="462.1" stroke="black" stroke-width="0.245"/>
+          <line x1="-50" y1="518" x2="1440" y2="518" stroke="black" stroke-width="0.245"/>
+          <line x1="-50" y1="571.3" x2="1440" y2="571.3" stroke="black" stroke-width="0.245"/>
+          <line x1="-50" y1="623.3" x2="1440" y2="623.3" stroke="black" stroke-width="0.245"/>
+          <line x1="-50" y1="676.6" x2="1440" y2="676.6" stroke="black" stroke-width="0.245"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Colored shapes (clipped to white card) -->
+    <div class="shapes-container">
+      <!-- Pink Rotated Rectangle -->
+      <div class="shape-pink">
+        <svg viewBox="0 0 621 594" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M488.387 0.777313L34.9452 87.6862C11.6004 92.1606 -3.69708 114.712 0.777288 138.057L81.3661 558.525C85.8405 581.869 108.392 597.167 131.737 592.693L585.179 505.784C608.524 501.309 623.822 478.757 619.347 455.413L538.759 34.9452C534.284 11.6004 511.732 -3.69707 488.387 0.777313Z" fill="#F090DE"/>
+        </svg>
+      </div>
+
+      <!-- Orange Rounded Rectangle -->
+      <div class="shape-orange">
+        <svg viewBox="0 0 361 353" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M316.429 0H43.844C19.6296 0 0 19.6296 0 43.844V308.889C0 333.104 19.6296 352.733 43.844 352.733H316.429C340.643 352.733 360.273 333.104 360.273 308.889V43.844C360.273 19.6296 340.643 0 316.429 0Z" fill="#EB591D"/>
+        </svg>
+      </div>
+
+      <!-- Blue Rotated Rectangle -->
+      <div class="shape-blue">
+        <svg viewBox="0 0 549 494" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M517.611 108.998L140.275 1.65355C117.413 -4.85039 93.6065 8.41088 87.1026 31.2735L1.65354 331.643C-4.8504 354.505 8.41091 378.311 31.2735 384.815L408.609 492.16C431.472 498.664 455.278 485.403 461.782 462.54L547.231 162.171C553.735 139.308 540.474 115.502 517.611 108.998Z" fill="#00A3DD"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Photo in parallelogram mask -->
+    <div class="photo-container">
+      <svg viewBox="0 0 388 363" style="position:absolute;top:0;left:0;width:100%;height:100%;">
+        <defs>
+          <clipPath id="photoClip">
+            <path d="M105.931 1.51973L352.128 59.0096C375.336 64.4287 390.897 82.7477 386.881 99.9279L330.864 339.852C326.849 357.032 304.79 366.565 281.582 361.146L35.3843 303.656C12.1763 298.237 -3.38406 279.918 0.631203 262.737L56.6485 22.8134C60.6637 5.63317 82.7231 -3.89939 105.931 1.51973Z"/>
+          </clipPath>
+        </defs>
+        <g clip-path="url(#photoClip)">
+          <image href="profile-picture.png"
+                 x="20" y="18" width="492" height="349"
+                 transform="rotate(14, 190, 180)"
+                 style="scale: 0.92;"
+                 preserveAspectRatio="xMidYMid slice"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Decorative Text -->
+    <span class="deco-word deco-designer">Designer</span>
+    <span class="deco-word deco-creative">Creative <span class="deco-director-down">Director</span></span>
+    <span class="deco-word deco-direction">Direction</span>
+    <span class="deco-word deco-illustrator">Illustrator</span>
+
+    <!-- About Me Heading -->
+    <span class="about-heading-text">About Me</span>
+
+    <!-- Body Text -->
+    <div class="body-text">
+      <h2>Making Brands Look Good (and Work Even Better)</h2>
+      <p>Six years navigating the ever-evolving landscape of visual design has taught me one crucial thing, identities are born at the intersection of strategy and creativity.</p>
+      <p>I partner with businesses to perform a little visual alchemy, transforming their essence into compelling narratives across Branding, Packaging, and the digital landscape of UI/UX. I bring a strategic eye, a playful mind, and a meticulous hand to every project, ensuring the result is not just aesthetically pleasing but also strategically sharp.</p>
+      <p>I thrive on the ever evolving design landscape, turning that energy into impactful solutions. At the heart of it all is collaboration - building strong partnerships to ensure each design is both visually impactful and strategically aligned with your larger vision.</p>
+    </div>
+
+    <!-- Service Labels -->
+    <div class="service-label" data-service="brand" style="left:62.292%;top:78.251%;">BRAND IDENTITY / PACKAGING / UI.UX</div>
+    <div class="service-label" data-service="print" style="left:58.681%;top:84.235%;">PRINT & EDITORIAL / ILLUSTRATION</div>
+    <div class="service-label service-label-normal" data-service="services" style="left:47.639%;top:90.219%;">SERVICES</div>
+    <div class="service-label" data-service="creative-dir" style="left:80.417%;top:90.334%;">CREATIVE DIRECTOR</div>
+
+  </div>
+
+  <script>
+    const hamburger = document.querySelector('.hamburger');
+    const menu = document.getElementById('mobileMenu');
+    const menuClose = document.getElementById('menuClose');
+
+    hamburger.addEventListener('click', function() {
+      menu.classList.add('open');
+    });
+
+    menuClose.addEventListener('click', function() {
+      menu.classList.remove('open');
+    });
+  </script>
+
+  <script src="footer-widget.js"></script>
+</body>
+</html>
