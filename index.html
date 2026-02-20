@@ -402,7 +402,7 @@
                 <div class="outline-dot" id="out-dot-2"></div>
                 <div class="outline-dot" id="out-dot-3"></div>
 
-                <lottie-player id="lt-bee" class="lottie-layer" src="lotties/bee/bee_fly.json" background="transparent" speed="1.4" style="width: 500px; height: auto; z-index: 3;" autoplay loop></lottie-player>
+                <lottie-player id="lt-bee" class="lottie-layer" src="lotties/bee/bee_fly.json" background="transparent" speed="1.4" style="width: 500px; height: auto; z-index: 3;"></lottie-player>
 
 
             </div>
@@ -598,6 +598,30 @@
             }
 
         }, { passive: false });
+    </script>
+
+    <script>
+        const beePlayer = document.getElementById('lt-bee');
+        beePlayer.addEventListener('ready', () => {
+            const anim = beePlayer.getLottie();
+
+            function startFlapLoop() {
+                anim.loop = true;
+                anim.playSegments([34, 42], true);
+            }
+
+            function playFullThenFlap() {
+                anim.loop = false;
+                anim.playSegments([0, 44], true);
+                anim.removeEventListener('complete', startFlapLoop);
+                anim.addEventListener('complete', startFlapLoop);
+            }
+
+            // Play full animation immediately, then flap loop
+            playFullThenFlap();
+            // Every 6 seconds, replay the full animation
+            setInterval(playFullThenFlap, 6000);
+        });
     </script>
 
     <script type="text/paperscript" canvas="myCanvas">
@@ -1037,6 +1061,13 @@
 
                 // Move Root (Snap to Head using stored offset)
                 f.rootPoint = new Point(newX, f.baseY).add(f.rootOffset);
+            }
+        }
+
+        // --- MOBILE: INITIAL NUDGE ON LOAD ---
+        if (window.innerWidth < 768) {
+            for (var i = 0; i < flowers.length; i++) {
+                flowers[i].velocity = (Math.random() - 0.5) * 0.8;
             }
         }
 
