@@ -1144,6 +1144,17 @@
       menu.classList.remove('open');
     });
 
+    // Lock photo animation after it plays once
+    var photo = document.querySelector('.photo-container');
+    if (photo) {
+      photo.addEventListener('animationend', function() {
+        var isMobile = window.matchMedia('(max-width: 768px)').matches;
+        photo.style.animation = 'none';
+        photo.style.zIndex = '20';
+        photo.style.transform = isMobile ? 'rotate(3.72deg)' : 'translateX(var(--right-shift))';
+      }, { once: true });
+    }
+
     // Shape hover → card + text follow (listens on SVG for path-accurate hit testing)
     [
       ['.shape-orange', '.deco-designer'],
