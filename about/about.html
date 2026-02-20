@@ -197,7 +197,7 @@
       left: 3.472%;
       width: 93.125%;
       height: 81.933%;
-      z-index: 5;
+      z-index: 2;
       overflow: hidden;
       transform: translateX(var(--right-shift));
     }
@@ -255,6 +255,78 @@
     }
 
     /* Photo mask */
+    @keyframes photoReveal {
+      0% {
+        z-index: 5;
+        transform: translateX(var(--right-shift)) translateY(50%);
+        scale: 1;
+        opacity: 100%;
+      }
+      /* 10% {
+        z-index: 5;
+        transform: translateX(calc(var(--right-shift) - 5%)) translateY(-15%) rotate(-10deg);
+      } */
+      30% {
+        z-index: 5;
+        transform: translateX(calc(var(--right-shift) + 8%)) translateY(-70%) rotate(28deg);
+      }
+      30.1% {
+        z-index: 20;
+        transform: translateX(calc(var(--right-shift) + 8%)) translateY(-70%) rotate(28deg);
+      }
+      45% {
+        opacity: 100%;
+      }
+      60% {
+        transform: translateX(calc(var(--right-shift) + 0%)) translateY(1.5%) rotate(0deg);
+        opacity: 100%;
+      }
+      85% {
+        /* transform: translateX(calc(var(--right-shift) - 0.3%)) translateY(-0.5%) rotate(-0.5deg); */
+        opacity: 100%;
+      }
+      100% {
+        z-index: 20;
+        transform: translateX(var(--right-shift)) translateY(0%) rotate(0deg);
+      }
+    }
+
+    @keyframes photoRevealMobile {
+      0% {
+        z-index: 5;
+        transform: translateX(var(--right-shift)) translateY(70%);
+        scale: 1;
+        opacity: 100%;
+      }
+      /* 10% {
+        z-index: 5;
+        transform: translateX(calc(var(--right-shift) - 5%)) translateY(-15%) rotate(-10deg);
+      } */
+      30% {
+        z-index: 5;
+        transform: translateX(calc(var(--right-shift) + 58%)) translateY(-20%) rotate(40deg);
+      }
+      30.1% {
+        z-index: 20;
+        transform: translateX(calc(var(--right-shift) + 58%)) translateY(-20%) rotate(40deg);
+      }
+      45% {
+        opacity: 100%;
+      }
+      60% {
+        transform: translateX(calc(var(--right-shift) + 0%)) translateY(1.5%) rotate(0deg);
+        opacity: 100%;
+      }
+      85% {
+        /* transform: translateX(calc(var(--right-shift) - 0.3%)) translateY(-0.5%) rotate(-0.5deg); */
+        opacity: 100%;
+      }
+      100% {
+        z-index: 20;
+        transform: translateX(var(--right-shift)) translateY(0%) rotate(0deg);
+      }
+    }
+
     .photo-container {
       position: absolute;
       top: 26.122%;    /* 227/869 */
@@ -265,6 +337,7 @@
       overflow: hidden;
       transform: translateX(var(--right-shift));
       pointer-events: none;
+      animation: photoReveal 1.5s ease-in-out 0.4s both;
     }
 
     .photo-container svg {
@@ -278,7 +351,7 @@
     /* Decorative text words */
     .deco-word {
       position: absolute;
-      z-index: 25;
+      z-index: 4;
       font-family: 'Romie Trial Mid', serif;
       font-weight: 400;
       color: #000;
@@ -373,7 +446,7 @@
       position: absolute;
       z-index: 30;
       font-family: 'Inter', sans-serif;
-      font-size: calc(0.9 * var(--scale));
+      font-size: calc(0.972 * var(--scale));
       font-weight: 600;
       color: #000;
       letter-spacing: -0.03em;
@@ -389,7 +462,7 @@
     .about-heading-text {
       position: absolute;
       z-index: 30;
-      font-family: 'Romie Trial Bold', serif;
+      font-family: 'Romie Trial Mid', serif;
       font-weight: 400;
       color: #000;
       white-space: nowrap;
@@ -439,10 +512,11 @@
       .page {
         --scale: 1vw; /* on mobile, page is always full width */
         width: 100%;
-        height: 229vw; /* 900/393 * 100 - explicit height so % children resolve correctly */
+        height: 217vw;
         position: relative;
         overflow: visible;
         clip-path: none;
+        margin-bottom: -12.5vw;
       }
 
       /* Navigation */
@@ -489,12 +563,11 @@
       .hamburger span:nth-child(2) { margin-bottom: 1.781vw; } /* ~7px at 393 */
 
       /* White Card - mobile portrait orientation */
-      /* Absolute: x=24, y=112, w=345, h=758 on 393x900 */
       .white-card {
         top: 12.444%;      /* 112/900 */
         left: 6.107%;      /* 24/393 */
         width: 87.786%;    /* 345/393 */
-        height: 84.202%;   /* 758/900 */
+        height: 79%;
       }
 
       .white-card-left {
@@ -541,7 +614,7 @@
         top: 12.444%;      /* 112/900 */
         left: 6.107%;      /* 24/393 */
         width: 87.786%;    /* 345/393 */
-        height: 84.202%;   /* 758/900 */
+        height: 79%;
         overflow: visible;
       }
 
@@ -596,6 +669,7 @@
         transform: rotate(3.72deg);
         transform-origin: center center;
         pointer-events: none;
+        animation: photoRevealMobile 1.5s ease-in-out 0.4s both;
       }
 
       /* "About me" heading - mobile position */
@@ -610,7 +684,7 @@
       .body-text {
         top: 50.222%;      /* 452/900 */
         left: 12.214%;     /* 48/393 */
-        width: 74.3%;      /* 292/393 */
+        width: 70.0%;      /* 292/393 */
         font-size: 2.55vw; /* 10/393*100 */
         max-width: none;
       }
@@ -621,7 +695,7 @@
 
       /* Service labels - repositioned for mobile */
       .service-label {
-        font-size: 2.04vw;  /* 8/393*100 */
+        font-size: 2.04vw;
       }
 
       /* Decorative words - mobile repositioning */
@@ -675,28 +749,28 @@
       /* BRAND IDENTITY... abs (163, 752) -> 41.5%, 83.6% */
       .service-label[data-service="brand"] {
         left: 41.476% !important;
-        top: 83.556% !important;
+        top: 79.4% !important;
         font-size: 2.04vw !important;
       }
 
       /* PRINT & EDITORIAL... abs (121, 789) -> 30.8%, 87.7% */
       .service-label[data-service="print"] {
         left: 30.789% !important;
-        top: 87.667% !important;
+        top: 83.4% !important;
         font-size: 2.04vw !important;
       }
 
       /* SERVICES abs (48, 825) -> 12.2%, 91.7% */
       .service-label[data-service="services"] {
         left: 12.214% !important;
-        top: 91.667% !important;
+        top: 86.5% !important;
         font-size: 2.04vw !important;
       }
 
       /* CREATIVE DIRECTOR abs (265, 825) -> 67.4%, 91.7% */
       .service-label[data-service="creative-dir"] {
         left: 67.43% !important;
-        top: 91.667% !important;
+        top: 86.5% !important;
         font-size: 2.04vw !important;
       }
     }
@@ -1050,10 +1124,10 @@
     </div>
 
     <!-- Service Labels -->
-    <div class="service-label" data-service="brand" style="left:62.292%;top:78.251%;">BRAND IDENTITY / PACKAGING / UI.UX</div>
-    <div class="service-label" data-service="print" style="left:58.681%;top:84.235%;">PRINT & EDITORIAL / ILLUSTRATION</div>
-    <div class="service-label service-label-normal" data-service="services" style="left:47.639%;top:90.219%;">SERVICES</div>
-    <div class="service-label" data-service="creative-dir" style="left:80.417%;top:90.334%;">CREATIVE DIRECTOR</div>
+    <div class="service-label" data-service="brand" style="left:64%;top:74.5%;">BRAND IDENTITY / PACKAGING / UI.UX</div>
+    <div class="service-label" data-service="print" style="left:54.9%;top:81.5%;">PRINT & EDITORIAL / ILLUSTRATION</div>
+    <div class="service-label service-label-normal" data-service="services" style="left:44.5%;top:88.2%;">SERVICES</div>
+    <div class="service-label" data-service="creative-dir" style="left:83.5%;top:88.3%;">CREATIVE DIRECTOR</div>
 
   </div>
 

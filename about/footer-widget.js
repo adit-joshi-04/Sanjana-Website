@@ -89,13 +89,13 @@
 
 #sanjana-footer .lets-chat {
   position: absolute;
-  left: 554px;
+  left: 764px;
   top: 47px;
   width: 774px;
   font-family: 'Romie Trial Mid', 'Playfair Display', 'Georgia', serif;
-  font-size: 80px;
+  font-size: 65px;
   font-weight: 500;
-  text-align: center;
+  text-align: left;
   letter-spacing: -2.4px;
   line-height: 107%;
   color: #000;
@@ -164,11 +164,12 @@
     height: 412px;
   }
   #sanjana-footer .lets-chat {
-    left: 0;
+    left: 32px;
     width: 393px;
     top: 49px;
     font-size: 47.13px;
     letter-spacing: -1.41px;
+    text-align: left;
   }
   #sanjana-footer .contact-block {
     left: 32px;
@@ -444,6 +445,12 @@
           cursorY = (e.clientY - rect.top) / scaleFactor;
           cursorAge++;
         });
+
+        new IntersectionObserver(function(entries) {
+          if (entries[0].isIntersecting) {
+            spawnFlowers(currentDesignW / 2, currentDesignH / 2);
+          }
+        }, { threshold: 0.4 }).observe(footer);
       };
 
       p.draw = function() {
