@@ -159,6 +159,9 @@
 #sanjana-footer .social-icons svg { display: block; }
 
 @media (max-width: 768px) {
+  #sanjana-footer {
+    cursor: pointer;
+  }
   #sanjana-footer .footer-scaler {
     width: 393px;
     height: 412px;
@@ -468,7 +471,7 @@
           }
         }
 
-        if (cursorOver && flowerImages.length > 0) {
+        if (cursorOver && flowerImages.length > 0 && window.innerWidth > MOBILE_BP) {
           var img = flowerImages[cursorFlowerIndex];
           if (img && img.width > 0) {
             var pulse = 0.85 + 0.1 * Math.sin(p.frameCount * 0.03);
