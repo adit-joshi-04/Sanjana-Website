@@ -1151,7 +1151,9 @@
         var isMobile = window.matchMedia('(max-width: 768px)').matches;
         photo.style.animation = 'none';
         photo.style.zIndex = '20';
-        photo.style.transform = isMobile ? 'rotate(3.72deg)' : 'translateX(var(--right-shift))';
+        photo.style.transform = isMobile
+          ? 'translateX(0px) translateY(0%) rotate(0deg)'
+          : 'translateX(var(--right-shift)) translateY(0%) rotate(0deg)';
       }, { once: true });
     }
 
