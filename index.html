@@ -269,65 +269,19 @@
         }
 
         @media screen and (max-width: 768px) {
-            #white-wheel-2 {
-                left: 20%;
-                bottom: 23%;
+            html, body {
+                overflow-x: auto;
+                overflow-y: hidden;
             }
 
-            #lt-rotate-circle2 { top: 85%; left: 34%; transform: translate(-50%, -50%); scale: 0.7; }
-            #white-ball-1 { left: 3.7%; top: 67%;}
-            #white-ball-2 { left: 9%; top: 83%;}
-            #white-ball-4 { left: 0%; bottom: -52%; scale: 0.9;}
-            #white-ball-3 { display: none;}
-            #yellow-flower { left: 0.3%; top: 59%; scale: 0.68; display: none;}
-            #yellow-stem { height: 320px; display: none;}
-
-            #blue-bent { left: 12%; bottom: -13%; display: none;}
-
-            #outline-balls { left: 18.3%; bottom: 0%; }
-            #blue-head { scale: 1; left: 2.7%; bottom: -49px;}
-            #bird { left: 25%; top: 43%; scale: 0.7;}
-            #blue { left: 25%; top: 63%; display: none;}
-            
-            #dot-6 { left: 35%; top: 12%;}
-            #dot-5 { left: 37%; top: 78%; scale: 0.7;}
-            #dot-4 { left: 13.5%; top: 79%; background-color: #ef5542;}
-
-            #star-5 { left: 25.7%; top: 50%; width: 31px; fill: #e293d9; display: none;}
-            .big-dot { left: 35%; scale: 0.7; top: 95.5%;}
-            #star-4 { left: 11%; top: 75%; width: 38px; fill: #e293d9; scale: 1.2; display: none;}
-            #yellow { rotate: 180deg; scale: 0.8; display: none;}
-            #lt-jumping-star { top: 90%;
-            left: 29%;
-            scale: 0.8;
-            transform-origin: center; transform: translateX(-50%, 50%);}
-            #star-2 { left: 35%; top: 13%; width: 35px; fill: #e293d9; }
-
-            #twinkle-star-4 { left: 30%; top: 1%; width: 70px; }
-
-            #out-dot-1 {
-                left: 30.5%;
-                top: 57%;
-                scale: 0.8;
+            #stage-container {
+                overflow-x: auto;
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
             }
 
-            #out-dot-2 {
-                left: 37.5%;
-                top: 78%;
-                scale: 0.6;
-            }
-
-            #out-dot-3 {
-                left: 14%;
-                top: 76%;
-                scale: 0.8;
-                display: block;
-            }
-
-            #lt-bee { top: 49%; left: 9%; transform: translate(-50%, -50%); z-index: 5; scale: 1;}
-
-            #blue-yellow-star { left: 13%; top: 64%; display: block; scale: 0.7;}
-
+            #blue-head { bottom: -40px; }
+            #white-wheel { left: 52.3%; }
         }
 
     </style>
@@ -420,8 +374,8 @@
             const availW = container.offsetWidth;
             const availH = container.offsetHeight;
 
-            const baseH = 880; 
-            const minW = 1680; 
+            const baseH = 880;
+            const minW = 1680;
 
             // 2. Base Scale (Fit Height)
             let scale = availH / baseH;
@@ -429,40 +383,101 @@
             // 3. Calculate Width based on that scale
             let newInternalWidth = availW / scale;
 
-            // Mobile Protection
+            // Clamp to minimum desktop width
             if (newInternalWidth < minW) {
                 newInternalWidth = minW;
             }
 
             // --- ALIGNMENT & SCALE ADJUSTMENT LOGIC ---
             if (window.innerWidth < 768) {
-                // MOBILE: 
-                // 1. Snap Left
-                container.style.justifyContent = 'flex-start';
-                // 2. Pin vertical center (so it doesn't clip top/bottom when scaled down)
-                stage.style.transformOrigin = 'left center';
-                
-                // 3. EXTRA SCALE DOWN:
-                // Multiply by 0.85 to make it 15% smaller than the screen height
-                scale = scale * 1; 
+                // MOBILE: Same composition as desktop, horizontally scrollable
+                newInternalWidth = minW; // Always use full desktop width
+
+                container.style.overflowX = 'auto';
+                container.style.overflowY = 'hidden';
+                container.style.display = 'block';
+
+                stage.style.position = 'relative';
+                stage.style.transformOrigin = 'top left';
+                stage.style.flexShrink = '0';
+
+                // Negative margins compensate for transform:scale so scroll area
+                // matches the visual size, not the layout size
+                stage.style.marginRight = -(newInternalWidth * (1 - scale)) + 'px';
+                stage.style.marginBottom = -(baseH * (1 - scale)) + 'px';
 
             } else {
-                // DESKTOP:
+                // DESKTOP: Centered, no scrolling
+                container.style.overflowX = 'hidden';
+                container.style.overflowY = 'hidden';
+                container.style.display = 'flex';
                 container.style.justifyContent = 'center';
+                container.style.alignItems = 'center';
+
+                stage.style.position = 'absolute';
                 stage.style.transformOrigin = 'center center';
+                stage.style.marginRight = '0px';
+                stage.style.marginBottom = '0px';
             }
 
             // 4. Apply to DOM
             stage.style.width = newInternalWidth + 'px';
             stage.style.transform = `scale(${scale})`;
-            
+
             // 5. UPDATE PAPER.JS
             if (window.updatePaperLayout) {
                 window.updatePaperLayout(newInternalWidth);
             }
         }
 
-        window.addEventListener('load', resizeStage);
+        let hasPlayedIntro = false;
+
+        function mobileIntroScroll() {
+            if (hasPlayedIntro || window.innerWidth >= 768) return;
+            hasPlayedIntro = true;
+
+            const container = document.getElementById('stage-container');
+            if (!container) return;
+
+            const maxScroll = container.scrollWidth - container.clientWidth;
+            // Start scrolled to the far right
+            container.scrollLeft = maxScroll;
+
+            const duration = 2750; // ms
+            let startTime = null;
+
+            // Cubic bezier-style ease in-out (slow start, slow end)
+            function easeInOutCubic(t) {
+                return t < 0.5
+                    ? 4 * t * t * t
+                    : 1 - Math.pow(-2 * t + 2, 3) / 2;
+            }
+
+            function animateScroll(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = easeInOutCubic(progress);
+
+                container.scrollLeft = maxScroll * (1 - eased);
+
+                if (progress < 1) {
+                    requestAnimationFrame(animateScroll);
+                }
+            }
+
+            // Wait two frames so the browser paints the right-side position first
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(animateScroll);
+                });
+            });
+        }
+
+        window.addEventListener('load', () => {
+            resizeStage();
+            mobileIntroScroll();
+        });
         window.addEventListener('resize', resizeStage);
     </script>
 
@@ -582,11 +597,6 @@
 
         // 2. Mobile Touch
         window.addEventListener('touchmove', (e) => {
-            // Prevent scrolling if touching the stage
-            if(e.target.closest('#stage-container')) {
-                e.preventDefault();
-            }
-
             const touch = e.touches[0];
 
             // Update Lotties/CSS
@@ -597,7 +607,7 @@
                 window.moveFlowersMobile(touch.clientX, touch.clientY);
             }
 
-        }, { passive: false });
+        }, { passive: true });
     </script>
 
     <script>
