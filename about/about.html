@@ -266,23 +266,17 @@
         z-index: 5;
         transform: translateX(calc(var(--right-shift) - 5%)) translateY(-15%) rotate(-10deg);
       } */
-      30% {
+      40% {
         z-index: 5;
         transform: translateX(calc(var(--right-shift) + 8%)) translateY(-70%) rotate(28deg);
       }
-      30.1% {
+      40.1% {
         z-index: 20;
         transform: translateX(calc(var(--right-shift) + 8%)) translateY(-70%) rotate(28deg);
       }
-      45% {
-        opacity: 100%;
-      }
-      60% {
+      
+      75% {
         transform: translateX(calc(var(--right-shift) + 0%)) translateY(1.5%) rotate(0deg);
-        opacity: 100%;
-      }
-      85% {
-        /* transform: translateX(calc(var(--right-shift) - 0.3%)) translateY(-0.5%) rotate(-0.5deg); */
         opacity: 100%;
       }
       100% {
@@ -302,23 +296,16 @@
         z-index: 5;
         transform: translateX(calc(var(--right-shift) - 5%)) translateY(-15%) rotate(-10deg);
       } */
-      30% {
+      40% {
         z-index: 5;
         transform: translateX(calc(var(--right-shift) + 58%)) translateY(-20%) rotate(40deg);
       }
-      30.1% {
+      40.1% {
         z-index: 20;
         transform: translateX(calc(var(--right-shift) + 58%)) translateY(-20%) rotate(40deg);
       }
-      45% {
-        opacity: 100%;
-      }
-      60% {
+      75% {
         transform: translateX(calc(var(--right-shift) + 0%)) translateY(1.5%) rotate(0deg);
-        opacity: 100%;
-      }
-      85% {
-        /* transform: translateX(calc(var(--right-shift) - 0.3%)) translateY(-0.5%) rotate(-0.5deg); */
         opacity: 100%;
       }
       100% {
@@ -412,10 +399,10 @@
     /* Body text */
     .body-text {
       position: absolute;
-      top: 42.348%;    /* 368/869 */
+      bottom: 8.6%;   /* aligned with SERVICES label top */
       left: 7.083%;    /* 102/1440 */
       width: calc(28.75% + var(--right-shift));
-      max-width: 40%;
+      max-width: 35%;
       z-index: 30;
       font-family: 'Inter', sans-serif;
       font-size: calc(1.1 * var(--scale));
@@ -425,6 +412,7 @@
       line-height: 135%;
       text-align: left;
       transform: translateX(calc(-1 * var(--right-shift)));
+      /* transform-origin: left bottom; */
     }
 
     .body-text h2 {
@@ -516,7 +504,7 @@
         position: relative;
         overflow: visible;
         clip-path: none;
-        margin-bottom: -12.5vw;
+        margin-bottom: 0;
       }
 
       /* Navigation */
@@ -564,10 +552,11 @@
 
       /* White Card - mobile portrait orientation */
       .white-card {
-        top: 12.444%;      /* 112/900 */
+        top: 27vw;         /* 12.444% of 217vw */
         left: 6.107%;      /* 24/393 */
         width: 87.786%;    /* 345/393 */
-        height: 79%;
+        height: auto;
+        bottom: 5vw;       /* stretches with page height, covers service labels */
       }
 
       .white-card-left {
@@ -580,14 +569,29 @@
 
       .white-card-mobile {
         display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 121.4vw;  /* fixed height preserves diagonal angle */
+      }
+
+      .white-card::after {
+        content: '';
+        position: absolute;
+        top: 150vw;       /* starts within the rectangular portion of SVG */
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: white;
+        border-radius: 0 0 8.2vw 8.2vw;
       }
 
       /* Notebook lines - match white card position */
       .notebook-lines {
-        top: 12.444%;
+        top: 27vw;
         left: 6.107%;
         width: 87.786%;
-        height: 84.202%;
+        height: 182.7vw;  /* 84.202% of 217vw */
         opacity: 0.19;
         clip-path: url(#mobileCardClip);
       }
@@ -611,10 +615,10 @@
 
       /* Shapes container - match mobile white card position */
       .shapes-container {
-        top: 12.444%;      /* 112/900 */
+        top: 27vw;         /* 12.444% of 217vw */
         left: 6.107%;      /* 24/393 */
         width: 87.786%;    /* 345/393 */
-        height: 79%;
+        height: 171.4vw;   /* 79% of 217vw */
         overflow: visible;
       }
 
@@ -662,10 +666,10 @@
 
       /* Photo: abs (81, 176), 221x207, rotation 3.72 */
       .photo-container {
-        top: 19.556%;     /* 176/900 */
+        top: 42.4vw;      /* 19.556% of 217vw */
         left: 20.611%;    /* 81/393 */
         width: 56.234%;   /* 221/393 */
-        height: 23.0%;    /* 207/900 */
+        height: 49.9vw;   /* 23% of 217vw */
         transform: rotate(3.72deg);
         transform-origin: center center;
         pointer-events: none;
@@ -682,33 +686,39 @@
       /* Body text - wider on mobile */
       /* abs (48, 452), width 292, fontSize 10 on 393 */
       .body-text {
-        top: 50.222%;      /* 452/900 */
+        bottom: auto;
+        top: 115vw;
         left: 12.214%;     /* 48/393 */
         width: 70.0%;      /* 292/393 */
-        font-size: 2.55vw; /* 10/393*100 */
+        font-size: 3.2vw; /* 10/393*100 */
         max-width: none;
       }
 
       .body-text h2 {
-        font-size: 2.55vw;
+        font-size: 3.2vw;
+        margin-bottom: 1.8em;
+      }
+
+      .body-text p {
+        margin-bottom: 1.5em;
       }
 
       /* Service labels - repositioned for mobile */
       .service-label {
-        font-size: 2.04vw;
+        font-size: 2.3vw;
       }
 
       /* Decorative words - mobile repositioning */
       .deco-designer {
         left: 37%;
-        top: 11.5%;
+        top: 25vw;    /* 11.5% of 217vw */
         font-size: 4.8vw;
         transform: rotate(-14deg);
       }
 
       .deco-creative {
         left: 71%;
-        top: 14.8%;
+        top: 32.1vw;  /* 14.8% of 217vw */
         font-size: 4.8vw;
         width: 20px;
         transform: rotate(0);
@@ -721,14 +731,14 @@
 
       .deco-direction {
         left: 88.04%;
-        top: 11.5%;
+        top: 25vw;    /* 11.5% of 217vw */
         font-size: 5.0vw;
         transform: rotate(-8deg);
       }
 
       .deco-illustrator {
         left: 74%;
-        top: 34.3%;
+        top: 74.4vw;  /* 34.3% of 217vw */
         font-size: 4.8vw;
         transform: rotate(16deg);
       }
@@ -736,7 +746,7 @@
       /* About Me heading - mobile */
       .about-heading-text {
         left: 12.214%;
-        top: 44.8%;
+        top: 100vw;
         font-size: 7.1vw; /* 28/393*100 */
         font-family: 'Romie Trial Mid', serif;
         font-weight: 700;
@@ -749,29 +759,29 @@
       /* BRAND IDENTITY... abs (163, 752) -> 41.5%, 83.6% */
       .service-label[data-service="brand"] {
         left: 41.476% !important;
-        top: 79.4% !important;
-        font-size: 2.04vw !important;
+        top: 172.3vw !important;  /* 79.4% of 217vw */
+        font-size: 2.3vw !important;
       }
 
       /* PRINT & EDITORIAL... abs (121, 789) -> 30.8%, 87.7% */
       .service-label[data-service="print"] {
         left: 30.789% !important;
-        top: 83.4% !important;
-        font-size: 2.04vw !important;
+        top: 181vw !important;    /* 83.4% of 217vw */
+        font-size: 2.3vw !important;
       }
 
       /* SERVICES abs (48, 825) -> 12.2%, 91.7% */
       .service-label[data-service="services"] {
         left: 12.214% !important;
-        top: 86.5% !important;
-        font-size: 2.04vw !important;
+        top: 187.7vw !important;  /* 86.5% of 217vw */
+        font-size: 2.3vw !important;
       }
 
       /* CREATIVE DIRECTOR abs (265, 825) -> 67.4%, 91.7% */
       .service-label[data-service="creative-dir"] {
         left: 67.43% !important;
-        top: 86.5% !important;
-        font-size: 2.04vw !important;
+        top: 187.7vw !important;  /* 86.5% of 217vw */
+        font-size: 2.3vw !important;
       }
     }
 
@@ -1006,7 +1016,7 @@
         <path d="M1.44434 0.00726008C9.99517 -0.130182 18.4583 1.68542 26.1943 5.31781L910.14 420.421C929.833 429.669 942.409 449.471 942.409 471.226V655.702C942.409 686.695 917.277 711.826 886.284 711.827H0V0.029721C0.493009 0.0218959 0.974519 0.0147359 1.44434 0.00726008Z" fill="white"/>
       </svg>
       <svg class="white-card-mobile" viewBox="0 0 346 758" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-        <path d="M0 33.4896V725.393C0 743.302 14.5194 757.812 32.4192 757.812H313.072C330.982 757.812 345.492 743.293 345.492 725.393L343.826 391.35C343.826 382.158 341.356 373.141 336.677 365.237L107.631 15.8998C101.694 5.8747 90.8358 -0.198453 79.1834 0.00495385C61.3127 0.314907 53.1764 0.731408 31.8962 1.08011C14.1998 1.37069 0.00968073 15.7932 0.00968073 33.4993L0 33.4896Z" fill="white"/>
+        <path d="M0 33.4896V725.393C0 743.302 14.5194 757.812 32.4192 757.812H313.072C330.982 757.812 345.492 743.293 345.492 725.393L343.826 300C343.826 290.81 341.356 281.79 336.677 273.89L107.631 15.8998C101.694 5.8747 90.8358 -0.198453 79.1834 0.00495385C61.3127 0.314907 53.1764 0.731408 31.8962 1.08011C14.1998 1.37069 0.00968073 15.7932 0.00968073 33.4993L0 33.4896Z" fill="white"/>
       </svg>
     </div>
 
@@ -1177,6 +1187,67 @@
         });
       }
     });
+  </script>
+
+  <script>
+    // Mobile: position service labels after body text, adjust page & white card height
+    function adjustMobileLayout() {
+      var page = document.querySelector('.page');
+      var bodyText = document.querySelector('.body-text');
+      var brandLabel = document.querySelector('[data-service="brand"]');
+      var printLabel = document.querySelector('[data-service="print"]');
+      var servicesLabel = document.querySelector('[data-service="services"]');
+      var creativeDirLabel = document.querySelector('[data-service="creative-dir"]');
+
+      // Save original inline tops on first run
+      if (!brandLabel._origTop) {
+        [brandLabel, printLabel, servicesLabel, creativeDirLabel].forEach(function(el) {
+          el._origTop = el.style.top;
+          el._origLeft = el.style.left;
+        });
+      }
+
+      // Restore original inline styles when switching back to desktop
+      if (window.innerWidth > 768) {
+        [brandLabel, printLabel, servicesLabel, creativeDirLabel].forEach(function(el) {
+          el.style.setProperty('top', el._origTop, '');
+          el.style.setProperty('left', el._origLeft, '');
+        });
+        page.style.removeProperty('height');
+        return;
+      }
+
+      var vw = window.innerWidth / 100;
+
+      // Measure body text bottom relative to page top
+      var pageTop = page.getBoundingClientRect().top;
+      var textBottom = bodyText.getBoundingClientRect().bottom - pageTop;
+
+      // Convert to vw
+      var textBottomVw = textBottom / vw;
+
+      // Position service labels below body text with spacing
+      var gap = 10;  // vw gap after body text
+      var rowGap = 11; // vw between label rows
+
+      var row1 = textBottomVw + gap;
+      var row2 = row1 + rowGap;
+      var row3 = row2 + rowGap;
+
+      brandLabel.style.setProperty('top', row1 + 'vw', 'important');
+      printLabel.style.setProperty('top', row2 + 'vw', 'important');
+      servicesLabel.style.setProperty('top', row3 + 'vw', 'important');
+      creativeDirLabel.style.setProperty('top', row3 + 'vw', 'important');
+
+      // Set page height to fit all content
+      var totalHeight = row3 + 18; // bottom padding after last label row
+      if (totalHeight > 217) {
+        page.style.height = totalHeight + 'vw';
+      }
+    }
+
+    window.addEventListener('load', adjustMobileLayout);
+    window.addEventListener('resize', adjustMobileLayout);
   </script>
 
   <script src="footer-widget.js"></script>
