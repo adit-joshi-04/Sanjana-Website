@@ -603,12 +603,28 @@
             // Update Lotties/CSS
             checkInteractiveElements(touch.clientX, touch.clientY);
 
-            // Update Paper.js (Bridge)
-            if (window.moveFlowersMobile) {
-                window.moveFlowersMobile(touch.clientX, touch.clientY);
-            }
-
         }, { passive: true });
+
+        // 3. Mobile Scroll → Flower Wind
+        // Track scroll velocity on the stage-container and feed it into Paper.js flowers
+        (function() {
+            if (window.innerWidth >= 768) return;
+
+            const container = document.getElementById('stage-container');
+            if (!container) return;
+
+            let lastScrollLeft = container.scrollLeft;
+
+            container.addEventListener('scroll', () => {
+                const currentScroll = container.scrollLeft;
+                const delta = currentScroll - lastScrollLeft;
+                lastScrollLeft = currentScroll;
+
+                if (window.applyScrollWind) {
+                    window.applyScrollWind(delta);
+                }
+            }, { passive: true });
+        })();
     </script>
 
     <script>
@@ -1011,38 +1027,33 @@
             }
         };
 
-        // --- NEW: MOBILE LOGIC BRIDGE ---
+        // --- MOBILE LOGIC BRIDGE ---
         // This function is called manually by the 'touchmove' event in the HTML script
-        var lastMobilePoint = new Point(0,0); 
+        var lastMobilePoint = new Point(0,0);
 
         window.moveFlowersMobile = function(screenX, screenY) {
-            
-            // 1. Get Canvas Screen Position
             var canvas = document.getElementById('myCanvas');
             var rect = canvas.getBoundingClientRect();
-
-            // 2. Normalize Input (0.0 to 1.0)
             var pctX = (screenX - rect.left) / rect.width;
             var pctY = (screenY - rect.top) / rect.height;
-
-            // 3. Map to Internal Paper.js Coordinates (Matches your fixed viewSize)
-            // Note: Since you use a custom camera (center 400,400, zoom 0.8), 
-            // we have to be careful. But for wind interaction, raw internal coordinates usually suffice.
-            // If the wind feels "off", we might need to adjust this math to account for the zoom.
             var internalX = pctX * view.viewSize.width;
             var internalY = pctY * view.viewSize.height;
             var currentPoint = new Point(internalX, internalY);
-
-            // 4. Calculate Wind Force
             var deltaX = currentPoint.x - lastMobilePoint.x;
-            
-            // 5. Update Flowers
-            for(var i = 0; i < flowers.length; i++) { 
-                flowers[i].update(currentPoint, deltaX); 
+            for(var i = 0; i < flowers.length; i++) {
+                flowers[i].update(currentPoint, deltaX);
             }
-
-            // 6. Save for next frame
             lastMobilePoint = currentPoint;
+        };
+
+        // --- SCROLL-DRIVEN WIND (Mobile) ---
+        // Applies scroll velocity directly as wind force to all flowers
+        var scrollWindMultiplier = 0.0005;
+
+        window.applyScrollWind = function(scrollDelta) {
+            for (var i = 0; i < flowers.length; i++) {
+                flowers[i].velocity -= scrollDelta * scrollWindMultiplier;
+            }
         };
 
         
